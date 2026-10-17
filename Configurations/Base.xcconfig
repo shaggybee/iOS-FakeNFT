@@ -1,0 +1,11 @@
+//
+//  Base.xcconfig
+//  iOS-FakeNFT-Extended
+//
+//  Created by Kislov Vadim on 17.10.2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+#include? "Secrets.xcconfig"
