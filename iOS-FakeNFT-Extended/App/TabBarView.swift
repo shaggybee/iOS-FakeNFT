@@ -21,7 +21,7 @@ struct TabBarView: View {
                     }
                 }
             
-            Text("Корзина")
+            ShoppingCartRootView()
                 .tabItem {
                     Label {
                         Text("Корзина")
