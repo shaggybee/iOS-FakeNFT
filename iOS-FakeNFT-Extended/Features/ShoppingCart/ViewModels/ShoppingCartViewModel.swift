@@ -17,6 +17,8 @@ final class ShoppingCartViewModel {
     var isNftsListEmpty: Bool { nfts.isEmpty }
     
     func fetchNfts() async {
+        viewState = .loading
+        
         nfts = []
     }
     
@@ -26,7 +28,7 @@ final class ShoppingCartViewModel {
             name: nft.name,
             rating: nft.rating,
             price: nft.price,
-            imageUrl: nft.images.first
+            imageUrl: URL(string: nft.images.first ?? "")
         )
     }
 }

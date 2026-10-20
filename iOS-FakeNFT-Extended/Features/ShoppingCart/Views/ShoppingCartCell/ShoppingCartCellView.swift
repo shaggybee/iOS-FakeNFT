@@ -23,6 +23,7 @@ struct ShoppingCartCellView: View {
             
             deleteButton
         }
+        .padding(.vertical, 16)
     }
     
     @ViewBuilder
@@ -83,7 +84,7 @@ struct ShoppingCartCellView: View {
         }
     }
     
-    private func getPriceString(for price: Float) -> String {
+    private func getPriceString(for price: Double) -> String {
         "\(price.formatted(.number.precision(.fractionLength(2)))) ETH"
     }
 }
@@ -91,7 +92,7 @@ struct ShoppingCartCellView: View {
 #Preview {
     ShoppingCartCellView(
         model: ShoppingCartCellModel(
-            id: UUID(),
+            id: UUID().uuidString,
             name: "Тестовый",
             rating: 2,
             price: 124.6,

@@ -24,7 +24,6 @@ struct ShoppingCartView: View {
                     EmptyStateView(message: "Корзина пуста")
                 } else {
                     content
-                        .padding(.horizontal, 16)
                 }
             case .error:
                 ErrorStateView(message: "Не удалось получить элементы корзины", onRetry: {
@@ -40,17 +39,28 @@ struct ShoppingCartView: View {
     }
     
     private var content: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(viewModel.nfts, id: \.id) { nft in
-                    ShoppingCartCellView(
-                        model: viewModel.getPreparedCartCellModel(from: nft)) {
-                            // TODO добавить удаление NFT
-                        }
+        VStack {
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(viewModel.nfts, id: \.id) { nft in
+                        ShoppingCartCellView(
+                            model: viewModel.getPreparedCartCellModel(from: nft)) {
+                                // TODO добавить удаление NFT
+                            }
+                    }
                 }
             }
+            .scrollIndicators(.hidden)
+            .padding(.horizontal, 16)
+            
+            ShoppingCartSummaryView(
+                count: 4,
+                totalCost: 345.54,
+                onPayTap: {
+                    // TODO добавить раутинг на экран оплаты
+                }
+            )
         }
-        .scrollIndicators(.hidden)
     }
 }
 
