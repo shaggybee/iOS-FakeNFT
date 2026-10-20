@@ -11,5 +11,5 @@ enum ViewState<T> {
     case idle
     case loading
     case loaded(T)
-    case error(Error)
+    case error(Error?)
 }
