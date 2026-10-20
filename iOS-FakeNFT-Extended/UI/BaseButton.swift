@@ -9,17 +9,28 @@ import SwiftUI
 
 struct BaseButton: View {
     let title: String
+    let height: CGFloat
     let action: () -> Void
+    
+    init(
+        title: String,
+        height: CGFloat = 60,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.height = height
+        self.action = action
+    }
     
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(AppFont.bold17)
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .background(.blackPrimary)
                 .foregroundStyle(.whitePrimary)
-                .cornerRadius(16)
+                .frame(maxWidth: .infinity)
+                .frame(height: height)
+                .background(.blackPrimary)
+                .clipShape(.rect(cornerRadius: 16))
         }
     }
 }
@@ -27,6 +38,13 @@ struct BaseButton: View {
 #Preview {
     BaseButton(
         title: "Оплатить",
+        action: {}
+    )
+    .padding()
+    
+    BaseButton(
+        title: "Оплатить",
+        height: 40,
         action: {}
     )
     .padding()

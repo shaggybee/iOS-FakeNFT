@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6303A36A30877FBE00925C37 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303A36930877FBE00925C37 /* BaseButton.swift */; };
+		6303A3883087831F00925C37 /* ErrorStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303A3873087831F00925C37 /* ErrorStateView.swift */; };
 		6320F0403082BDC00095EB91 /* AppSystemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F03F3082BDC00095EB91 /* AppSystemIcon.swift */; };
 		63B85E8230867497003FDC64 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B85E8130867497003FDC64 /* LoadingView.swift */; };
 		63B85E84308678D0003FDC64 /* BlockingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B85E83308678D0003FDC64 /* BlockingProgressView.swift */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		6303A36930877FBE00925C37 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
+		6303A3873087831F00925C37 /* ErrorStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorStateView.swift; sourceTree = "<group>"; };
 		6320F03F3082BDC00095EB91 /* AppSystemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSystemIcon.swift; sourceTree = "<group>"; };
 		6320F14F3083F5B00095EB91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		63B85E8130867497003FDC64 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				63B85E83308678D0003FDC64 /* BlockingProgressView.swift */,
 				63B85EA130867F80003FDC64 /* EmptyStateView.swift */,
 				6303A36930877FBE00925C37 /* BaseButton.swift */,
+				6303A3873087831F00925C37 /* ErrorStateView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				63B85EA230867F80003FDC64 /* EmptyStateView.swift in Sources */,
 				ABC5E1992C31F666002B4068 /* Fonts.swift in Sources */,
 				ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */,
+				6303A3883087831F00925C37 /* ErrorStateView.swift in Sources */,
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
 				ABC5E1A62C31F815002B4068 /* NetworkRequest.swift in Sources */,
 				ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */,
