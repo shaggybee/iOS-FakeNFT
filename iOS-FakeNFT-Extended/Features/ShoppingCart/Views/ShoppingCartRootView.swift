@@ -10,7 +10,7 @@ import SwiftUI
 struct ShoppingCartRootView: View {
     var body: some View {
         // TODO в последующих задачах реализовать навигацию
-        ShoppingCartView()
+        ShoppingCartView(viewModel: ShoppingCartViewModel())
     }
 }
 
