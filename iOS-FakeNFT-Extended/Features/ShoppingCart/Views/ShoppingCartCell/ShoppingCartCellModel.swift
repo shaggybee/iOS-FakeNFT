@@ -8,9 +8,9 @@
 import Foundation
 
 struct ShoppingCartCellModel {
-    let id: UUID
+    let id: String
     let name: String
     let rating: Int
-    let price: Float
+    let price: Double
     let imageUrl: URL?
 }

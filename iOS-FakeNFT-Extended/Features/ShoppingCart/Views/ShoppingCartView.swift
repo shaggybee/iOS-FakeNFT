@@ -27,7 +27,9 @@ struct ShoppingCartView: View {
                         .padding(.horizontal, 16)
                 }
             case .error:
-                ErrorStateView(message: "Не удалось получить элементы корзины", onRetry: {})
+                ErrorStateView(message: "Не удалось получить элементы корзины", onRetry: {
+                    // TODO добавить обновление списка
+                })
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -39,7 +41,14 @@ struct ShoppingCartView: View {
     
     private var content: some View {
         ScrollView {
-            LazyVStack(spacing: 0) { }
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.nfts, id: \.id) { nft in
+                    ShoppingCartCellView(
+                        model: viewModel.getPreparedCartCellModel(from: nft)) {
+                            // TODO добавить удаление NFT
+                        }
+                }
+            }
         }
         .scrollIndicators(.hidden)
     }

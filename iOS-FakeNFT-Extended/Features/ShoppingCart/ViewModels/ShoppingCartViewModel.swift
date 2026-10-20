@@ -19,4 +19,14 @@ final class ShoppingCartViewModel {
     func fetchNfts() async {
         nfts = []
     }
+    
+    func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {
+        return ShoppingCartCellModel(
+            id: nft.id,
+            name: nft.name,
+            rating: nft.rating,
+            price: nft.price,
+            imageUrl: nft.images.first
+        )
+    }
 }
