@@ -13,10 +13,12 @@ final class CatalogViewModel {
     private(set) var state: ViewState<[NftCollection]> = .idle
     private(set) var isLoadingNextPage = false
     private(set) var isNextPageFailed = false
+    var isSortDialogPresented = false
 
     private let collectionsService: CollectionsService
     private var nextPage = 0
     private var hasMorePages = true
+    private var sortOption: CatalogSortOption?
 
     init(collectionsService: CollectionsService) {
         self.collectionsService = collectionsService
@@ -46,7 +48,20 @@ final class CatalogViewModel {
         Task { await loadNextPage() }
     }
 
-    func sortButtonTapped() {}
+    func sortButtonTapped() {
+        isSortDialogPresented = true
+    }
+
+    func sortOptionSelected(_ option: CatalogSortOption) {
+        sortOption = option
+        guard case .loaded(let collections) = state else { return }
+        state = .loaded(sorted(collections))
+    }
+}
+
+enum CatalogSortOption {
+    case name
+    case nftCount
 }
 
 private extension CatalogViewModel {
@@ -62,7 +77,7 @@ private extension CatalogViewModel {
 
         do {
             let collections = try await loadPage(nextPage)
-            state = .loaded(collections)
+            state = .loaded(sorted(collections))
         } catch {
             state = .error(error)
         }
@@ -79,7 +94,7 @@ private extension CatalogViewModel {
             let page = try await loadPage(nextPage)
             guard case .loaded(let collections) = state else { return }
             let loadedIds = Set(collections.map(\.id))
-            state = .loaded(collections + page.filter { !loadedIds.contains($0.id) })
+            state = .loaded(sorted(collections + page.filter { !loadedIds.contains($0.id) }))
         } catch {
             isNextPageFailed = true
         }
@@ -90,5 +105,16 @@ private extension CatalogViewModel {
         hasMorePages = collections.count == Constants.pageSize
         nextPage = page + 1
         return collections
+    }
+
+    func sorted(_ collections: [NftCollection]) -> [NftCollection] {
+        switch sortOption {
+        case .none:
+            collections
+        case .name:
+            collections.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .nftCount:
+            collections.sorted { $0.nfts.count > $1.nfts.count }
+        }
     }
 }

@@ -93,6 +93,19 @@ struct CatalogView: View {
             Image(.sort40)
         }
         .tint(.blackPrimary)
+        .confirmationDialog(
+            "Сортировка",
+            isPresented: $viewModel.isSortDialogPresented,
+            titleVisibility: .visible
+        ) {
+            Button("По названию") {
+                viewModel.sortOptionSelected(.name)
+            }
+            Button("По количеству NFT") {
+                viewModel.sortOptionSelected(.nftCount)
+            }
+            Button("Закрыть", role: .cancel) {}
+        }
     }
 }
 
