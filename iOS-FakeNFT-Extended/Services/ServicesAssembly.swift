@@ -10,7 +10,6 @@ protocol ServicesAssemblyProtocol {
 @Observable
 @MainActor
 final class ServicesAssembly: ServicesAssemblyProtocol {
-
     private let networkClient: NetworkClient
     private let nftStorage: NftStorage
 

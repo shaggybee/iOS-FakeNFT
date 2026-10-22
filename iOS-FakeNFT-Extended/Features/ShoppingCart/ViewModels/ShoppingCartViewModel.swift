@@ -12,14 +12,42 @@ import Foundation
 final class ShoppingCartViewModel {
     private(set) var viewState: ViewState<[Nft]> = .idle
     
-    var nfts: [Nft] = []
+    let shoppingCartService: ShoppingCartServiceProtocol
+    var isErrorShown: Bool = false
     
+    var nfts: [Nft] {
+        guard case let .loaded(items) = viewState else {
+            return []
+        }
+
+        return items
+    }
     var isNftsListEmpty: Bool { nfts.isEmpty }
+    var totalShoppingCartCost: Double {
+        nfts.reduce(0) { result, nft in
+            result + nft.price
+        }
+    }
+    
+    init(shoppingCartService: ShoppingCartServiceProtocol) {
+        self.shoppingCartService = shoppingCartService
+    }
     
     func fetchNfts() async {
         viewState = .loading
         
-        nfts = []
+        do {
+            let result = try await shoppingCartService.loadShoppingCart()
+            
+            viewState = .loaded(result)
+        } catch is CancellationError {
+            //
+        } catch {
+            guard !Task.isCancelled else { return }
+            
+            isErrorShown = true
+            viewState = .error(nil)
+        }
     }
     
     func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {

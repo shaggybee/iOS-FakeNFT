@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct ShoppingCartRootView: View {
+    // TODO как будет доступен API не забыть удалить и прокинуть действительный
+    @Environment(ServicesAssemblyMock.self) private var services
+    
     var body: some View {
         // TODO в последующих задачах реализовать навигацию
-        ShoppingCartView(viewModel: ShoppingCartViewModel())
+        ShoppingCartView(
+            viewModel: ShoppingCartViewModel(
+                shoppingCartService: services.shoppingCartService
+            )
+        )
     }
 }
 

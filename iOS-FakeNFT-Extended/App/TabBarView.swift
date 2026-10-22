@@ -21,7 +21,9 @@ struct TabBarView: View {
                     }
                 }
             
+            // TODO как будет доступен API не забыть удалить и прокинуть действительный
             ShoppingCartRootView()
+                .environment(ServicesAssemblyMock())
                 .tabItem {
                     Label {
                         Text("Корзина")

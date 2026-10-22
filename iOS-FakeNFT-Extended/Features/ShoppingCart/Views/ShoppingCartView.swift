@@ -26,13 +26,27 @@ struct ShoppingCartView: View {
                     content
                 }
             case .error:
-                ErrorStateView(message: "Не удалось получить элементы корзины", onRetry: {
-                    // TODO добавить обновление списка
-                })
+                if (!viewModel.isErrorShown) {
+                    ErrorStateView(
+                        message: "Не удалось получить элементы корзины",
+                        onRetry: {
+                            Task {
+                                await viewModel.fetchNfts()
+                            }
+                        })
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.whitePrimary)
+        .alert("Не удалось получить данные", isPresented: $viewModel.isErrorShown) {
+            Button("Повторить") {
+                Task {
+                    await viewModel.fetchNfts()
+                }
+            }
+            Button("Отмена", role: .cancel) { }
+        }
         .task {
             await viewModel.fetchNfts()
         }
@@ -54,8 +68,8 @@ struct ShoppingCartView: View {
             .padding(.horizontal, 16)
             
             ShoppingCartSummaryView(
-                count: 4,
-                totalCost: 345.54,
+                count: viewModel.nfts.count,
+                totalCost: viewModel.totalShoppingCartCost,
                 onPayTap: {
                     // TODO добавить раутинг на экран оплаты
                 }
@@ -65,5 +79,11 @@ struct ShoppingCartView: View {
 }
 
 #Preview {
-    ShoppingCartView(viewModel: ShoppingCartViewModel())
+    let servicesAssembly = ServicesAssemblyMock()
+    
+    ShoppingCartView(
+        viewModel: ShoppingCartViewModel(
+            shoppingCartService: servicesAssembly.shoppingCartService
+        )
+    )
 }
