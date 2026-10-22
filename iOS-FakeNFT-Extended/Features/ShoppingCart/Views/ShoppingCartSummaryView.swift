@@ -18,7 +18,7 @@ struct ShoppingCartSummaryView: View {
                 Text("\(count) NFT")
                     .font(AppFont.regular15)
                     .foregroundStyle(.blackPrimary)
-
+                
                 Text(getPriceString(for: totalCost))
                     .font(AppFont.bold17)
                     .foregroundStyle(.greenUniversal)
@@ -36,7 +36,7 @@ struct ShoppingCartSummaryView: View {
                 topLeadingRadius: 12,
                 topTrailingRadius: 12
             )
-                .fill(.lightGrey)
+            .fill(.lightGrey)
         )
     }
     

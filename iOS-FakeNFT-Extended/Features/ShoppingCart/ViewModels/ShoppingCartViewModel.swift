@@ -19,7 +19,7 @@ final class ShoppingCartViewModel {
         guard case let .loaded(items) = viewState else {
             return []
         }
-
+        
         return items
     }
     var isNftsListEmpty: Bool { nfts.isEmpty }
@@ -51,7 +51,7 @@ final class ShoppingCartViewModel {
     }
     
     func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {
-        return ShoppingCartCellModel(
+        ShoppingCartCellModel(
             id: nft.id,
             name: nft.name,
             rating: nft.rating,

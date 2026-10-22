@@ -26,7 +26,7 @@ struct ShoppingCartView: View {
                     content
                 }
             case .error:
-                if (!viewModel.isErrorShown) {
+                if !viewModel.isErrorShown {
                     ErrorStateView(
                         message: "Не удалось получить элементы корзины",
                         onRetry: {
