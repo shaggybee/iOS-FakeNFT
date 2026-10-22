@@ -42,8 +42,10 @@ struct TabBarView: View {
                 }
             }
             .tag(Tab.catalog)
-
-            Text("Tab.cart")
+            
+            // TODO как будет доступен API не забыть удалить и прокинуть действительный
+            ShoppingCartRootView()
+                .environment(ServicesAssemblyMock())
                 .tabItem {
                     Label {
                         Text("Tab.cart")
