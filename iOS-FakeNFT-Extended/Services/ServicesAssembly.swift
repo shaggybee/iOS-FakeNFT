@@ -1,8 +1,15 @@
 import Foundation
 
+@MainActor
+protocol ServicesAssemblyProtocol {
+    var nftService: NftService { get }
+    var orderService: OrderServiceProtocol { get }
+    var shoppingCartService: ShoppingCartServiceProtocol { get }
+}
+
 @Observable
 @MainActor
-final class ServicesAssembly {
+final class ServicesAssembly: ServicesAssemblyProtocol {
 
     private let networkClient: NetworkClient
     private let nftStorage: NftStorage

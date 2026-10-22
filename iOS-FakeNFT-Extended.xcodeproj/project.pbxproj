@@ -93,6 +93,7 @@
 		6320F05F3083E9610095EB91 /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
 		6320F0603083E9D10095EB91 /* Features */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Features; sourceTree = "<group>"; };
 		6320F14C3083F3F70095EB91 /* Configurations */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Configurations; sourceTree = "<group>"; };
+		6373BD33308A1F2300FC72B9 /* Mock */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mock; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +243,7 @@
 		ABC5E1A92C31FABA002B4068 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				6373BD33308A1F2300FC72B9 /* Mock */,
 				ABC5E1AC2C31FB6C002B4068 /* Requests */,
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
@@ -295,6 +297,7 @@
 				6320F03E3082B9920095EB91 /* Resources */,
 				6320F05F3083E9610095EB91 /* App */,
 				6320F0603083E9D10095EB91 /* Features */,
+				6373BD33308A1F2300FC72B9 /* Mock */,
 			);
 			name = "iOS-FakeNFT-Extended";
 			packageProductDependencies = (
