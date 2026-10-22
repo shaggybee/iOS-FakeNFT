@@ -16,7 +16,8 @@ struct TabBarView: View {
                 }
                 .tag(Tab.profile)
             
-            CatalogView(collectionsService: servicesAssembly.collectionsService)
+            // TODO: вернуть servicesAssembly.collectionsService, когда API станет доступен
+            CatalogView(collectionsService: CollectionsServiceStub())
                 .tabItem {
                     Label {
                         Text("Каталог")
