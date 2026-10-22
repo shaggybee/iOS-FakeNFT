@@ -10,8 +10,8 @@ import SwiftUI
 struct CatalogView: View {
     @State private var viewModel: CatalogViewModel
 
-    init(collectionsService: CollectionsService) {
-        _viewModel = State(initialValue: CatalogViewModel(collectionsService: collectionsService))
+    init(viewModel: CatalogViewModel) {
+        _viewModel = State(initialValue: viewModel)
     }
 
     var body: some View {
@@ -40,26 +40,26 @@ struct CatalogView: View {
                 onRetry: viewModel.retryButtonTapped
             )
             .padding(.horizontal, Constants.horizontalPadding)
-        case .loaded(let collections) where collections.isEmpty:
+        case .empty:
             EmptyStateView(message: "Коллекций пока нет")
                 .padding(.horizontal, Constants.horizontalPadding)
-        case .loaded(let collections):
-            list(collections)
+        case .loaded(let cells):
+            list(cells)
         }
     }
 
-    private func list(_ collections: [NftCollection]) -> some View {
+    private func list(_ cells: [CatalogCellModel]) -> some View {
         List {
-            ForEach(collections) { collection in
+            ForEach(cells) { cell in
                 CatalogCellView(
-                    coverURL: collection.cover,
-                    title: viewModel.title(for: collection)
+                    coverURL: cell.coverURL,
+                    title: cell.title
                 )
                 .listRowInsets(Constants.rowInsets)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
                 .onAppear {
-                    viewModel.collectionDidAppear(collection)
+                    viewModel.cellDidAppear(cell)
                 }
             }
 
@@ -98,11 +98,10 @@ struct CatalogView: View {
             isPresented: $viewModel.isSortDialogPresented,
             titleVisibility: .visible
         ) {
-            Button("По названию") {
-                viewModel.sortOptionSelected(.name)
-            }
-            Button("По количеству NFT") {
-                viewModel.sortOptionSelected(.nftCount)
+            ForEach(CatalogSortOption.allCases, id: \.self) { option in
+                Button(option.title) {
+                    viewModel.sortOptionSelected(option)
+                }
             }
             Button("Закрыть", role: .cancel) {}
         }
@@ -117,5 +116,5 @@ private extension CatalogView {
 }
 
 #Preview {
-    CatalogView(collectionsService: CollectionsServiceStub())
+    CatalogView(viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()))
 }

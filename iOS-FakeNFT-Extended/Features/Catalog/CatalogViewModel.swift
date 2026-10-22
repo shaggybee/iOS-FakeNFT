@@ -10,22 +10,19 @@ import Foundation
 @Observable
 @MainActor
 final class CatalogViewModel {
-    private(set) var state: ViewState<[NftCollection]> = .idle
+    private(set) var state: ViewState<[CatalogCellModel]> = .idle
     private(set) var isLoadingNextPage = false
     private(set) var isNextPageFailed = false
     var isSortDialogPresented = false
 
     private let collectionsService: CollectionsService
+    private var collections: [NftCollection] = []
     private var nextPage = 0
     private var hasMorePages = true
     private var sortOption: CatalogSortOption?
 
     init(collectionsService: CollectionsService) {
         self.collectionsService = collectionsService
-    }
-
-    func title(for collection: NftCollection) -> String {
-        "\(collection.name) (\(collection.nfts.count))"
     }
 
     func onAppear() {
@@ -37,9 +34,9 @@ final class CatalogViewModel {
         Task { await loadFirstPage() }
     }
 
-    func collectionDidAppear(_ collection: NftCollection) {
-        guard case .loaded(let collections) = state,
-              collection.id == collections.last?.id,
+    func cellDidAppear(_ cell: CatalogCellModel) {
+        guard case .loaded = state,
+              cell.id == collections.last?.id,
               !isNextPageFailed else { return }
         Task { await loadNextPage() }
     }
@@ -54,19 +51,25 @@ final class CatalogViewModel {
 
     func sortOptionSelected(_ option: CatalogSortOption) {
         sortOption = option
-        guard case .loaded(let collections) = state else { return }
-        state = .loaded(sorted(collections))
+        guard case .loaded = state else { return }
+        collections = sorted(collections)
+        state = .loaded(cellModels)
     }
-}
-
-enum CatalogSortOption {
-    case name
-    case nftCount
 }
 
 private extension CatalogViewModel {
     enum Constants {
         static let pageSize = 10
+    }
+
+    var cellModels: [CatalogCellModel] {
+        collections.map { collection in
+            CatalogCellModel(
+                id: collection.id,
+                coverURL: collection.cover,
+                title: "\(collection.name) (\(collection.nfts.count))"
+            )
+        }
     }
 
     func loadFirstPage() async {
@@ -76,8 +79,8 @@ private extension CatalogViewModel {
         isNextPageFailed = false
 
         do {
-            let collections = try await loadPage(nextPage)
-            state = .loaded(sorted(collections))
+            collections = sorted(try await loadPage(nextPage))
+            state = collections.isEmpty ? .empty : .loaded(cellModels)
         } catch {
             state = .error(error)
         }
@@ -92,9 +95,10 @@ private extension CatalogViewModel {
 
         do {
             let page = try await loadPage(nextPage)
-            guard case .loaded(let collections) = state else { return }
+            guard case .loaded = state else { return }
             let loadedIds = Set(collections.map(\.id))
-            state = .loaded(sorted(collections + page.filter { !loadedIds.contains($0.id) }))
+            collections = sorted(collections + page.filter { !loadedIds.contains($0.id) })
+            state = .loaded(cellModels)
         } catch {
             isNextPageFailed = true
         }

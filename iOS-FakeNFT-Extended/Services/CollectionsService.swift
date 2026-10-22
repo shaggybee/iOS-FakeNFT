@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CollectionsService {
+protocol CollectionsService: Sendable {
     func loadCollections(page: Int, size: Int) async throws -> [NftCollection]
 }
 
