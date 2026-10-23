@@ -22,7 +22,7 @@ final class ShoppingCartViewModel {
             return []
         }
         
-        return items
+        return sort(nfts: items, by: sortOption)
     }
     var isNftsListEmpty: Bool { nfts.isEmpty }
     var totalShoppingCartCost: Double {
@@ -64,5 +64,13 @@ final class ShoppingCartViewModel {
             price: nft.price,
             imageUrl: URL(string: nft.images.first ?? "")
         )
+    }
+    
+    private func sort(nfts: [Nft], by option: NftSortOption) -> [Nft] {
+        switch option {
+        case .title: nfts.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .price: nfts.sorted { $0.price < $1.price }
+        case .rating: nfts.sorted { $0.rating < $1.rating }
+        }
     }
 }
