@@ -12,7 +12,6 @@ struct ShoppingCartView: View {
     
     @State private var viewModel: ShoppingCartViewModel
     @State private var isSortSheetPresented = false
-    @State private var deletingNft: Nft?
     @AppStorage(Self.sortOptionKey) private var sortOption: NftSortOption = .title
     
     let onPayTap: () -> Void
@@ -34,7 +33,7 @@ struct ShoppingCartView: View {
                     content
                 }
             case .error:
-                if !viewModel.isErrorShown {
+                if !viewModel.isFetchingNftsErrorShown {
                     ErrorStateView(
                         message: "Не удалось получить элементы корзины",
                         onRetry: {
@@ -47,7 +46,7 @@ struct ShoppingCartView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.whitePrimary)
-        .alert("Не удалось получить данные", isPresented: $viewModel.isErrorShown) {
+        .alert("Не удалось получить данные", isPresented: $viewModel.isFetchingNftsErrorShown) {
             Button("Повторить") {
                 Task {
                     await viewModel.loadNfts()
@@ -77,20 +76,41 @@ struct ShoppingCartView: View {
             
             Button("Закрыть", role: .cancel) { }
         }
-        .fullScreenCover(item: $deletingNft) { nft in
+        .fullScreenCover(item: $viewModel.nftPendingDeletion) { nft in
             ZStack {
                 ShoppingCartDeleteNftConfirmationView(
                     nft: nft,
-                    onDeleteTap: {},
+                    onDeleteTap: {
+                        Task {
+                            await viewModel.delete(nft: nft)
+                        }
+                    },
                     onCancelTap: {
-                        deletingNft = nil
+                        viewModel.nftPendingDeletion = nil
                     }
                 )
+                .disabled(viewModel.isDeleting)
+                
+                if (viewModel.isDeleting) {
+                    BlockingProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            .alert("Не удалось удалить NFT", isPresented: $viewModel.isDeletingNftErrorShown) {
+                Button("Повторить") {
+                    Task {
+                        guard let deletingNft = viewModel.nftPendingDeletion else {
+                            return
+                        }
+                        
+                        await viewModel.delete(nft: deletingNft)
+                    }
+                }
+                Button("Отмена", role: .cancel) {
+                    viewModel.isDeleting = false
+                }
             }
             .presentationBackground(.ultraThinMaterial)
-        }
-        .task {
-            await viewModel.loadNfts()
         }
         .onChange(of: sortOption, initial: true) {
             viewModel.apply(sort: $1)
@@ -104,7 +124,7 @@ struct ShoppingCartView: View {
                     ForEach(viewModel.nfts, id: \.id) { nft in
                         ShoppingCartCellView(
                             model: viewModel.getPreparedCartCellModel(from: nft)) {
-                                deletingNft = nft
+                                viewModel.nftPendingDeletion = nft
                             }
                     }
                 }

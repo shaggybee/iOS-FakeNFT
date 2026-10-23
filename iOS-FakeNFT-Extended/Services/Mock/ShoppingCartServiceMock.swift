@@ -10,15 +10,28 @@ import Foundation
 actor ShoppingCartServiceMock: ShoppingCartServiceProtocol {
     private let orderService: OrderServiceProtocol
     private let nftService: NftService
-
+    
+    var loadedNfts: [Nft] = []
+    var isStorageInit: Bool = false
+    
     init(orderService: OrderServiceProtocol, nftService: NftService) {
         self.orderService = orderService
         self.nftService = nftService
     }
-
+    
     func loadShoppingCart() async throws -> [Nft] {
+        if isStorageInit {
+            try await Task.sleep(for: .seconds(2))
+            
+            return loadedNfts
+        }
+        
         let order = try await orderService.loadOrder()
-
-        return try await nftService.loadNfts(ids: order.nfts)
+        let nfts = try await nftService.loadNfts(ids: order.nfts)
+        
+        loadedNfts = nfts
+        isStorageInit = true
+        
+        return nfts
     }
 }

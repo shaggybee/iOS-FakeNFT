@@ -80,7 +80,14 @@ struct ShoppingCartDeleteNftConfirmationView: View {
 
 #Preview {
     ShoppingCartDeleteNftConfirmationView(
-        nft: MockConstants.nfts.first!,
+        nft: Nft(
+            id: "1",
+            name: "тестовый 1",
+            images: [""],
+            description: "",
+            rating: 1,
+            price: 12,
+            author: ""),
         onDeleteTap: {},
         onCancelTap: {}
     )

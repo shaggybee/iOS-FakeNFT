@@ -14,8 +14,11 @@ final class ShoppingCartViewModel {
     
     let sortOptions: [NftSortOption] = [.price, .rating, .title]
     let shoppingCartService: ShoppingCartServiceProtocol
-    var isErrorShown: Bool = false
+    var isFetchingNftsErrorShown: Bool = false
+    var isDeletingNftErrorShown: Bool = false
     var sortOption: NftSortOption = .title
+    var nftPendingDeletion: Nft?
+    var isDeleting: Bool = false
     
     var nfts: [Nft] {
         guard case let .loaded(items) = viewState else {
@@ -36,19 +39,15 @@ final class ShoppingCartViewModel {
     }
     
     func loadNfts() async {
-        if case .loaded = viewState {
-            return
-        }
-        
-        await fetchNfts()
-    }
-    
-    func reloadNfts() async {
         await fetchNfts()
     }
     
     func apply(sort: NftSortOption) {
         sortOption = sort
+    }
+    
+    func delete(nft: Nft) async {
+        isDeleting = true
     }
     
     func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {
@@ -73,7 +72,7 @@ final class ShoppingCartViewModel {
         } catch {
             guard !Task.isCancelled else { return }
             
-            isErrorShown = true
+            isFetchingNftsErrorShown = true
             viewState = .error(nil)
         }
     }
