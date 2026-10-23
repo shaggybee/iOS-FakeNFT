@@ -8,9 +8,23 @@
 import SwiftUI
 import Kingfisher
 
+// MARK: - Constants
+
+private enum Constants {
+    static let coverHeight: CGFloat = 140
+    static let coverCornerRadius: CGFloat = 12
+}
+
+// MARK: - CatalogCellView
+
 struct CatalogCellView: View {
+
+    // MARK: - Properties
+
     let coverURL: URL?
     let title: String
+
+    // MARK: - Body
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -22,6 +36,8 @@ struct CatalogCellView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    // MARK: - Private Views
 
     private var cover: some View {
         Color(.lightGrey)
@@ -37,12 +53,7 @@ struct CatalogCellView: View {
     }
 }
 
-private extension CatalogCellView {
-    enum Constants {
-        static let coverHeight: CGFloat = 140
-        static let coverCornerRadius: CGFloat = 12
-    }
-}
+// MARK: - Preview
 
 #Preview {
     CatalogCellView(

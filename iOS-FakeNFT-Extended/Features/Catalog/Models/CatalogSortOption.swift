@@ -7,16 +7,16 @@
 
 import Foundation
 
-enum CatalogSortOption: CaseIterable {
+enum CatalogSortOption: String, CaseIterable {
     case name
     case nftCount
 
     var title: String {
         switch self {
         case .name:
-            "По названию"
+            String(localized: "Sort.byName")
         case .nftCount:
-            "По количеству NFT"
+            String(localized: "Sort.byNftCount")
         }
     }
 }

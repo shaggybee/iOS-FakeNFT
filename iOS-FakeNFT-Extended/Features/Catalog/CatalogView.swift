@@ -36,12 +36,12 @@ struct CatalogView: View {
             LoadingView()
         case .error:
             ErrorStateView(
-                message: "Не удалось загрузить коллекции",
+                message: String(localized: "Catalog.loadingError"),
                 onRetry: viewModel.retryButtonTapped
             )
             .padding(.horizontal, Constants.horizontalPadding)
         case .empty:
-            EmptyStateView(message: "Коллекций пока нет")
+            EmptyStateView(message: String(localized: "Catalog.empty"))
                 .padding(.horizontal, Constants.horizontalPadding)
         case .loaded(let cells):
             list(cells)
@@ -78,7 +78,7 @@ struct CatalogView: View {
                 .tint(.blackPrimary)
         } else if viewModel.isNextPageFailed {
             BaseButton(
-                title: "Повторить",
+                title: String(localized: "Error.repeat"),
                 height: 44,
                 action: viewModel.nextPageRetryButtonTapped
             )
@@ -94,7 +94,7 @@ struct CatalogView: View {
         }
         .tint(.blackPrimary)
         .confirmationDialog(
-            "Сортировка",
+            String(localized: "Sort.title"),
             isPresented: $viewModel.isSortDialogPresented,
             titleVisibility: .visible
         ) {
@@ -103,7 +103,7 @@ struct CatalogView: View {
                     viewModel.sortOptionSelected(option)
                 }
             }
-            Button("Закрыть", role: .cancel) {}
+            Button(String(localized: "Common.close"), role: .cancel) {}
         }
     }
 }

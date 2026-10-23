@@ -16,13 +16,24 @@ final class CatalogViewModel {
     var isSortDialogPresented = false
 
     private let collectionsService: CollectionsService
+    private let userDefaults: UserDefaults
     private var collections: [NftCollection] = []
     private var nextPage = 0
     private var hasMorePages = true
-    private var sortOption: CatalogSortOption?
+    private var sortOption: CatalogSortOption {
+        didSet {
+            userDefaults.set(sortOption.rawValue, forKey: Constants.sortOptionKey)
+        }
+    }
 
-    init(collectionsService: CollectionsService) {
+    init(
+        collectionsService: CollectionsService,
+        userDefaults: UserDefaults = .standard
+    ) {
         self.collectionsService = collectionsService
+        self.userDefaults = userDefaults
+        self.sortOption = userDefaults.string(forKey: Constants.sortOptionKey)
+            .flatMap(CatalogSortOption.init(rawValue:)) ?? .nftCount
     }
 
     func onAppear() {
@@ -36,8 +47,10 @@ final class CatalogViewModel {
 
     func cellDidAppear(_ cell: CatalogCellModel) {
         guard case .loaded = state,
-              cell.id == collections.last?.id,
-              !isNextPageFailed else { return }
+              hasMorePages,
+              !isLoadingNextPage,
+              !isNextPageFailed,
+              collections.suffix(Constants.prefetchThreshold).contains(where: { $0.id == cell.id }) else { return }
         Task { await loadNextPage() }
     }
 
@@ -60,6 +73,8 @@ final class CatalogViewModel {
 private extension CatalogViewModel {
     enum Constants {
         static let pageSize = 10
+        static let prefetchThreshold = 3
+        static let sortOptionKey = "catalogSortOption"
     }
 
     var cellModels: [CatalogCellModel] {
@@ -74,12 +89,13 @@ private extension CatalogViewModel {
 
     func loadFirstPage() async {
         state = .loading
-        nextPage = 0
-        hasMorePages = true
         isNextPageFailed = false
 
         do {
-            collections = sorted(try await loadPage(nextPage))
+            let firstPage = 0
+            let page = try await loadPage(firstPage)
+            collections = sorted(page)
+            updatePagination(afterLoading: firstPage, itemsCount: page.count)
             state = collections.isEmpty ? .empty : .loaded(cellModels)
         } catch {
             state = .error(error)
@@ -94,10 +110,12 @@ private extension CatalogViewModel {
         defer { isLoadingNextPage = false }
 
         do {
-            let page = try await loadPage(nextPage)
+            let pageNumber = nextPage
+            let page = try await loadPage(pageNumber)
             guard case .loaded = state else { return }
             let loadedIds = Set(collections.map(\.id))
             collections = sorted(collections + page.filter { !loadedIds.contains($0.id) })
+            updatePagination(afterLoading: pageNumber, itemsCount: page.count)
             state = .loaded(cellModels)
         } catch {
             isNextPageFailed = true
@@ -105,16 +123,16 @@ private extension CatalogViewModel {
     }
 
     func loadPage(_ page: Int) async throws -> [NftCollection] {
-        let collections = try await collectionsService.loadCollections(page: page, size: Constants.pageSize)
-        hasMorePages = collections.count == Constants.pageSize
+        try await collectionsService.loadCollections(page: page, size: Constants.pageSize)
+    }
+
+    func updatePagination(afterLoading page: Int, itemsCount: Int) {
         nextPage = page + 1
-        return collections
+        hasMorePages = itemsCount == Constants.pageSize
     }
 
     func sorted(_ collections: [NftCollection]) -> [NftCollection] {
         switch sortOption {
-        case .none:
-            collections
         case .name:
             collections.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         case .nftCount:

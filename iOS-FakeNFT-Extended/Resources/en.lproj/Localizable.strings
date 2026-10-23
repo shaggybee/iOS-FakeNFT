@@ -1,6 +1,12 @@
-"Tab.catalog" = "Каталог";
+"Catalog.empty" = "Коллекций пока нет";
+"Catalog.loadingError" = "Не удалось загрузить коллекции";
 "Catalog.openNft" = "Открыть Nft";
+"Common.close" = "Закрыть";
 "Error.network" = "Произошла ошибка сети";
-"Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
+"Error.unknown" = "Произошла неизвестная ошибка";
+"Sort.byName" = "По названию";
+"Sort.byNftCount" = "По количеству NFT";
+"Sort.title" = "Сортировка";
+"Tab.catalog" = "Каталог";
