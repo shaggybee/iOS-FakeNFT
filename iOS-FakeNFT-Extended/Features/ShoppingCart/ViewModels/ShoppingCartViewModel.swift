@@ -35,21 +35,16 @@ final class ShoppingCartViewModel {
         self.shoppingCartService = shoppingCartService
     }
     
-    func fetchNfts() async {
-        viewState = .loading
-        
-        do {
-            let result = try await shoppingCartService.loadShoppingCart()
-            
-            viewState = .loaded(result)
-        } catch is CancellationError {
-            //
-        } catch {
-            guard !Task.isCancelled else { return }
-            
-            isErrorShown = true
-            viewState = .error(nil)
+    func loadNfts() async {
+        if case .loaded = viewState {
+            return
         }
+        
+        await fetchNfts()
+    }
+    
+    func reloadNfts() async {
+        await fetchNfts()
     }
     
     func apply(sort: NftSortOption) {
@@ -64,6 +59,23 @@ final class ShoppingCartViewModel {
             price: nft.price,
             imageUrl: URL(string: nft.images.first ?? "")
         )
+    }
+    
+    private func fetchNfts() async {
+        viewState = .loading
+        
+        do {
+            let result = try await shoppingCartService.loadShoppingCart()
+            
+            viewState = .loaded(result)
+        } catch is CancellationError {
+            //
+        } catch {
+            guard !Task.isCancelled else { return }
+            
+            isErrorShown = true
+            viewState = .error(nil)
+        }
     }
     
     private func sort(nfts: [Nft], by option: NftSortOption) -> [Nft] {

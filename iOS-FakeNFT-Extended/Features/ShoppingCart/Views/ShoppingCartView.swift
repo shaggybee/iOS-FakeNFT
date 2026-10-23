@@ -14,8 +14,11 @@ struct ShoppingCartView: View {
     @State private var isSortSheetPresented = false
     @AppStorage(Self.sortOptionKey) private var sortOption: NftSortOption = .title
     
-    init(viewModel: ShoppingCartViewModel) {
+    let onPayTap: () -> Void
+    
+    init(viewModel: ShoppingCartViewModel, onPayTap: @escaping () -> Void) {
         self.viewModel = viewModel
+        self.onPayTap = onPayTap
     }
     
     var body: some View {
@@ -35,7 +38,7 @@ struct ShoppingCartView: View {
                         message: "Не удалось получить элементы корзины",
                         onRetry: {
                             Task {
-                                await viewModel.fetchNfts()
+                                await viewModel.loadNfts()
                             }
                         })
                 }
@@ -46,7 +49,7 @@ struct ShoppingCartView: View {
         .alert("Не удалось получить данные", isPresented: $viewModel.isErrorShown) {
             Button("Повторить") {
                 Task {
-                    await viewModel.fetchNfts()
+                    await viewModel.loadNfts()
                 }
             }
             Button("Отмена", role: .cancel) { }
@@ -74,7 +77,7 @@ struct ShoppingCartView: View {
             Button("Закрыть", role: .cancel) { }
         }
         .task {
-            await viewModel.fetchNfts()
+            await viewModel.loadNfts()
         }
         .onChange(of: sortOption, initial: true) {
             viewModel.apply(sort: $1)
@@ -99,9 +102,7 @@ struct ShoppingCartView: View {
             ShoppingCartSummaryView(
                 count: viewModel.nfts.count,
                 totalCost: viewModel.totalShoppingCartCost,
-                onPayTap: {
-                    // TODO добавить раутинг на экран оплаты
-                }
+                onPayTap: onPayTap
             )
         }
     }
@@ -114,7 +115,8 @@ struct ShoppingCartView: View {
         ShoppingCartView(
             viewModel: ShoppingCartViewModel(
                 shoppingCartService: servicesAssembly.shoppingCartService
-            )
+            ),
+            onPayTap: {}
         )
     }
 }
