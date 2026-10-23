@@ -12,8 +12,10 @@ import Foundation
 final class ShoppingCartViewModel {
     private(set) var viewState: ViewState<[Nft]> = .idle
     
+    let sortOptions: [NftSortOption] = [.price, .rating, .title]
     let shoppingCartService: ShoppingCartServiceProtocol
     var isErrorShown: Bool = false
+    var sortOption: NftSortOption = .title
     
     var nfts: [Nft] {
         guard case let .loaded(items) = viewState else {
@@ -48,6 +50,10 @@ final class ShoppingCartViewModel {
             isErrorShown = true
             viewState = .error(nil)
         }
+    }
+    
+    func apply(sort: NftSortOption) {
+        sortOption = sort
     }
     
     func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {

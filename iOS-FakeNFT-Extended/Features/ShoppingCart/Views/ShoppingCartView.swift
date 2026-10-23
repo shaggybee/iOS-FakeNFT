@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
+    private static let sortOptionKey = "shoppingCart.sortOptionKey"
+    
     @State private var viewModel: ShoppingCartViewModel
+    @State private var isSortSheetPresented = false
+    @AppStorage(Self.sortOptionKey) private var sortOption: NftSortOption = .title
     
     init(viewModel: ShoppingCartViewModel) {
         self.viewModel = viewModel
@@ -47,8 +51,33 @@ struct ShoppingCartView: View {
             }
             Button("Отмена", role: .cancel) { }
         }
+        .toolbar {
+            if !viewModel.isNftsListEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isSortSheetPresented = true
+                    } label: {
+                        Image(.sort40)
+                            .foregroundStyle(.blackPrimary)
+                            .frame(width: 42, height: 42)
+                    }
+                }
+            }
+        }
+        .confirmationDialog("Сортировка", isPresented: $isSortSheetPresented, titleVisibility: .visible) {
+            ForEach(viewModel.sortOptions, id: \.self) { option in
+                Button(option.title) {
+                    sortOption = option
+                }
+            }
+            
+            Button("Закрыть", role: .cancel) { }
+        }
         .task {
             await viewModel.fetchNfts()
+        }
+        .onChange(of: sortOption, initial: true) {
+            viewModel.apply(sort: $1)
         }
     }
     
@@ -81,9 +110,11 @@ struct ShoppingCartView: View {
 #Preview {
     let servicesAssembly = ServicesAssemblyMock()
     
-    ShoppingCartView(
-        viewModel: ShoppingCartViewModel(
-            shoppingCartService: servicesAssembly.shoppingCartService
+    NavigationStack {
+        ShoppingCartView(
+            viewModel: ShoppingCartViewModel(
+                shoppingCartService: servicesAssembly.shoppingCartService
+            )
         )
-    )
+    }
 }

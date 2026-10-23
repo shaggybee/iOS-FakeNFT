@@ -13,11 +13,13 @@ struct ShoppingCartRootView: View {
     
     var body: some View {
         // TODO в последующих задачах реализовать навигацию
-        ShoppingCartView(
-            viewModel: ShoppingCartViewModel(
-                shoppingCartService: services.shoppingCartService
+        NavigationStack {
+            ShoppingCartView(
+                viewModel: ShoppingCartViewModel(
+                    shoppingCartService: services.shoppingCartService
+                )
             )
-        )
+        }
     }
 }
 
