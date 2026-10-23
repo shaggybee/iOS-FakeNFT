@@ -18,10 +18,12 @@ struct AppRootView: App {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .whitePrimary
+        appearance.shadowColor = .clear
         
         appearance.stackedLayoutAppearance.normal.iconColor = .blackPrimary
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor(resource: .blackPrimary)]
         
+        UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 }
