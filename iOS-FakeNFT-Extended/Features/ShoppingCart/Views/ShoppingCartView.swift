@@ -12,6 +12,7 @@ struct ShoppingCartView: View {
     
     @State private var viewModel: ShoppingCartViewModel
     @State private var isSortSheetPresented = false
+    @State private var deletingNft: Nft?
     @AppStorage(Self.sortOptionKey) private var sortOption: NftSortOption = .title
     
     let onPayTap: () -> Void
@@ -76,6 +77,18 @@ struct ShoppingCartView: View {
             
             Button("Закрыть", role: .cancel) { }
         }
+        .fullScreenCover(item: $deletingNft) { nft in
+            ZStack {
+                ShoppingCartDeleteNftConfirmationView(
+                    nft: nft,
+                    onDeleteTap: {},
+                    onCancelTap: {
+                        deletingNft = nil
+                    }
+                )
+            }
+            .presentationBackground(.ultraThinMaterial)
+        }
         .task {
             await viewModel.loadNfts()
         }
@@ -91,7 +104,7 @@ struct ShoppingCartView: View {
                     ForEach(viewModel.nfts, id: \.id) { nft in
                         ShoppingCartCellView(
                             model: viewModel.getPreparedCartCellModel(from: nft)) {
-                                // TODO добавить удаление NFT
+                                deletingNft = nft
                             }
                     }
                 }
