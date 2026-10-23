@@ -34,4 +34,8 @@ actor ShoppingCartServiceMock: ShoppingCartServiceProtocol {
         
         return nfts
     }
+    
+    func deleteNfts(except ids: [String]) async throws {
+        loadedNfts = loadedNfts.filter { ids.contains($0.id) }
+    }
 }

@@ -48,6 +48,19 @@ final class ShoppingCartViewModel {
     
     func delete(nft: Nft) async {
         isDeleting = true
+    
+        do {
+            let remainingNfts = nfts.filter { $0.id != nft.id }
+            
+            try await shoppingCartService.deleteNfts(except: remainingNfts.map({ $0.id }))
+            
+            viewState = .loaded(remainingNfts)
+            nftPendingDeletion = nil
+            isDeleting = false
+        } catch {
+            isDeleting = false
+            isDeletingNftErrorShown = true
+        }
     }
     
     func getPreparedCartCellModel(from nft: Nft) -> ShoppingCartCellModel {
