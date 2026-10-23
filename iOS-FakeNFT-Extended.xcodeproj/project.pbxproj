@@ -84,6 +84,7 @@
 		6320F05F3083E9610095EB91 /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
 		6320F0603083E9D10095EB91 /* Features */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Features; sourceTree = "<group>"; };
 		6320F14C3083F3F70095EB91 /* Configurations */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Configurations; sourceTree = "<group>"; };
+		63569BA5308B661B00723CF1 /* Sorting */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Sorting; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +188,7 @@
 		ABC5E19A2C31F687002B4068 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				63569BA5308B661B00723CF1 /* Sorting */,
 				ABC5E19B2C31F69C002B4068 /* MemoryStorage */,
 				ABC5E1A22C31F7E8002B4068 /* NetworkClient */,
 				ABC5E1A72C31FA90002B4068 /* DateFormatters+Presets.swift */,
@@ -281,6 +283,7 @@
 				6320F03E3082B9920095EB91 /* Resources */,
 				6320F05F3083E9610095EB91 /* App */,
 				6320F0603083E9D10095EB91 /* Features */,
+				63569BA5308B661B00723CF1 /* Sorting */,
 			);
 			name = "iOS-FakeNFT-Extended";
 			packageProductDependencies = (
