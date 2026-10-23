@@ -12,15 +12,20 @@ import Foundation
 final class ShoppingCartViewModel {
     private(set) var viewState: ViewState<[Nft]> = .idle
     
+    let sortOptions: [NftSortOption] = [.price, .rating, .title]
     let shoppingCartService: ShoppingCartServiceProtocol
-    var isErrorShown: Bool = false
+    var isFetchingNftsErrorShown: Bool = false
+    var isDeletingNftErrorShown: Bool = false
+    var sortOption: NftSortOption = .title
+    var nftPendingDeletion: Nft?
+    var isDeleting: Bool = false
     
     var nfts: [Nft] {
         guard case let .loaded(items) = viewState else {
             return []
         }
         
-        return items
+        return sort(nfts: items, by: sortOption)
     }
     var isNftsListEmpty: Bool { nfts.isEmpty }
     var totalShoppingCartCost: Double {
@@ -33,20 +38,28 @@ final class ShoppingCartViewModel {
         self.shoppingCartService = shoppingCartService
     }
     
-    func fetchNfts() async {
-        viewState = .loading
-        
+    func loadNfts() async {
+        await fetchNfts()
+    }
+    
+    func apply(sort: NftSortOption) {
+        sortOption = sort
+    }
+    
+    func delete(nft: Nft) async {
+        isDeleting = true
+    
         do {
-            let result = try await shoppingCartService.loadShoppingCart()
+            let remainingNfts = nfts.filter { $0.id != nft.id }
             
-            viewState = .loaded(result)
-        } catch is CancellationError {
-            //
+            try await shoppingCartService.deleteNfts(except: remainingNfts.map({ $0.id }))
+            
+            viewState = .loaded(remainingNfts)
+            nftPendingDeletion = nil
+            isDeleting = false
         } catch {
-            guard !Task.isCancelled else { return }
-            
-            isErrorShown = true
-            viewState = .error(nil)
+            isDeleting = false
+            isDeletingNftErrorShown = true
         }
     }
     
@@ -58,5 +71,30 @@ final class ShoppingCartViewModel {
             price: nft.price,
             imageUrl: URL(string: nft.images.first ?? "")
         )
+    }
+    
+    private func fetchNfts() async {
+        viewState = .loading
+        
+        do {
+            let result = try await shoppingCartService.loadShoppingCart()
+            
+            viewState = .loaded(result)
+        } catch is CancellationError {
+            //
+        } catch {
+            guard !Task.isCancelled else { return }
+            
+            isFetchingNftsErrorShown = true
+            viewState = .error(nil)
+        }
+    }
+    
+    private func sort(nfts: [Nft], by option: NftSortOption) -> [Nft] {
+        switch option {
+        case .title: nfts.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .price: nfts.sorted { $0.price < $1.price }
+        case .rating: nfts.sorted { $0.rating < $1.rating }
+        }
     }
 }

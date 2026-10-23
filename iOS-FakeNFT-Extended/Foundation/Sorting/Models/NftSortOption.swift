@@ -17,9 +17,9 @@ enum NftSortOption: String, CaseIterable {
         case .title:
             "По названию"
         case .rating:
-            "По цене"
-        case .price:
             "По рейтингу"
+        case .price:
+            "По цене"
         }
     }
 }
