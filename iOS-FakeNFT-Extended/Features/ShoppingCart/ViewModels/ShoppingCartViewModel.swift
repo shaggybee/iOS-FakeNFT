@@ -94,7 +94,7 @@ final class ShoppingCartViewModel {
         switch option {
         case .title: nfts.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
         case .price: nfts.sorted { $0.price < $1.price }
-        case .rating: nfts.sorted { $0.rating < $1.rating }
+        case .rating: nfts.sorted { $0.rating > $1.rating }
         }
     }
 }
