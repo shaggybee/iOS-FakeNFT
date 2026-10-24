@@ -30,7 +30,7 @@ struct TabBarView: View {
                     }
                 }
             
-            Text("Статистика")
+            StatisticsRatingView()
                 .tabItem {
                     Label {
                         Text("Статистика")
