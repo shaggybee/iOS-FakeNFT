@@ -21,4 +21,9 @@ final class ServicesAssembly {
             storage: nftStorage
         )
     }
+    
+    // Эпик: статистика
+    var usersService: UsersService {
+        UsersServiceImpl(networkClient: networkClient)
+    }
 }

@@ -31,6 +31,14 @@
 		ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */; };
 		ABC5E1D82C3204A9002B4068 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = ABC5E1D72C3204A9002B4068 /* Kingfisher */; };
 		ABC5E1E22C320535002B4068 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = ABC5E1E12C320535002B4068 /* ProgressHUD */; };
+		DB1DE8A5308A08EA002DAECC /* RatingUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1DE8A4308A08E8002DAECC /* RatingUserRow.swift */; };
+		DB1DE8A8308A09F4002DAECC /* StatisticsRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1DE8A7308A09F3002DAECC /* StatisticsRatingView.swift */; };
+		DB45CC6F308B930C0056B7C3 /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45CC6E308B930A0056B7C3 /* RatingViewModel.swift */; };
+		DB45CC71308BA2B10056B7C3 /* UsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */; };
+		DB4942B8308CA1D700DE3C38 /* RatingUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */; };
+		DB4942BB308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md in Resources */ = {isa = PBXBuildFile; fileRef = DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */; };
+		DBADCAF1308BF667008A1EA6 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBADCAF0308BF65B008A1EA6 /* UserModel.swift */; };
+		DBADCAF3308BF747008A1EA6 /* UsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBADCAF2308BF738008A1EA6 /* UsersService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +85,14 @@
 		ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestConstants.swift; sourceTree = "<group>"; };
 		ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleRequest.swift; sourceTree = "<group>"; };
 		ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesAssembly.swift; sourceTree = "<group>"; };
+		DB1DE8A4308A08E8002DAECC /* RatingUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingUserRow.swift; sourceTree = "<group>"; };
+		DB1DE8A7308A09F3002DAECC /* StatisticsRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRatingView.swift; sourceTree = "<group>"; };
+		DB45CC6E308B930A0056B7C3 /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
+		DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRequest.swift; sourceTree = "<group>"; };
+		DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingUser.swift; sourceTree = "<group>"; };
+		DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ElinaM_statistics-decomposition.md"; sourceTree = "<group>"; };
+		DBADCAF0308BF65B008A1EA6 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		DBADCAF2308BF738008A1EA6 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -116,6 +132,7 @@
 		ABC5E15F2C31F5AF002B4068 = {
 			isa = PBXGroup;
 			children = (
+				DB4942B9308CA87B00DE3C38 /* docs */,
 				6320F14C3083F3F70095EB91 /* Configurations */,
 				ABC5E16A2C31F5AF002B4068 /* iOS-FakeNFT-Extended */,
 				ABC5E17B2C31F5B0002B4068 /* iOS-FakeNFT-ExtendedTests */,
@@ -137,6 +154,7 @@
 		ABC5E16A2C31F5AF002B4068 /* iOS-FakeNFT-Extended */ = {
 			isa = PBXGroup;
 			children = (
+				DB1DE8A2308A08A4002DAECC /* Statistics */,
 				6320F14F3083F5B00095EB91 /* Info.plist */,
 				6320F0603083E9D10095EB91 /* Features */,
 				6320F05F3083E9610095EB91 /* App */,
@@ -214,6 +232,7 @@
 		ABC5E19F2C31F6CB002B4068 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				DBADCAF0308BF65B008A1EA6 /* UserModel.swift */,
 				ABC5E1A02C31F6D7002B4068 /* Nft.swift */,
 			);
 			path = Network;
@@ -234,6 +253,7 @@
 				ABC5E1AC2C31FB6C002B4068 /* Requests */,
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
+				DBADCAF2308BF738008A1EA6 /* UsersService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -244,6 +264,7 @@
 				ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */,
 				ABC5E1AD2C31FB7F002B4068 /* NftByIdRequest.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
+				DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -259,6 +280,49 @@
 				6303A4DB3087A2EE00925C37 /* RatingView.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		DB1DE8A2308A08A4002DAECC /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				DB4942B6308CA1BC00DE3C38 /* Models */,
+				DB1DE8A6308A08F6002DAECC /* ViewModels */,
+				DB1DE8A3308A08D5002DAECC /* Views */,
+			);
+			path = Statistics;
+			sourceTree = "<group>";
+		};
+		DB1DE8A3308A08D5002DAECC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DB1DE8A4308A08E8002DAECC /* RatingUserRow.swift */,
+				DB1DE8A7308A09F3002DAECC /* StatisticsRatingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DB1DE8A6308A08F6002DAECC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				DB45CC6E308B930A0056B7C3 /* RatingViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		DB4942B6308CA1BC00DE3C38 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DB4942B9308CA87B00DE3C38 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */,
+			);
+			path = docs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -380,6 +444,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABC5E1732C31F5AF002B4068 /* Preview Assets.xcassets in Resources */,
+				DB4942BB308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,14 +493,21 @@
 				6303A4DC3087A2EE00925C37 /* RatingView.swift in Sources */,
 				ABC5E1992C31F666002B4068 /* Fonts.swift in Sources */,
 				ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */,
+				DB45CC6F308B930C0056B7C3 /* RatingViewModel.swift in Sources */,
 				6303A3883087831F00925C37 /* ErrorStateView.swift in Sources */,
+				DB1DE8A8308A09F4002DAECC /* StatisticsRatingView.swift in Sources */,
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
+				DB1DE8A5308A08EA002DAECC /* RatingUserRow.swift in Sources */,
 				ABC5E1A62C31F815002B4068 /* NetworkRequest.swift in Sources */,
 				ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */,
 				6303A36A30877FBE00925C37 /* BaseButton.swift in Sources */,
+				DBADCAF3308BF747008A1EA6 /* UsersService.swift in Sources */,
 				63B85E8230867497003FDC64 /* LoadingView.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
 				ABC5E1AE2C31FB7F002B4068 /* NftByIdRequest.swift in Sources */,
+				DB45CC71308BA2B10056B7C3 /* UsersRequest.swift in Sources */,
+				DBADCAF1308BF667008A1EA6 /* UserModel.swift in Sources */,
+				DB4942B8308CA1D700DE3C38 /* RatingUser.swift in Sources */,
 				6320F0403082BDC00095EB91 /* AppSystemIcon.swift in Sources */,
 				ABC5E1AB2C31FACD002B4068 /* NftService.swift in Sources */,
 				ABC5E1B22C31FBD4002B4068 /* ExampleRequest.swift in Sources */,
