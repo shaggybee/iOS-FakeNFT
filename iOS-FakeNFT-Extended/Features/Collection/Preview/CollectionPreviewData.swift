@@ -12,12 +12,41 @@ extension NftCollection {
         id: "1",
         name: "Peach",
         cover: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"),
-        nfts: CollectionNftCellModel.mocks.map(\.id),
+        nfts: Nft.peachMocks.map(\.id),
         description: "Персиковый — как облака над закатным солнцем в океане. "
             + "В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
         author: "John Doe",
         website: nil
     )
+}
+
+extension Nft {
+    static let peachMocks: [Nft] = [
+        "Archie", "Ruby", "Nacho", "Biscuit", "Daisy",
+        "Susan", "Oreo", "Pixi", "Zoe", "Tater"
+    ].enumerated().map { index, name in
+        Nft(
+            id: String(index),
+            name: name,
+            images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/\(name)/1.png")].compactMap { $0 },
+            rating: 2,
+            price: 1
+        )
+    }
+}
+
+extension CollectionNftCellModel {
+    static let mocks: [CollectionNftCellModel] = Nft.peachMocks.enumerated().map { index, nft in
+        CollectionNftCellModel(
+            id: nft.id,
+            imageURL: nft.images.first,
+            name: nft.name,
+            rating: nft.rating,
+            price: nft.price,
+            isLiked: index < 3,
+            isInCart: index < 3
+        )
+    }
 }
 
 struct CollectionServiceStub: CollectionService {
@@ -28,28 +57,13 @@ struct CollectionServiceStub: CollectionService {
     }
 }
 
-extension CollectionNftCellModel {
-    static let mocks: [CollectionNftCellModel] = [
-        ("Archie", true, true),
-        ("Ruby", true, true),
-        ("Nacho", true, true),
-        ("Biscuit", false, false),
-        ("Daisy", false, false),
-        ("Susan", false, false),
-        ("Oreo", false, false),
-        ("Pixi", false, false),
-        ("Zoe", false, false),
-        ("Tater", false, false)
-    ].enumerated().map { index, item in
-        let (name, isLiked, isInCart) = item
-        return CollectionNftCellModel(
-            id: String(index),
-            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/\(name)/1.png"),
-            name: name,
-            rating: 2,
-            price: 1,
-            isLiked: isLiked,
-            isInCart: isInCart
-        )
+struct NftServiceStub: NftService {
+    var nfts = Nft.peachMocks
+
+    func loadNft(id: String) async throws -> Nft {
+        guard let nft = nfts.first(where: { $0.id == id }) else {
+            throw NetworkClientError.httpStatusCode(404)
+        }
+        return nft
     }
 }

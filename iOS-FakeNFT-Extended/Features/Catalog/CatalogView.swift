@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CatalogView: View {
     @State private var viewModel: CatalogViewModel
+    @State private var selectedCollectionId: String?
 
     init(viewModel: CatalogViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -22,6 +23,16 @@ struct CatalogView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         sortButton
                     }
+                }
+                .navigationDestination(item: $selectedCollectionId) { collectionId in
+                    // TODO: вернуть servicesAssembly.collectionService и servicesAssembly.nftService, когда API станет доступен
+                    CollectionView(
+                        viewModel: CollectionViewModel(
+                            collectionId: collectionId,
+                            collectionService: CollectionServiceStub(),
+                            nftService: NftServiceStub()
+                        )
+                    )
                 }
         }
         .onAppear {
@@ -51,10 +62,15 @@ struct CatalogView: View {
     private func list(_ cells: [CatalogCellModel]) -> some View {
         List {
             ForEach(cells) { cell in
-                CatalogCellView(
-                    coverURL: cell.coverURL,
-                    title: cell.title
-                )
+                Button {
+                    selectedCollectionId = cell.id
+                } label: {
+                    CatalogCellView(
+                        coverURL: cell.coverURL,
+                        title: cell.title
+                    )
+                }
+                .buttonStyle(.plain)
                 .listRowInsets(Constants.rowInsets)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)

@@ -28,38 +28,63 @@ private enum Constants {
 
 struct CollectionView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
+    @State private var viewModel: CollectionViewModel
 
-    let collection: NftCollection
-    let nfts: [CollectionNftCellModel]
-    var onAuthorTap: () -> Void = {}
-    var onLikeTap: (CollectionNftCellModel) -> Void = { _ in }
-    var onCartTap: (CollectionNftCellModel) -> Void = { _ in }
+    init(viewModel: CollectionViewModel) {
+        _viewModel = State(initialValue: viewModel)
+    }
 
     var body: some View {
+        content
+            .navigationBarBackButtonHidden()
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    backButton
+                }
+            }
+            .onAppear {
+                viewModel.onAppear()
+            }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state {
+        case .idle, .loading:
+            LoadingView()
+        case .error:
+            ErrorStateView(
+                message: String(localized: "Collection.loadingError"),
+                onRetry: viewModel.retryButtonTapped
+            )
+            .padding(.horizontal, Constants.horizontalPadding)
+        case .empty:
+            EmptyView()
+        case .loaded(let model):
+            loaded(model)
+        }
+    }
+
+    // MARK: - Private Views
+
+    private func loaded(_ model: CollectionScreenModel) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                cover
-                header
+                cover(model.collection)
+                header(model.collection)
                     .padding(.top, Constants.headerTopPadding)
-                grid
+                grid(model.nfts)
                     .padding(.top, Constants.gridTopPadding)
             }
             .padding(.bottom, Constants.bottomPadding)
         }
         .ignoresSafeArea(edges: .top)
         .scrollIndicators(.hidden)
-        .navigationBarBackButtonHidden()
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                backButton
-            }
-        }
     }
 
-    // MARK: - Private Views
-
-    private var cover: some View {
+    private func cover(_ collection: NftCollection) -> some View {
         Color(.lightGrey)
             .frame(height: Constants.coverHeight)
             .overlay {
@@ -76,7 +101,7 @@ struct CollectionView: View {
             )
     }
 
-    private var header: some View {
+    private func header(_ collection: NftCollection) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(collection.name)
                 .font(AppFont.bold22)
@@ -86,7 +111,11 @@ struct CollectionView: View {
                 Text(String(localized: "Collection.author"))
                     .font(AppFont.regular13)
                     .foregroundStyle(.blackPrimary)
-                Button(collection.author, action: onAuthorTap)
+                Button(collection.author) {
+                    if let website = collection.website {
+                        openURL(website)
+                    }
+                }
                     .font(AppFont.regular15)
                     .foregroundStyle(.blueUniversal)
                     .lineLimit(1)
@@ -102,14 +131,10 @@ struct CollectionView: View {
         .padding(.horizontal, Constants.horizontalPadding)
     }
 
-    private var grid: some View {
+    private func grid(_ nfts: [CollectionNftCellModel]) -> some View {
         LazyVGrid(columns: Constants.columns, spacing: Constants.gridRowSpacing) {
             ForEach(nfts) { nft in
-                CollectionCellView(
-                    model: nft,
-                    onLikeTap: { onLikeTap(nft) },
-                    onCartTap: { onCartTap(nft) }
-                )
+                CollectionCellView(model: nft, onLikeTap: {}, onCartTap: {})
             }
         }
         .padding(.horizontal, Constants.horizontalPadding)
@@ -129,8 +154,11 @@ struct CollectionView: View {
 #Preview {
     NavigationStack {
         CollectionView(
-            collection: .peachMock,
-            nfts: CollectionNftCellModel.mocks
+            viewModel: CollectionViewModel(
+                collectionId: NftCollection.peachMock.id,
+                collectionService: CollectionServiceStub(),
+                nftService: NftServiceStub()
+            )
         )
     }
 }
