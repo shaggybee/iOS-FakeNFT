@@ -1,6 +1,7 @@
 "Catalog.empty" = "Коллекций пока нет";
 "Catalog.loadingError" = "Не удалось загрузить коллекции";
 "Catalog.openNft" = "Открыть Nft";
+"Collection.author" = "Автор коллекции:";
 "Common.close" = "Закрыть";
 "Error.network" = "Произошла ошибка сети";
 "Error.repeat" = "Повторить";
