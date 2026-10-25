@@ -20,6 +20,14 @@ extension NftCollection {
     )
 }
 
+struct CollectionServiceStub: CollectionService {
+    var collection = NftCollection.peachMock
+
+    func loadCollection(id: String) async throws -> NftCollection {
+        collection
+    }
+}
+
 extension CollectionNftCellModel {
     static let mocks: [CollectionNftCellModel] = [
         ("Archie", true, true),
