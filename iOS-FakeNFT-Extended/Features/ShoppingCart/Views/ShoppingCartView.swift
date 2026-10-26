@@ -28,14 +28,14 @@ struct ShoppingCartView: View {
                 LoadingView()
             case .loaded:
                 if viewModel.isNftsListEmpty {
-                    EmptyStateView(message: "Корзина пуста")
+                    EmptyStateView(message: NSLocalizedString("ShoppingCart.empty", comment: ""))
                 } else {
                     content
                 }
             case .error:
                 if !viewModel.isFetchingNftsErrorShown {
                     ErrorStateView(
-                        message: "Не удалось получить элементы корзины",
+                        message: NSLocalizedString("ShoppingCart.loadError", comment: ""),
                         onRetry: {
                             Task {
                                 await viewModel.loadNfts()
@@ -46,13 +46,13 @@ struct ShoppingCartView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.whitePrimary)
-        .alert("Не удалось получить данные", isPresented: $viewModel.isFetchingNftsErrorShown) {
-            Button("Повторить") {
+        .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingNftsErrorShown) {
+            Button("Button.retry") {
                 Task {
                     await viewModel.loadNfts()
                 }
             }
-            Button("Отмена", role: .cancel) { }
+            Button("Button.cancel", role: .cancel) { }
         }
         .toolbar {
             if !viewModel.isNftsListEmpty {
@@ -67,14 +67,14 @@ struct ShoppingCartView: View {
                 }
             }
         }
-        .confirmationDialog("Сортировка", isPresented: $isSortSheetPresented, titleVisibility: .visible) {
+        .confirmationDialog(Text("Sorting.title"), isPresented: $isSortSheetPresented, titleVisibility: .visible) {
             ForEach(viewModel.sortOptions, id: \.self) { option in
                 Button(option.title) {
                     sortOption = option
                 }
             }
             
-            Button("Закрыть", role: .cancel) { }
+            Button("Button.close", role: .cancel) { }
         }
         .fullScreenCover(item: $viewModel.nftPendingDeletion) { nft in
             ZStack {
@@ -96,8 +96,8 @@ struct ShoppingCartView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .alert("Не удалось удалить NFT", isPresented: $viewModel.isDeletingNftErrorShown) {
-                Button("Повторить") {
+            .alert(Text("ShoppingCart.deleteNftError"), isPresented: $viewModel.isDeletingNftErrorShown) {
+                Button("Button.retry") {
                     Task {
                         guard let deletingNft = viewModel.nftPendingDeletion else {
                             return
@@ -106,7 +106,7 @@ struct ShoppingCartView: View {
                         await viewModel.delete(nft: deletingNft)
                     }
                 }
-                Button("Отмена", role: .cancel) {
+                Button("Button.cancel", role: .cancel) {
                     viewModel.isDeleting = false
                 }
             }

@@ -25,7 +25,7 @@ struct TabBarView: View {
             ShoppingCartRootView(shoppingCartService: ServicesAssemblyMock().shoppingCartService)
                 .tabItem {
                     Label {
-                        Text("Корзина")
+                        Text("Tab.cart")
                     } icon: {
                         Image(.basket30)
                     }

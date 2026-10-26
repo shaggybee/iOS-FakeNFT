@@ -5,6 +5,8 @@
 //  Created by Kislov Vadim on 23.10.2026.
 //
 
+import Foundation
+
 enum NftSortOption: String, CaseIterable {
     case price
     case rating
@@ -13,11 +15,11 @@ enum NftSortOption: String, CaseIterable {
     var title: String {
         switch self {
         case .title:
-            "По названию"
+            NSLocalizedString("Sorting.byTitle", comment: "")
         case .rating:
-            "По рейтингу"
+            NSLocalizedString("Sorting.byRating", comment: "")
         case .price:
-            "По цене"
+            NSLocalizedString("Sorting.byPrice", comment: "")
         }
     }
 }

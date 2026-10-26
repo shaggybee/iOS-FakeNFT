@@ -20,7 +20,7 @@ struct ShoppingCartDeleteNftConfirmationView: View {
                     .frame(width: 108, height: 108)
                     .clipShape(.rect(cornerRadius: 12))
                 
-                Text("Вы уверены, что хотите удалить объект из корзины?")
+                Text("ShoppingCart.deleteNftConfirmation")
                     .font(AppFont.regular13)
                     .foregroundStyle(.blackPrimary)
                     .multilineTextAlignment(.center)
@@ -29,8 +29,8 @@ struct ShoppingCartDeleteNftConfirmationView: View {
             
             
             HStack(spacing: 8) {
-                getButton("Удалить", color: .redUniversal, action: onDeleteTap)
-                getButton("Вернуться", color: .whitePrimary, action: onCancelTap)
+                getButton("Button.delete", color: .redUniversal, action: onDeleteTap)
+                getButton("Button.comeback", color: .whitePrimary, action: onCancelTap)
             }
             
         }
@@ -38,7 +38,7 @@ struct ShoppingCartDeleteNftConfirmationView: View {
     }
     
     private func getButton(
-        _ title: String,
+        _ title: LocalizedStringKey,
         color: Color,
         action: @escaping () -> Void) -> some View {
             Button(action: action) {

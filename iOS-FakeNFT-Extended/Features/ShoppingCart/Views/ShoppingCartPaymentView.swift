@@ -16,7 +16,7 @@ struct ShoppingCartPaymentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.whitePrimary)
-        .navigationTitle("Выберите способ оплаты")
+        .navigationTitle("Payment.selection")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
