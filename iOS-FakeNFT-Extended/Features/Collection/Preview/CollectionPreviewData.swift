@@ -57,6 +57,24 @@ struct CollectionServiceStub: CollectionService {
     }
 }
 
+actor LikesServiceStub: LikesService {
+    static let shared = LikesServiceStub()
+
+    private var likes: Set<String>
+
+    init(likes: Set<String> = ["0", "1", "2"]) {
+        self.likes = likes
+    }
+
+    func loadLikes() async throws -> Set<String> {
+        likes
+    }
+
+    func updateLikes(_ likes: Set<String>) async throws {
+        self.likes = likes
+    }
+}
+
 struct NftServiceStub: NftService {
     var nfts = Nft.peachMocks
 

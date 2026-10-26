@@ -11,19 +11,28 @@ import Foundation
 @MainActor
 final class CollectionViewModel {
     private(set) var state: ViewState<CollectionScreenModel> = .idle
+    var isLikeErrorPresented = false
 
     private let collectionId: String
     private let collectionService: CollectionService
     private let nftService: NftService
+    private let likesService: LikesService
+    private var collection: NftCollection?
+    private var nfts: [Nft] = []
+    private var likes: Set<String> = []
+    private var confirmedLikes: Set<String> = []
+    private var likesSyncTask: Task<Void, Never>?
 
     init(
         collectionId: String,
         collectionService: CollectionService,
-        nftService: NftService
+        nftService: NftService,
+        likesService: LikesService
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
         self.nftService = nftService
+        self.likesService = likesService
     }
 
     func onAppear() {
@@ -34,6 +43,23 @@ final class CollectionViewModel {
     func retryButtonTapped() {
         Task { await load() }
     }
+
+    func likeButtonTapped(_ nft: CollectionNftCellModel) {
+        guard case .loaded = state else { return }
+
+        if likes.contains(nft.id) {
+            likes.remove(nft.id)
+        } else {
+            likes.insert(nft.id)
+        }
+        updateLoadedState()
+
+        let previousTask = likesSyncTask
+        likesSyncTask = Task {
+            await previousTask?.value
+            await syncLikes()
+        }
+    }
 }
 
 private extension CollectionViewModel {
@@ -41,14 +67,14 @@ private extension CollectionViewModel {
         state = .loading
 
         do {
-            let collection = try await collectionService.loadCollection(id: collectionId)
-            let nfts = try await loadNfts(ids: collection.nfts)
-            state = .loaded(
-                CollectionScreenModel(
-                    collection: collection,
-                    nfts: nfts.map(cellModel)
-                )
-            )
+            async let collection = collectionService.loadCollection(id: collectionId)
+            async let likes = likesService.loadLikes()
+            let loadedCollection = try await collection
+            nfts = try await loadNfts(ids: loadedCollection.nfts)
+            self.likes = try await likes
+            self.collection = loadedCollection
+            confirmedLikes = self.likes
+            updateLoadedState()
         } catch {
             state = .error(error)
         }
@@ -70,6 +96,30 @@ private extension CollectionViewModel {
         }
     }
 
+    func syncLikes() async {
+        let likesToSave = likes
+        guard likesToSave != confirmedLikes else { return }
+
+        do {
+            try await likesService.updateLikes(likesToSave)
+            confirmedLikes = likesToSave
+        } catch {
+            likes = confirmedLikes
+            updateLoadedState()
+            isLikeErrorPresented = true
+        }
+    }
+
+    func updateLoadedState() {
+        guard let collection else { return }
+        state = .loaded(
+            CollectionScreenModel(
+                collection: collection,
+                nfts: nfts.map(cellModel)
+            )
+        )
+    }
+
     func cellModel(_ nft: Nft) -> CollectionNftCellModel {
         CollectionNftCellModel(
             id: nft.id,
@@ -77,7 +127,7 @@ private extension CollectionViewModel {
             name: nft.name,
             rating: nft.rating,
             price: nft.price,
-            isLiked: false,
+            isLiked: likes.contains(nft.id),
             isInCart: false
         )
     }

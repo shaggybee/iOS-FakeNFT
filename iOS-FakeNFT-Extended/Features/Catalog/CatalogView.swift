@@ -25,12 +25,13 @@ struct CatalogView: View {
                     }
                 }
                 .navigationDestination(item: $selectedCollectionId) { collectionId in
-                    // TODO: вернуть servicesAssembly.collectionService и servicesAssembly.nftService, когда API станет доступен
+                    // TODO: вернуть сервисы из servicesAssembly, когда API станет доступен
                     CollectionView(
                         viewModel: CollectionViewModel(
                             collectionId: collectionId,
                             collectionService: CollectionServiceStub(),
-                            nftService: NftServiceStub()
+                            nftService: NftServiceStub(),
+                            likesService: LikesServiceStub.shared
                         )
                     )
                 }

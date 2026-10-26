@@ -47,6 +47,14 @@ struct CollectionView: View {
             .onAppear {
                 viewModel.onAppear()
             }
+            .alert(
+                String(localized: "Error.title"),
+                isPresented: $viewModel.isLikeErrorPresented
+            ) {
+                Button(String(localized: "Common.close"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "Collection.likeError"))
+            }
     }
 
     @ViewBuilder
@@ -134,7 +142,11 @@ struct CollectionView: View {
     private func grid(_ nfts: [CollectionNftCellModel]) -> some View {
         LazyVGrid(columns: Constants.columns, spacing: Constants.gridRowSpacing) {
             ForEach(nfts) { nft in
-                CollectionCellView(model: nft, onLikeTap: {}, onCartTap: {})
+                CollectionCellView(
+                    model: nft,
+                    onLikeTap: { viewModel.likeButtonTapped(nft) },
+                    onCartTap: {}
+                )
             }
         }
         .padding(.horizontal, Constants.horizontalPadding)
@@ -157,7 +169,8 @@ struct CollectionView: View {
             viewModel: CollectionViewModel(
                 collectionId: NftCollection.peachMock.id,
                 collectionService: CollectionServiceStub(),
-                nftService: NftServiceStub()
+                nftService: NftServiceStub(),
+                likesService: LikesServiceStub()
             )
         )
     }
