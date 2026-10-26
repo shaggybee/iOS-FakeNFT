@@ -8,6 +8,6 @@
 import Foundation
 
 struct CollectionScreenModel {
-    let collection: NftCollection
+    let header: CollectionHeaderModel
     let nfts: [CollectionNftCellModel]
 }

@@ -73,7 +73,7 @@ struct CollectionCellView: View {
                     .font(AppFont.bold17)
                     .foregroundStyle(.blackPrimary)
                     .lineLimit(1)
-                Text("\(model.price.formatted()) ETH")
+                Text(model.priceText)
                     .font(AppFont.medium10)
                     .foregroundStyle(.blackPrimary)
                     .lineLimit(1)

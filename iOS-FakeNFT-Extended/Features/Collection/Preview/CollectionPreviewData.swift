@@ -14,7 +14,7 @@ extension NftCollection {
         cover: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"),
         nfts: Nft.peachMocks.map(\.id),
         description: "Персиковый — как облака над закатным солнцем в океане. "
-            + "В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
+        + "В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
         author: "John Doe",
         website: nil
     )
@@ -42,7 +42,7 @@ extension CollectionNftCellModel {
             imageURL: nft.images.first,
             name: nft.name,
             rating: nft.rating,
-            price: nft.price,
+            priceText: "\(nft.price.formatted()) ETH",
             isLiked: index < 3,
             isInCart: index < 3
         )

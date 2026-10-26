@@ -47,6 +47,11 @@ struct CollectionView: View {
             .onAppear {
                 viewModel.onAppear()
             }
+            .onChange(of: viewModel.presentedAuthorWebsite) { _, url in
+                guard let url else { return }
+                openURL(url)
+                viewModel.presentedAuthorWebsite = nil
+            }
             .alert(
                 String(localized: "Error.title"),
                 isPresented: $viewModel.isLikeErrorPresented
@@ -88,8 +93,8 @@ struct CollectionView: View {
     private func loaded(_ model: CollectionScreenModel) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                cover(model.collection)
-                header(model.collection)
+                cover(model.header.coverURL)
+                header(model.header)
                     .padding(.top, Constants.headerTopPadding)
                 grid(model.nfts)
                     .padding(.top, Constants.gridTopPadding)
@@ -100,11 +105,11 @@ struct CollectionView: View {
         .scrollIndicators(.hidden)
     }
 
-    private func cover(_ collection: NftCollection) -> some View {
+    private func cover(_ url: URL?) -> some View {
         Color(.lightGrey)
             .frame(height: Constants.coverHeight)
             .overlay {
-                KFImage(collection.cover)
+                KFImage(url)
                     .placeholder { ProgressView() }
                     .resizable()
                     .scaledToFill()
@@ -117,9 +122,9 @@ struct CollectionView: View {
             )
     }
 
-    private func header(_ collection: NftCollection) -> some View {
+    private func header(_ header: CollectionHeaderModel) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(collection.name)
+            Text(header.title)
                 .font(AppFont.bold22)
                 .foregroundStyle(.blackPrimary)
 
@@ -127,18 +132,14 @@ struct CollectionView: View {
                 Text(String(localized: "Collection.author"))
                     .font(AppFont.regular13)
                     .foregroundStyle(.blackPrimary)
-                Button(collection.author) {
-                    if let website = collection.website {
-                        openURL(website)
-                    }
-                }
+                Button(header.author, action: viewModel.authorTapped)
                     .font(AppFont.regular15)
                     .foregroundStyle(.blueUniversal)
                     .lineLimit(1)
             }
             .padding(.top, Constants.authorTopPadding)
 
-            Text(collection.description)
+            Text(header.description)
                 .font(AppFont.regular13)
                 .foregroundStyle(.blackPrimary)
                 .fixedSize(horizontal: false, vertical: true)

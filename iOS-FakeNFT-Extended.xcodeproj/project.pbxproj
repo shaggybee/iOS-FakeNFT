@@ -21,14 +21,6 @@
 		ABC5E1992C31F666002B4068 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1982C31F666002B4068 /* Fonts.swift */; };
 		ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E19C2C31F6A6002B4068 /* NftStorage.swift */; };
 		ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1A02C31F6D7002B4068 /* Nft.swift */; };
-		C011EC710000000000000017 /* OrderNfts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000018 /* OrderNfts.swift */; };
-		C011EC710000000000000015 /* UpdateOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000016 /* UpdateOrderRequest.swift */; };
-		C011EC710000000000000013 /* OrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000014 /* OrderRequest.swift */; };
-		C011EC710000000000000011 /* CartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000012 /* CartService.swift */; };
-		C011EC71000000000000000F /* ProfileLikes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000010 /* ProfileLikes.swift */; };
-		C011EC71000000000000000D /* UpdateLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000E /* UpdateLikesRequest.swift */; };
-		C011EC71000000000000000B /* ProfileLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000C /* ProfileLikesRequest.swift */; };
-		C011EC710000000000000009 /* LikesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000A /* LikesService.swift */; };
 		ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1A32C31F800002B4068 /* NetworkClient.swift */; };
 		ABC5E1A62C31F815002B4068 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1A52C31F815002B4068 /* NetworkRequest.swift */; };
 		ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1A72C31FA90002B4068 /* DateFormatters+Presets.swift */; };
@@ -43,6 +35,14 @@
 		C011EC710000000000000003 /* CollectionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000004 /* CollectionsRequest.swift */; };
 		C011EC710000000000000005 /* CollectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000006 /* CollectionService.swift */; };
 		C011EC710000000000000007 /* CollectionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000008 /* CollectionRequest.swift */; };
+		C011EC710000000000000009 /* LikesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000A /* LikesService.swift */; };
+		C011EC71000000000000000B /* ProfileLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000C /* ProfileLikesRequest.swift */; };
+		C011EC71000000000000000D /* UpdateLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000E /* UpdateLikesRequest.swift */; };
+		C011EC71000000000000000F /* ProfileLikes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000010 /* ProfileLikes.swift */; };
+		C011EC710000000000000011 /* CartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000012 /* CartService.swift */; };
+		C011EC710000000000000013 /* OrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000014 /* OrderRequest.swift */; };
+		C011EC710000000000000015 /* UpdateOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000016 /* UpdateOrderRequest.swift */; };
+		C011EC710000000000000017 /* OrderNfts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000018 /* OrderNfts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,14 +81,6 @@
 		ABC5E1982C31F666002B4068 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		ABC5E19C2C31F6A6002B4068 /* NftStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftStorage.swift; sourceTree = "<group>"; };
 		ABC5E1A02C31F6D7002B4068 /* Nft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nft.swift; sourceTree = "<group>"; };
-		C011EC710000000000000018 /* OrderNfts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderNfts.swift; sourceTree = "<group>"; };
-		C011EC710000000000000016 /* UpdateOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateOrderRequest.swift; sourceTree = "<group>"; };
-		C011EC710000000000000014 /* OrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRequest.swift; sourceTree = "<group>"; };
-		C011EC710000000000000012 /* CartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartService.swift; sourceTree = "<group>"; };
-		C011EC710000000000000010 /* ProfileLikes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikes.swift; sourceTree = "<group>"; };
-		C011EC71000000000000000E /* UpdateLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikesRequest.swift; sourceTree = "<group>"; };
-		C011EC71000000000000000C /* ProfileLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikesRequest.swift; sourceTree = "<group>"; };
-		C011EC71000000000000000A /* LikesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesService.swift; sourceTree = "<group>"; };
 		ABC5E1A32C31F800002B4068 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		ABC5E1A52C31F815002B4068 /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
 		ABC5E1A72C31FA90002B4068 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
@@ -101,6 +93,14 @@
 		C011EC710000000000000004 /* CollectionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsRequest.swift; sourceTree = "<group>"; };
 		C011EC710000000000000006 /* CollectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionService.swift; sourceTree = "<group>"; };
 		C011EC710000000000000008 /* CollectionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionRequest.swift; sourceTree = "<group>"; };
+		C011EC71000000000000000A /* LikesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesService.swift; sourceTree = "<group>"; };
+		C011EC71000000000000000C /* ProfileLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikesRequest.swift; sourceTree = "<group>"; };
+		C011EC71000000000000000E /* UpdateLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikesRequest.swift; sourceTree = "<group>"; };
+		C011EC710000000000000010 /* ProfileLikes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikes.swift; sourceTree = "<group>"; };
+		C011EC710000000000000012 /* CartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartService.swift; sourceTree = "<group>"; };
+		C011EC710000000000000014 /* OrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRequest.swift; sourceTree = "<group>"; };
+		C011EC710000000000000016 /* UpdateOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateOrderRequest.swift; sourceTree = "<group>"; };
+		C011EC710000000000000018 /* OrderNfts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderNfts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */

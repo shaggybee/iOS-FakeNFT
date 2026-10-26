@@ -10,9 +10,14 @@ import SwiftUI
 struct CatalogView: View {
     @State private var viewModel: CatalogViewModel
     @State private var selectedCollectionId: String?
+    private let makeCollectionViewModel: (String) -> CollectionViewModel
 
-    init(viewModel: CatalogViewModel) {
+    init(
+        viewModel: CatalogViewModel,
+        makeCollectionViewModel: @escaping (String) -> CollectionViewModel
+    ) {
         _viewModel = State(initialValue: viewModel)
+        self.makeCollectionViewModel = makeCollectionViewModel
     }
 
     var body: some View {
@@ -25,16 +30,7 @@ struct CatalogView: View {
                     }
                 }
                 .navigationDestination(item: $selectedCollectionId) { collectionId in
-                    // TODO: вернуть сервисы из servicesAssembly, когда API станет доступен
-                    CollectionView(
-                        viewModel: CollectionViewModel(
-                            collectionId: collectionId,
-                            collectionService: CollectionServiceStub(),
-                            nftService: NftServiceStub(),
-                            likesService: LikesServiceStub.shared,
-                            cartService: CartServiceStub.shared
-                        )
-                    )
+                    CollectionView(viewModel: makeCollectionViewModel(collectionId))
                 }
         }
         .onAppear {
@@ -134,5 +130,16 @@ private extension CatalogView {
 }
 
 #Preview {
-    CatalogView(viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()))
+    CatalogView(
+        viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
+        makeCollectionViewModel: { collectionId in
+            CollectionViewModel(
+                collectionId: collectionId,
+                collectionService: CollectionServiceStub(),
+                nftService: NftServiceStub(),
+                likesService: LikesServiceStub(),
+                cartService: CartServiceStub()
+            )
+        }
+    )
 }

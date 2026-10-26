@@ -13,6 +13,7 @@ final class CollectionViewModel {
     private(set) var state: ViewState<CollectionScreenModel> = .idle
     var isLikeErrorPresented = false
     var isCartErrorPresented = false
+    var presentedAuthorWebsite: URL?
 
     private let collectionId: String
     private let collectionService: CollectionService
@@ -49,6 +50,10 @@ final class CollectionViewModel {
 
     func retryButtonTapped() {
         Task { await load() }
+    }
+
+    func authorTapped() {
+        presentedAuthorWebsite = collection?.website
     }
 
     func likeButtonTapped(_ nft: CollectionNftCellModel) {
@@ -155,7 +160,12 @@ private extension CollectionViewModel {
         guard let collection else { return }
         state = .loaded(
             CollectionScreenModel(
-                collection: collection,
+                header: CollectionHeaderModel(
+                    coverURL: collection.cover,
+                    title: collection.name,
+                    author: collection.author,
+                    description: collection.description
+                ),
                 nfts: nfts.map(cellModel)
             )
         )
@@ -167,7 +177,7 @@ private extension CollectionViewModel {
             imageURL: nft.images.first,
             name: nft.name,
             rating: nft.rating,
-            price: nft.price,
+            priceText: "\(nft.price.formatted()) ETH",
             isLiked: likes.contains(nft.id),
             isInCart: cart.contains(nft.id)
         )
