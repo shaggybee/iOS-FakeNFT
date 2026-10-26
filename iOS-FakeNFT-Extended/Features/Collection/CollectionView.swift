@@ -55,6 +55,14 @@ struct CollectionView: View {
             } message: {
                 Text(String(localized: "Collection.likeError"))
             }
+            .alert(
+                String(localized: "Error.title"),
+                isPresented: $viewModel.isCartErrorPresented
+            ) {
+                Button(String(localized: "Common.close"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "Collection.cartError"))
+            }
     }
 
     @ViewBuilder
@@ -145,7 +153,7 @@ struct CollectionView: View {
                 CollectionCellView(
                     model: nft,
                     onLikeTap: { viewModel.likeButtonTapped(nft) },
-                    onCartTap: {}
+                    onCartTap: { viewModel.cartButtonTapped(nft) }
                 )
             }
         }
@@ -170,7 +178,8 @@ struct CollectionView: View {
                 collectionId: NftCollection.peachMock.id,
                 collectionService: CollectionServiceStub(),
                 nftService: NftServiceStub(),
-                likesService: LikesServiceStub()
+                likesService: LikesServiceStub(),
+                cartService: CartServiceStub()
             )
         )
     }

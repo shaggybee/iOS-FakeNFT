@@ -12,27 +12,34 @@ import Foundation
 final class CollectionViewModel {
     private(set) var state: ViewState<CollectionScreenModel> = .idle
     var isLikeErrorPresented = false
+    var isCartErrorPresented = false
 
     private let collectionId: String
     private let collectionService: CollectionService
     private let nftService: NftService
     private let likesService: LikesService
+    private let cartService: CartService
     private var collection: NftCollection?
     private var nfts: [Nft] = []
     private var likes: Set<String> = []
     private var confirmedLikes: Set<String> = []
     private var likesSyncTask: Task<Void, Never>?
+    private var cart: Set<String> = []
+    private var confirmedCart: Set<String> = []
+    private var cartSyncTask: Task<Void, Never>?
 
     init(
         collectionId: String,
         collectionService: CollectionService,
         nftService: NftService,
-        likesService: LikesService
+        likesService: LikesService,
+        cartService: CartService
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
         self.nftService = nftService
         self.likesService = likesService
+        self.cartService = cartService
     }
 
     func onAppear() {
@@ -60,6 +67,23 @@ final class CollectionViewModel {
             await syncLikes()
         }
     }
+
+    func cartButtonTapped(_ nft: CollectionNftCellModel) {
+        guard case .loaded = state else { return }
+
+        if cart.contains(nft.id) {
+            cart.remove(nft.id)
+        } else {
+            cart.insert(nft.id)
+        }
+        updateLoadedState()
+
+        let previousTask = cartSyncTask
+        cartSyncTask = Task {
+            await previousTask?.value
+            await syncCart()
+        }
+    }
 }
 
 private extension CollectionViewModel {
@@ -69,11 +93,14 @@ private extension CollectionViewModel {
         do {
             async let collection = collectionService.loadCollection(id: collectionId)
             async let likes = likesService.loadLikes()
+            async let cart = cartService.loadCart()
             let loadedCollection = try await collection
             nfts = try await loadNfts(ids: loadedCollection.nfts)
             self.likes = try await likes
+            self.cart = try await cart
             self.collection = loadedCollection
             confirmedLikes = self.likes
+            confirmedCart = self.cart
             updateLoadedState()
         } catch {
             state = .error(error)
@@ -110,6 +137,20 @@ private extension CollectionViewModel {
         }
     }
 
+    func syncCart() async {
+        let cartToSave = cart
+        guard cartToSave != confirmedCart else { return }
+
+        do {
+            try await cartService.updateCart(cartToSave)
+            confirmedCart = cartToSave
+        } catch {
+            cart = confirmedCart
+            updateLoadedState()
+            isCartErrorPresented = true
+        }
+    }
+
     func updateLoadedState() {
         guard let collection else { return }
         state = .loaded(
@@ -128,7 +169,7 @@ private extension CollectionViewModel {
             rating: nft.rating,
             price: nft.price,
             isLiked: likes.contains(nft.id),
-            isInCart: false
+            isInCart: cart.contains(nft.id)
         )
     }
 }

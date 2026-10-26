@@ -31,7 +31,8 @@ struct CatalogView: View {
                             collectionId: collectionId,
                             collectionService: CollectionServiceStub(),
                             nftService: NftServiceStub(),
-                            likesService: LikesServiceStub.shared
+                            likesService: LikesServiceStub.shared,
+                            cartService: CartServiceStub.shared
                         )
                     )
                 }

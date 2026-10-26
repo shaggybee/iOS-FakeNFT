@@ -75,6 +75,24 @@ actor LikesServiceStub: LikesService {
     }
 }
 
+actor CartServiceStub: CartService {
+    static let shared = CartServiceStub()
+
+    private var nfts: Set<String>
+
+    init(nfts: Set<String> = ["0", "1", "2"]) {
+        self.nfts = nfts
+    }
+
+    func loadCart() async throws -> Set<String> {
+        nfts
+    }
+
+    func updateCart(_ nfts: Set<String>) async throws {
+        self.nfts = nfts
+    }
+}
+
 struct NftServiceStub: NftService {
     var nfts = Nft.peachMocks
 
