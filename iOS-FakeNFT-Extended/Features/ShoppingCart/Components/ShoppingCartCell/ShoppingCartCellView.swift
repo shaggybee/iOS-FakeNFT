@@ -13,7 +13,7 @@ struct ShoppingCartCellView: View {
     
     var body: some View {
         HStack(spacing: 20) {
-            nftLogo
+            NftLogoView(url: model.imageUrl)
                 .frame(width: 108, height: 108)
                 .clipShape(.rect(cornerRadius: 12))
             
@@ -24,32 +24,6 @@ struct ShoppingCartCellView: View {
             deleteButton
         }
         .padding(.vertical, 16)
-    }
-    
-    @ViewBuilder
-    private var nftLogo: some View {
-        if let url = model.imageUrl {
-            AsyncImage(url: url) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity)
-                } else if phase.error != nil {
-                    nftPlaceholder
-                } else {
-                    LoadingView()
-                }
-            }
-        } else {
-            nftPlaceholder
-        }
-    }
-    
-    private var nftPlaceholder: some View {
-        Image(.nftPlaceholder)
-            .resizable()
-            .scaledToFit()
     }
     
     private var infoBlock: some View {

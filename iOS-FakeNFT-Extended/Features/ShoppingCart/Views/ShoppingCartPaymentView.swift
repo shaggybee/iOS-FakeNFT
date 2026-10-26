@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShoppingCartPaymentView: View {
-    @Environment(\.dismiss) private var dismis
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
@@ -22,7 +22,7 @@ struct ShoppingCartPaymentView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    dismis()
+                    dismiss()
                 } label: {
                     Image(.backward24)
                         .tint(.blackPrimary)

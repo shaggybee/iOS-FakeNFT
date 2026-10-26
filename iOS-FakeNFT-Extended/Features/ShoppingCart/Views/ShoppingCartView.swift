@@ -91,7 +91,7 @@ struct ShoppingCartView: View {
                 )
                 .disabled(viewModel.isDeleting)
                 
-                if (viewModel.isDeleting) {
+                if viewModel.isDeleting {
                     BlockingProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }

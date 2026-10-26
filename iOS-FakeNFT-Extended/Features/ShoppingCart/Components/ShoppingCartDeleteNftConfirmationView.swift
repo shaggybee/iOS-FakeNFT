@@ -16,7 +16,7 @@ struct ShoppingCartDeleteNftConfirmationView: View {
     var body: some View {
         VStack(spacing: 20) {
             VStack(spacing: 12) {
-                nftLogo
+                NftLogoView(url: URL(string: nft.images.first ?? ""))
                     .frame(width: 108, height: 108)
                     .clipShape(.rect(cornerRadius: 12))
                 
@@ -37,26 +37,6 @@ struct ShoppingCartDeleteNftConfirmationView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    @ViewBuilder
-    private var nftLogo: some View {
-        if let url = URL(string: nft.images.first ?? "") {
-            AsyncImage(url: url) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity)
-                } else if phase.error != nil {
-                    nftPlaceholder
-                } else {
-                    LoadingView()
-                }
-            }
-        } else {
-            nftPlaceholder
-        }
-    }
-    
     private func getButton(
         _ title: String,
         color: Color,
@@ -70,12 +50,6 @@ struct ShoppingCartDeleteNftConfirmationView: View {
                     .clipShape(.rect(cornerRadius: 12))
             }
         }
-    
-    private var nftPlaceholder: some View {
-        Image(.nftPlaceholder)
-            .resizable()
-            .scaledToFit()
-    }
 }
 
 #Preview {
