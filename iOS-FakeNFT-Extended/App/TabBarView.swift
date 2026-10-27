@@ -21,10 +21,11 @@ struct TabBarView: View {
                     }
                 }
             
-            Text("Корзина")
+            // TODO как будет доступен API не забыть удалить и прокинуть действительный
+            ShoppingCartRootView(shoppingCartService: ServicesAssemblyMock().shoppingCartService)
                 .tabItem {
                     Label {
-                        Text("Корзина")
+                        Text("Tab.cart")
                     } icon: {
                         Image(.basket30)
                     }
