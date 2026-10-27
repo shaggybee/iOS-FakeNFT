@@ -17,7 +17,7 @@ enum MockConstants {
         Nft(
             id: "1",
             name: "тестовый 1",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 1,
             price: 12,
@@ -25,7 +25,7 @@ enum MockConstants {
         Nft(
             id: "2",
             name: "тестовый 2",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 2,
             price: 23.12,
@@ -33,7 +33,7 @@ enum MockConstants {
         Nft(
             id: "3",
             name: "тестовый 3",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 3,
             price: 45.43,
@@ -41,7 +41,7 @@ enum MockConstants {
         Nft(
             id: "4",
             name: "тестовый 4",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 4,
             price: 5.4,
@@ -49,7 +49,7 @@ enum MockConstants {
         Nft(
             id: "5",
             name: "тестовый 5",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 5,
             price: 45.43,
@@ -57,7 +57,7 @@ enum MockConstants {
         Nft(
             id: "6",
             name: "тестовый 6",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 0,
             price: 3.43,
@@ -65,7 +65,7 @@ enum MockConstants {
         Nft(
             id: "7",
             name: "тестовый 7",
-            images: [""],
+            images: ["https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png"],
             description: "",
             rating: 1,
             price: 8.49,

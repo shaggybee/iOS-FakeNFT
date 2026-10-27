@@ -25,7 +25,7 @@ struct ShoppingCartSummaryView: View {
             }
             
             BaseButton(
-                title: "К оплате",
+                title: NSLocalizedString("ShoppingCart.toPay", comment: ""),
                 height: 44,
                 action: onPayTap
             )

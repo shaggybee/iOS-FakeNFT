@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
-    @State private var viewModel: ShoppingCartViewModel
+    private static let sortOptionKey = "shoppingCart.sortOptionKey"
     
-    init(viewModel: ShoppingCartViewModel) {
+    @State private var viewModel: ShoppingCartViewModel
+    @State private var isSortSheetPresented = false
+    @AppStorage(Self.sortOptionKey) private var sortOption: NftSortOption = .title
+    
+    let onPayTap: () -> Void
+    
+    init(viewModel: ShoppingCartViewModel, onPayTap: @escaping () -> Void) {
         self.viewModel = viewModel
+        self.onPayTap = onPayTap
     }
     
     var body: some View {
@@ -21,17 +28,17 @@ struct ShoppingCartView: View {
                 LoadingView()
             case .loaded:
                 if viewModel.isNftsListEmpty {
-                    EmptyStateView(message: "Корзина пуста")
+                    EmptyStateView(message: NSLocalizedString("ShoppingCart.empty", comment: ""))
                 } else {
                     content
                 }
             case .error:
-                if !viewModel.isErrorShown {
+                if !viewModel.isFetchingNftsErrorShown {
                     ErrorStateView(
-                        message: "Не удалось получить элементы корзины",
+                        message: NSLocalizedString("ShoppingCart.loadError", comment: ""),
                         onRetry: {
                             Task {
-                                await viewModel.fetchNfts()
+                                await viewModel.loadNfts()
                             }
                         })
                 }
@@ -39,16 +46,74 @@ struct ShoppingCartView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.whitePrimary)
-        .alert("Не удалось получить данные", isPresented: $viewModel.isErrorShown) {
-            Button("Повторить") {
+        .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingNftsErrorShown) {
+            Button("Button.retry") {
                 Task {
-                    await viewModel.fetchNfts()
+                    await viewModel.loadNfts()
                 }
             }
-            Button("Отмена", role: .cancel) { }
+            Button("Button.cancel", role: .cancel) { }
         }
-        .task {
-            await viewModel.fetchNfts()
+        .toolbar {
+            if !viewModel.isNftsListEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isSortSheetPresented = true
+                    } label: {
+                        Image(.sort40)
+                            .foregroundStyle(.blackPrimary)
+                            .frame(width: 42, height: 42)
+                    }
+                }
+            }
+        }
+        .confirmationDialog(Text("Sorting.title"), isPresented: $isSortSheetPresented, titleVisibility: .visible) {
+            ForEach(viewModel.sortOptions, id: \.self) { option in
+                Button(option.title) {
+                    sortOption = option
+                }
+            }
+            
+            Button("Button.close", role: .cancel) { }
+        }
+        .fullScreenCover(item: $viewModel.nftPendingDeletion) { nft in
+            ZStack {
+                ShoppingCartDeleteNftConfirmationView(
+                    nft: nft,
+                    onDeleteTap: {
+                        Task {
+                            await viewModel.delete(nft: nft)
+                        }
+                    },
+                    onCancelTap: {
+                        viewModel.nftPendingDeletion = nil
+                    }
+                )
+                .disabled(viewModel.isDeleting)
+                
+                if viewModel.isDeleting {
+                    BlockingProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            .alert(Text("ShoppingCart.deleteNftError"), isPresented: $viewModel.isDeletingNftErrorShown) {
+                Button("Button.retry") {
+                    Task {
+                        guard let deletingNft = viewModel.nftPendingDeletion else {
+                            return
+                        }
+                        
+                        await viewModel.delete(nft: deletingNft)
+                    }
+                }
+                Button("Button.cancel", role: .cancel) {
+                    viewModel.isDeleting = false
+                }
+            }
+            .presentationBackground(.ultraThinMaterial)
+        }
+        .onChange(of: sortOption, initial: true) {
+            viewModel.apply(sort: $1)
         }
     }
     
@@ -59,7 +124,7 @@ struct ShoppingCartView: View {
                     ForEach(viewModel.nfts, id: \.id) { nft in
                         ShoppingCartCellView(
                             model: viewModel.getPreparedCartCellModel(from: nft)) {
-                                // TODO добавить удаление NFT
+                                viewModel.nftPendingDeletion = nft
                             }
                     }
                 }
@@ -70,9 +135,7 @@ struct ShoppingCartView: View {
             ShoppingCartSummaryView(
                 count: viewModel.nfts.count,
                 totalCost: viewModel.totalShoppingCartCost,
-                onPayTap: {
-                    // TODO добавить раутинг на экран оплаты
-                }
+                onPayTap: onPayTap
             )
         }
     }
@@ -81,9 +144,12 @@ struct ShoppingCartView: View {
 #Preview {
     let servicesAssembly = ServicesAssemblyMock()
     
-    ShoppingCartView(
-        viewModel: ShoppingCartViewModel(
-            shoppingCartService: servicesAssembly.shoppingCartService
+    NavigationStack {
+        ShoppingCartView(
+            viewModel: ShoppingCartViewModel(
+                shoppingCartService: servicesAssembly.shoppingCartService
+            ),
+            onPayTap: {}
         )
-    )
+    }
 }
