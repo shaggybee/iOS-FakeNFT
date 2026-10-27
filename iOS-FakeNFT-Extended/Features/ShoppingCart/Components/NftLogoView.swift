@@ -16,8 +16,7 @@ struct NftLogoView: View {
                 if let image = phase.image {
                     image
                         .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity)
+                        .scaledToFill()
                 } else if phase.error != nil {
                     nftPlaceholder
                 } else {
@@ -32,7 +31,7 @@ struct NftLogoView: View {
     private var nftPlaceholder: some View {
         Image(.nftPlaceholder)
             .resizable()
-            .scaledToFit()
+            .scaledToFill()
     }
 }
 
