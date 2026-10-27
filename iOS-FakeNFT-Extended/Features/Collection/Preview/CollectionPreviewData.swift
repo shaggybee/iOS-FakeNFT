@@ -102,4 +102,13 @@ struct NftServiceStub: NftService {
         }
         return nft
     }
+
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        try ids.map { id in
+            guard let nft = nfts.first(where: { $0.id == id }) else {
+                throw NetworkClientError.httpStatusCode(404)
+            }
+            return nft
+        }
+    }
 }

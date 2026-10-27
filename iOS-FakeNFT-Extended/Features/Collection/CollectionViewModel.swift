@@ -100,7 +100,7 @@ private extension CollectionViewModel {
             async let likes = likesService.loadLikes()
             async let cart = cartService.loadCart()
             let loadedCollection = try await collection
-            nfts = try await loadNfts(ids: loadedCollection.nfts)
+            nfts = try await nftService.loadNfts(ids: loadedCollection.nfts)
             self.likes = try await likes
             self.cart = try await cart
             self.collection = loadedCollection
@@ -109,22 +109,6 @@ private extension CollectionViewModel {
             updateLoadedState()
         } catch {
             state = .error(error)
-        }
-    }
-
-    func loadNfts(ids: [String]) async throws -> [Nft] {
-        try await withThrowingTaskGroup(of: (Int, Nft).self) { group in
-            for (index, id) in ids.enumerated() {
-                group.addTask { [nftService] in
-                    (index, try await nftService.loadNft(id: id))
-                }
-            }
-
-            var nfts = [Nft?](repeating: nil, count: ids.count)
-            for try await (index, nft) in group {
-                nfts[index] = nft
-            }
-            return nfts.compactMap { $0 }
         }
     }
 
