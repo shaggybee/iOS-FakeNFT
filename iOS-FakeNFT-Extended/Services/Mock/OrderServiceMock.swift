@@ -13,4 +13,8 @@ actor OrderServiceMock: OrderServiceProtocol {
         
         return MockConstants.order
     }
+    
+    func updateOrder(nfts: [String]) async throws {
+        // unused
+    }
 }
