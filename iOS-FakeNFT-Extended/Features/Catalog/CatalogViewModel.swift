@@ -10,12 +10,15 @@ import Foundation
 @Observable
 @MainActor
 final class CatalogViewModel {
+
+    // MARK: - Properties
+
     private(set) var state: ViewState<[CatalogCellModel]> = .idle
     private(set) var isLoadingNextPage = false
     private(set) var isNextPageFailed = false
     var isSortDialogPresented = false
 
-    private let collectionsService: CollectionsService
+    private let collectionsService: CollectionsServiceProtocol
     private let userDefaults: UserDefaults
     private var collections: [NftCollection] = []
     private var nextPage = 0
@@ -26,8 +29,10 @@ final class CatalogViewModel {
         }
     }
 
+    // MARK: - Init
+
     init(
-        collectionsService: CollectionsService,
+        collectionsService: CollectionsServiceProtocol,
         userDefaults: UserDefaults = .standard
     ) {
         self.collectionsService = collectionsService
@@ -35,6 +40,8 @@ final class CatalogViewModel {
         self.sortOption = userDefaults.string(forKey: Constants.sortOptionKey)
             .flatMap(CatalogSortOption.init(rawValue:)) ?? .nftCount
     }
+
+    // MARK: - Public Methods
 
     func onAppear() {
         guard case .idle = state else { return }
@@ -70,13 +77,19 @@ final class CatalogViewModel {
     }
 }
 
+// MARK: - Constants
+
 private extension CatalogViewModel {
     enum Constants {
         static let pageSize = 10
         static let prefetchThreshold = 3
         static let sortOptionKey = "catalogSortOption"
     }
+}
 
+// MARK: - Private Methods
+
+private extension CatalogViewModel {
     var cellModels: [CatalogCellModel] {
         collections.map { collection in
             CatalogCellModel(

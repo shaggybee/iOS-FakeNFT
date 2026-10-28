@@ -15,18 +15,29 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.profile)
-            
-            // TODO: вернуть servicesAssembly.collectionsService, когда API станет доступен
-            CatalogView(viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()))
-                .tabItem {
-                    Label {
-                        Text("Каталог")
-                    } icon: {
-                        Image(.catalog30)
-                    }
+
+            // TODO: вернуть сервисы из servicesAssembly, когда API станет доступен
+            CatalogView(
+                viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
+                makeCollectionViewModel: { collectionId in
+                    CollectionViewModel(
+                        collectionId: collectionId,
+                        collectionService: CollectionServiceMock(),
+                        nftService: NftServiceMock(),
+                        likesService: LikesServiceMock.shared,
+                        cartService: CartServiceMock.shared
+                    )
                 }
-                .tag(Tab.catalog)
-            
+            )
+            .tabItem {
+                Label {
+                    Text("Каталог")
+                } icon: {
+                    Image(.catalog30)
+                }
+            }
+            .tag(Tab.catalog)
+
             Text("Корзина")
                 .tabItem {
                     Label {
@@ -36,7 +47,7 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.cart)
-            
+
             Text("Статистика")
                 .tabItem {
                     Label {

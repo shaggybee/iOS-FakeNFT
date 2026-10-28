@@ -59,6 +59,11 @@ actor DefaultNetworkClient: NetworkClient {
            let dtoEncoded = try? encoder.encode(dto) {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
+        } else if let formParameters = request.formParameters {
+            var components = URLComponents()
+            components.queryItems = formParameters
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = components.percentEncodedQuery?.data(using: .utf8)
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 

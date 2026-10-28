@@ -8,8 +8,13 @@
 import Foundation
 
 enum CatalogSortOption: String, CaseIterable {
+
+    // MARK: - Cases
+
     case name
     case nftCount
+
+    // MARK: - Properties
 
     var title: String {
         switch self {

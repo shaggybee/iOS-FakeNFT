@@ -8,6 +8,9 @@
 import Foundation
 
 struct CatalogCellModel: Identifiable, Equatable {
+
+    // MARK: - Properties
+
     let id: String
     let coverURL: URL?
     let title: String

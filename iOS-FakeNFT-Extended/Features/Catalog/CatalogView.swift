@@ -7,12 +7,27 @@
 
 import SwiftUI
 
-struct CatalogView: View {
-    @State private var viewModel: CatalogViewModel
+// MARK: - CatalogView
 
-    init(viewModel: CatalogViewModel) {
+struct CatalogView: View {
+
+    // MARK: - Properties
+
+    @State private var viewModel: CatalogViewModel
+    @State private var selectedCollectionId: String?
+    private let makeCollectionViewModel: (String) -> CollectionViewModel
+
+    // MARK: - Init
+
+    init(
+        viewModel: CatalogViewModel,
+        makeCollectionViewModel: @escaping (String) -> CollectionViewModel
+    ) {
         _viewModel = State(initialValue: viewModel)
+        self.makeCollectionViewModel = makeCollectionViewModel
     }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack {
@@ -23,11 +38,16 @@ struct CatalogView: View {
                         sortButton
                     }
                 }
+                .navigationDestination(item: $selectedCollectionId) { collectionId in
+                    CollectionView(viewModel: makeCollectionViewModel(collectionId))
+                }
         }
         .onAppear {
             viewModel.onAppear()
         }
     }
+
+    // MARK: - Private Views
 
     @ViewBuilder
     private var content: some View {
@@ -51,10 +71,15 @@ struct CatalogView: View {
     private func list(_ cells: [CatalogCellModel]) -> some View {
         List {
             ForEach(cells) { cell in
-                CatalogCellView(
-                    coverURL: cell.coverURL,
-                    title: cell.title
-                )
+                Button {
+                    selectedCollectionId = cell.id
+                } label: {
+                    CatalogCellView(
+                        coverURL: cell.coverURL,
+                        title: cell.title
+                    )
+                }
+                .buttonStyle(.plain)
                 .listRowInsets(Constants.rowInsets)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
@@ -108,6 +133,8 @@ struct CatalogView: View {
     }
 }
 
+// MARK: - Constants
+
 private extension CatalogView {
     enum Constants {
         static let rowInsets = EdgeInsets(top: 0, leading: 16, bottom: 21, trailing: 16)
@@ -115,6 +142,19 @@ private extension CatalogView {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    CatalogView(viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()))
+    CatalogView(
+        viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
+        makeCollectionViewModel: { collectionId in
+            CollectionViewModel(
+                collectionId: collectionId,
+                collectionService: CollectionServiceMock(),
+                nftService: NftServiceMock(),
+                likesService: LikesServiceMock(),
+                cartService: CartServiceMock()
+            )
+        }
+    )
 }
