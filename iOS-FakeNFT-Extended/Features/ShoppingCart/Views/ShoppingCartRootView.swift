@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct ShoppingCartRootView: View {
+    private var services: ServicesAssemblyProtocol
+    
     @State private var navigationPath: NavigationPath = NavigationPath()
     @State private var shoppingCartViewModel: ShoppingCartViewModel
     
-    init(shoppingCartService: ShoppingCartServiceProtocol) {
+    init(services: ServicesAssemblyProtocol) {
+        self.services = services
+        
         _shoppingCartViewModel = State(
             initialValue: ShoppingCartViewModel(
-                shoppingCartService: shoppingCartService
+                shoppingCartService: services.shoppingCartService
             )
         )
     }
@@ -30,7 +34,9 @@ struct ShoppingCartRootView: View {
             .navigationDestination(for: ShoppingCartPath.self) { path in
                 switch path {
                 case .payment:
-                    ShoppingCartPaymentView()
+                    let shoppingCartPaymentViewModel = ShoppingCartPaymentViewModel(currenciesService: services.currenciesService)
+                    
+                    ShoppingCartPaymentView(viewModel: shoppingCartPaymentViewModel)
                         .toolbar(.hidden, for: .tabBar)
                 }
             }
@@ -42,5 +48,5 @@ struct ShoppingCartRootView: View {
 }
 
 #Preview {
-    ShoppingCartRootView(shoppingCartService: ServicesAssemblyMock().shoppingCartService)
+    ShoppingCartRootView(services: ServicesAssemblyMock())
 }

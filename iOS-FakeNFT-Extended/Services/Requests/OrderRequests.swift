@@ -30,3 +30,29 @@ struct OrderUpdateRequest: NetworkRequest {
         self.dto = OrderUpdateDTO(nfts: nfts)
     }
 }
+
+struct OrderClearRequest: NetworkRequest {
+    private struct OrderClearDTO: Encodable {
+        let nfts: [String]
+    }
+    
+    var httpMethod: HttpMethod { .post }
+
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+    }
+
+    let dto: Encodable?
+
+    init(nfts: [String]) {
+        self.dto = OrderClearDTO(nfts: nfts)
+    }
+}
+
+struct OrderPaymentRequest: NetworkRequest {
+    let currencyId: String
+
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1/payment/\(currencyId)")
+    }
+}

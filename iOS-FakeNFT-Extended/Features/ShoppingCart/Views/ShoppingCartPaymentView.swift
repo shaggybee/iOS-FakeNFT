@@ -10,6 +10,12 @@ import SwiftUI
 struct ShoppingCartPaymentView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @State private var viewModel: ShoppingCartPaymentViewModel
+    
+    init(viewModel: ShoppingCartPaymentViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         VStack {
             Text("ShoppingCartPaymentView")
@@ -33,5 +39,5 @@ struct ShoppingCartPaymentView: View {
 }
 
 #Preview {
-    ShoppingCartPaymentView()
+    ShoppingCartPaymentView(viewModel: ShoppingCartPaymentViewModel(currenciesService: CurrenciesServiceMock()))
 }

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TabBarView: View {
+    let services = ServicesAssemblyMock()
+    
     var body: some View {
         TabView {
             Text("Профиль")
@@ -22,7 +24,7 @@ struct TabBarView: View {
                 }
             
             // TODO как будет доступен API не забыть удалить и прокинуть действительный
-            ShoppingCartRootView(shoppingCartService: ServicesAssemblyMock().shoppingCartService)
+            ShoppingCartRootView(services: services)
                 .tabItem {
                     Label {
                         Text("Tab.cart")

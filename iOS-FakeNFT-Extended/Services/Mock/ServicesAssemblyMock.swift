@@ -24,4 +24,8 @@ final class ServicesAssemblyMock: ServicesAssemblyProtocol {
             nftService: nftService
         )
     }
+    
+    var currenciesService: CurrenciesServiceProtocol {
+        CurrenciesServiceMock()
+    }
 }

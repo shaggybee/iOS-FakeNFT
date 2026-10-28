@@ -5,6 +5,7 @@ protocol ServicesAssemblyProtocol {
     var nftService: NftService { get }
     var orderService: OrderServiceProtocol { get }
     var shoppingCartService: ShoppingCartServiceProtocol { get }
+    var currenciesService: CurrenciesServiceProtocol { get }
 }
 
 @Observable
@@ -37,5 +38,9 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
             orderService: orderService,
             nftService: nftService
         )
+    }
+    
+    var currenciesService: CurrenciesServiceProtocol {
+        CurrenciesService(networkClient: networkClient)
     }
 }
