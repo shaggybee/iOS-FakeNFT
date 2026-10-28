@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - NftCollection Mocks
+
 extension NftCollection {
     static let mocks: [NftCollection] = [
         ("1", "Peach", 11),
@@ -28,8 +30,15 @@ extension NftCollection {
     }
 }
 
-struct CollectionsServiceStub: CollectionsService {
+// MARK: - CollectionsServiceStub
+
+struct CollectionsServiceStub: CollectionsServiceProtocol {
+
+    // MARK: - Properties
+
     var collections = NftCollection.mocks
+
+    // MARK: - Public Methods
 
     func loadCollections(page: Int, size: Int) async throws -> [NftCollection] {
         Array(collections.dropFirst(page * size).prefix(size))

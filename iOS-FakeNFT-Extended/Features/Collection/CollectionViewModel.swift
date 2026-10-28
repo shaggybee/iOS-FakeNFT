@@ -10,16 +10,19 @@ import Foundation
 @Observable
 @MainActor
 final class CollectionViewModel {
+
+    // MARK: - Properties
+
     private(set) var state: ViewState<CollectionScreenModel> = .idle
     var isLikeErrorPresented = false
     var isCartErrorPresented = false
     var presentedAuthorWebsite: URL?
 
     private let collectionId: String
-    private let collectionService: CollectionService
+    private let collectionService: CollectionServiceProtocol
     private let nftService: NftService
-    private let likesService: LikesService
-    private let cartService: CartService
+    private let likesService: LikesServiceProtocol
+    private let cartService: CartServiceProtocol
     private var collection: NftCollection?
     private var nfts: [Nft] = []
     private var likes: Set<String> = []
@@ -29,12 +32,14 @@ final class CollectionViewModel {
     private var confirmedCart: Set<String> = []
     private var cartSyncTask: Task<Void, Never>?
 
+    // MARK: - Init
+
     init(
         collectionId: String,
-        collectionService: CollectionService,
+        collectionService: CollectionServiceProtocol,
         nftService: NftService,
-        likesService: LikesService,
-        cartService: CartService
+        likesService: LikesServiceProtocol,
+        cartService: CartServiceProtocol
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
@@ -43,9 +48,11 @@ final class CollectionViewModel {
         self.cartService = cartService
     }
 
-    func onAppear() {
+    // MARK: - Public Methods
+
+    func onAppear() async {
         guard case .idle = state else { return }
-        Task { await load() }
+        await load()
     }
 
     func retryButtonTapped() {
@@ -66,10 +73,11 @@ final class CollectionViewModel {
         }
         updateLoadedState()
 
+        let likesToSave = likes
         let previousTask = likesSyncTask
         likesSyncTask = Task {
             await previousTask?.value
-            await syncLikes()
+            await syncLikes(likesToSave)
         }
     }
 
@@ -83,13 +91,16 @@ final class CollectionViewModel {
         }
         updateLoadedState()
 
+        let cartToSave = cart
         let previousTask = cartSyncTask
         cartSyncTask = Task {
             await previousTask?.value
-            await syncCart()
+            await syncCart(cartToSave)
         }
     }
 }
+
+// MARK: - Private Methods
 
 private extension CollectionViewModel {
     func load() async {
@@ -108,34 +119,40 @@ private extension CollectionViewModel {
             confirmedCart = self.cart
             updateLoadedState()
         } catch {
+            guard !Task.isCancelled else {
+                state = .idle
+                return
+            }
             state = .error(error)
         }
     }
 
-    func syncLikes() async {
-        let likesToSave = likes
+    func syncLikes(_ likesToSave: Set<String>) async {
         guard likesToSave != confirmedLikes else { return }
 
         do {
             try await likesService.updateLikes(likesToSave)
             confirmedLikes = likesToSave
         } catch {
-            likes = confirmedLikes
-            updateLoadedState()
+            if likes == likesToSave {
+                likes = confirmedLikes
+                updateLoadedState()
+            }
             isLikeErrorPresented = true
         }
     }
 
-    func syncCart() async {
-        let cartToSave = cart
+    func syncCart(_ cartToSave: Set<String>) async {
         guard cartToSave != confirmedCart else { return }
 
         do {
-            try await cartService.updateCart(cartToSave)
+            try await cartService.updateCart(with: cartToSave)
             confirmedCart = cartToSave
         } catch {
-            cart = confirmedCart
-            updateLoadedState()
+            if cart == cartToSave {
+                cart = confirmedCart
+                updateLoadedState()
+            }
             isCartErrorPresented = true
         }
     }

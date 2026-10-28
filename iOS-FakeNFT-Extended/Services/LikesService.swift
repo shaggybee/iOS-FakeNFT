@@ -7,19 +7,29 @@
 
 import Foundation
 
-protocol LikesService: Sendable {
+// MARK: - LikesServiceProtocol
+
+protocol LikesServiceProtocol: Sendable {
     func loadLikes() async throws -> Set<String>
     func updateLikes(_ likes: Set<String>) async throws
 }
 
+// MARK: - LikesServiceImpl
+
 @MainActor
-final class LikesServiceImpl: LikesService {
+final class LikesServiceImpl: LikesServiceProtocol {
+
+    // MARK: - Properties
 
     private let networkClient: NetworkClient
+
+    // MARK: - Init
 
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
+
+    // MARK: - Public Methods
 
     func loadLikes() async throws -> Set<String> {
         let profile: ProfileLikes = try await networkClient.send(request: ProfileLikesRequest())

@@ -28,22 +28,22 @@ final class NftServiceImpl: NftService {
     }
 
     func loadNfts(ids: [String]) async throws -> [Nft] {
-        let loaded = try await withThrowingTaskGroup(of: Nft.self) { group in
-            for id in Set(ids) {
+        let uniqueIds = Set(ids)
+
+        return try await withThrowingTaskGroup(of: Nft.self) { group in
+            for id in uniqueIds {
                 group.addTask {
                     try await self.loadNft(id: id)
                 }
             }
 
-            var result: [String: Nft] = [:]
+            var nftsById: [String: Nft] = [:]
 
             for try await nft in group {
-                result[nft.id] = nft
+                nftsById[nft.id] = nft
             }
 
-            return result
+            return ids.compactMap { nftsById[$0] }
         }
-
-        return ids.compactMap { loaded[$0] }
     }
 }

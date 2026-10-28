@@ -8,5 +8,8 @@
 import Foundation
 
 struct ProfileLikes: Decodable {
+
+    // MARK: - Properties
+
     let likes: [String]
 }

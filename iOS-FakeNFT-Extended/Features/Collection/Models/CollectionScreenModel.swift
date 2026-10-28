@@ -8,6 +8,9 @@
 import Foundation
 
 struct CollectionScreenModel {
+
+    // MARK: - Properties
+
     let header: CollectionHeaderModel
     let nfts: [CollectionNftCellModel]
 }

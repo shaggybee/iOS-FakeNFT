@@ -9,7 +9,11 @@ import Foundation
 
 struct UpdateOrderRequest: NetworkRequest {
 
-    let nfts: [String]
+    // MARK: - Properties
+
+    let nftIDs: [String]
+
+    // MARK: - NetworkRequest
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
@@ -18,10 +22,9 @@ struct UpdateOrderRequest: NetworkRequest {
     var httpMethod: HttpMethod { .put }
 
     var formParameters: [URLQueryItem]? {
-        // API не принимает пустой массив: чтобы очистить корзину, нужно передать "null"
-        guard !nfts.isEmpty else {
+        guard !nftIDs.isEmpty else {
             return [URLQueryItem(name: "nfts", value: "null")]
         }
-        return nfts.map { URLQueryItem(name: "nfts", value: $0) }
+        return nftIDs.map { URLQueryItem(name: "nfts", value: $0) }
     }
 }

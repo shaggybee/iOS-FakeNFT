@@ -9,8 +9,12 @@ import Foundation
 
 struct CollectionsRequest: NetworkRequest {
 
+    // MARK: - Properties
+
     let page: Int
     let size: Int
+
+    // MARK: - NetworkRequest
 
     var endpoint: URL? {
         var components = URLComponents(string: "\(RequestConstants.baseURL)/api/v1/collections")

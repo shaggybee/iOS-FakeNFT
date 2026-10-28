@@ -8,6 +8,9 @@
 import Foundation
 
 struct CollectionHeaderModel: Equatable {
+
+    // MARK: - Properties
+
     let coverURL: URL?
     let title: String
     let author: String

@@ -22,10 +22,10 @@ struct TabBarView: View {
                 makeCollectionViewModel: { collectionId in
                     CollectionViewModel(
                         collectionId: collectionId,
-                        collectionService: CollectionServiceStub(),
-                        nftService: NftServiceStub(),
-                        likesService: LikesServiceStub.shared,
-                        cartService: CartServiceStub.shared
+                        collectionService: CollectionServiceMock(),
+                        nftService: NftServiceMock(),
+                        likesService: LikesServiceMock.shared,
+                        cartService: CartServiceMock.shared
                     )
                 }
             )

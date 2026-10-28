@@ -8,6 +8,9 @@
 import Foundation
 
 struct CollectionNftCellModel: Identifiable, Equatable {
+
+    // MARK: - Properties
+
     let id: String
     let imageURL: URL?
     let name: String

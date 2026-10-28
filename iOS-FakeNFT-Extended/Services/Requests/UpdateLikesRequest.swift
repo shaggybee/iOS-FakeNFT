@@ -9,7 +9,11 @@ import Foundation
 
 struct UpdateLikesRequest: NetworkRequest {
 
+    // MARK: - Properties
+
     let likes: [String]
+
+    // MARK: - NetworkRequest
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/profile/1")

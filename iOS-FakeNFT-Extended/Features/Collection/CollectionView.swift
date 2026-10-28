@@ -8,6 +8,8 @@
 import SwiftUI
 import Kingfisher
 
+// MARK: - Constants
+
 private enum Constants {
     static let coverHeight: CGFloat = 310
     static let coverCornerRadius: CGFloat = 12
@@ -26,14 +28,23 @@ private enum Constants {
     )
 }
 
+// MARK: - CollectionView
+
 struct CollectionView: View {
+
+    // MARK: - Properties
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var viewModel: CollectionViewModel
 
+    // MARK: - Init
+
     init(viewModel: CollectionViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
+
+    // MARK: - Body
 
     var body: some View {
         content
@@ -44,8 +55,8 @@ struct CollectionView: View {
                     backButton
                 }
             }
-            .onAppear {
-                viewModel.onAppear()
+            .task {
+                await viewModel.onAppear()
             }
             .onChange(of: viewModel.presentedAuthorWebsite) { _, url in
                 guard let url else { return }
@@ -70,6 +81,8 @@ struct CollectionView: View {
             }
     }
 
+    // MARK: - Private Views
+
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
@@ -87,8 +100,6 @@ struct CollectionView: View {
             loaded(model)
         }
     }
-
-    // MARK: - Private Views
 
     private func loaded(_ model: CollectionScreenModel) -> some View {
         ScrollView {
@@ -172,15 +183,17 @@ struct CollectionView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     NavigationStack {
         CollectionView(
             viewModel: CollectionViewModel(
                 collectionId: NftCollection.peachMock.id,
-                collectionService: CollectionServiceStub(),
-                nftService: NftServiceStub(),
-                likesService: LikesServiceStub(),
-                cartService: CartServiceStub()
+                collectionService: CollectionServiceMock(),
+                nftService: NftServiceMock(),
+                likesService: LikesServiceMock(),
+                cartService: CartServiceMock()
             )
         )
     }

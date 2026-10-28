@@ -7,18 +7,28 @@
 
 import Foundation
 
-protocol CollectionService: Sendable {
+// MARK: - CollectionServiceProtocol
+
+protocol CollectionServiceProtocol: Sendable {
     func loadCollection(id: String) async throws -> NftCollection
 }
 
+// MARK: - CollectionServiceImpl
+
 @MainActor
-final class CollectionServiceImpl: CollectionService {
+final class CollectionServiceImpl: CollectionServiceProtocol {
+
+    // MARK: - Properties
 
     private let networkClient: NetworkClient
+
+    // MARK: - Init
 
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
+
+    // MARK: - Public Methods
 
     func loadCollection(id: String) async throws -> NftCollection {
         let request = CollectionRequest(id: id)

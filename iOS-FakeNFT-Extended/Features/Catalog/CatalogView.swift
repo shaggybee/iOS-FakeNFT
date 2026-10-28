@@ -7,10 +7,17 @@
 
 import SwiftUI
 
+// MARK: - CatalogView
+
 struct CatalogView: View {
+
+    // MARK: - Properties
+
     @State private var viewModel: CatalogViewModel
     @State private var selectedCollectionId: String?
     private let makeCollectionViewModel: (String) -> CollectionViewModel
+
+    // MARK: - Init
 
     init(
         viewModel: CatalogViewModel,
@@ -19,6 +26,8 @@ struct CatalogView: View {
         _viewModel = State(initialValue: viewModel)
         self.makeCollectionViewModel = makeCollectionViewModel
     }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack {
@@ -37,6 +46,8 @@ struct CatalogView: View {
             viewModel.onAppear()
         }
     }
+
+    // MARK: - Private Views
 
     @ViewBuilder
     private var content: some View {
@@ -122,6 +133,8 @@ struct CatalogView: View {
     }
 }
 
+// MARK: - Constants
+
 private extension CatalogView {
     enum Constants {
         static let rowInsets = EdgeInsets(top: 0, leading: 16, bottom: 21, trailing: 16)
@@ -129,16 +142,18 @@ private extension CatalogView {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     CatalogView(
         viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
         makeCollectionViewModel: { collectionId in
             CollectionViewModel(
                 collectionId: collectionId,
-                collectionService: CollectionServiceStub(),
-                nftService: NftServiceStub(),
-                likesService: LikesServiceStub(),
-                cartService: CartServiceStub()
+                collectionService: CollectionServiceMock(),
+                nftService: NftServiceMock(),
+                likesService: LikesServiceMock(),
+                cartService: CartServiceMock()
             )
         }
     )

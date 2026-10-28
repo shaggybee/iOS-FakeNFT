@@ -8,6 +8,9 @@
 import Foundation
 
 struct NftCollection: Decodable, Identifiable, Hashable {
+
+    // MARK: - Properties
+
     let id: String
     let name: String
     let cover: URL?

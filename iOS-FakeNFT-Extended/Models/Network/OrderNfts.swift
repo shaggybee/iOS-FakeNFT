@@ -8,5 +8,8 @@
 import Foundation
 
 struct OrderNfts: Decodable {
+
+    // MARK: - Properties
+
     let nfts: [String]
 }

@@ -67,7 +67,7 @@ struct CollectionCellView: View {
     }
 
     private var info: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: .zero) {
             VStack(alignment: .leading, spacing: Constants.infoSpacing) {
                 Text(model.name)
                     .font(AppFont.bold17)
