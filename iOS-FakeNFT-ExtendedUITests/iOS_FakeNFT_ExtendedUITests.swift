@@ -54,6 +54,26 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 
     @MainActor
+    func testUnavailableWebsiteShowsRetryAndCanBeClosed() throws {
+        let app = XCUIApplication()
+        // The fixture uses a local unavailable address without changing a real profile.
+        app.launchArguments = ["--profile-ui-testing", "--profile-unavailable-website", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        let link = app.buttons["profile.website"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertEqual(link.label, "https://127.0.0.1:65534")
+        link.tap()
+        let retry = app.buttons["profile.website.retry"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Не удалось открыть сайт"].exists)
+        attachScreenshot("Ошибка открытия сайта")
+        retry.tap()
+        XCTAssertTrue(retry.waitForExistence(timeout: 10))
+        app.buttons["Готово"].tap()
+        XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
     private func attachScreenshot(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name

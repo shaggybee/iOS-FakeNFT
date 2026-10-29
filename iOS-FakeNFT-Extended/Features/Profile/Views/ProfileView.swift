@@ -10,7 +10,10 @@ struct ProfileRootView: View {
     private var profileService: any ProfileService {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") {
-            return ProfileUITestService(failsFirstLoad: ProcessInfo.processInfo.arguments.contains("--profile-fail-first-load"))
+            return ProfileUITestService(
+                failsFirstLoad: ProcessInfo.processInfo.arguments.contains("--profile-fail-first-load"),
+                unavailableWebsite: ProcessInfo.processInfo.arguments.contains("--profile-unavailable-website")
+            )
         }
         #endif
         return services.profileService
