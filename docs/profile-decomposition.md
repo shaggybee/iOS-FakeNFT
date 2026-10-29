@@ -11,11 +11,11 @@ SwiftUI, MVVM (`@Observable`), iOS 17.0+, Swift Concurrency. Сервисы — 
 | ID | Задача | План, ч | Статус |
 |---|---|---:|---|
 | [P1](https://github.com/shaggybee/iOS-FakeNFT/issues/37) | Изучить ТЗ, макеты, API и оформить план | 1.5 | План подготовлен, требуется проверка наставника |
-| [P2](https://github.com/shaggybee/iOS-FakeNFT/issues/38) | Модель профиля, GET/PUT, actor-сервис, form-urlencoded | 2 | Реализовано, подготовлено к ревью |
-| [P3](https://github.com/shaggybee/iOS-FakeNFT/issues/39) | Основной экран: фото, имя, описание, сайт, счётчики | 2 | Реализовано, подготовлено к ревью |
-| [P4](https://github.com/shaggybee/iOS-FakeNFT/issues/40) | Редактирование полей и URL фото, сохранение и отмена | 3 | Реализовано, подготовлено к ревью |
-| [P5](https://github.com/shaggybee/iOS-FakeNFT/issues/41) | Состояния загрузки/ошибки, повтор запроса, веб-вью | 1.5 | Реализовано, подготовлено к ревью |
-| [P6](https://github.com/shaggybee/iOS-FakeNFT/issues/42) | Тесты первой части, сборка и подготовка PR | 2 | Реализовано, подготовлено к ревью |
+| [P2](https://github.com/shaggybee/iOS-FakeNFT/issues/38) | Модель профиля, GET/PUT, actor-сервис, form-urlencoded | 2 | Слито в epic/profile, PR #54 |
+| [P3](https://github.com/shaggybee/iOS-FakeNFT/issues/39) | Основной экран: фото, имя, описание, сайт, счётчики | 2 | Слито в epic/profile, PR #54 |
+| [P4](https://github.com/shaggybee/iOS-FakeNFT/issues/40) | Редактирование полей и URL фото, сохранение и отмена | 3 | Слито в epic/profile, PR #54 |
+| [P5](https://github.com/shaggybee/iOS-FakeNFT/issues/41) | Состояния загрузки/ошибки, повтор запроса, веб-вью | 1.5 | Слито в epic/profile, PR #54 |
+| [P6](https://github.com/shaggybee/iOS-FakeNFT/issues/42) | Тесты первой части, сборка и подготовка PR | 2 | Слито в epic/profile, PR #54 |
 
 Готовность: профиль загружается из API; изменённые поля сохраняются PUT-запросом; изменения видны на основном экране; сайт открывается внутри приложения; ошибки допускают повтор. Переходы в «Мои NFT» и «Избранное» относятся к следующим итерациям.
 
@@ -23,13 +23,15 @@ SwiftUI, MVVM (`@Observable`), iOS 17.0+, Swift Concurrency. Сервисы — 
 
 | ID | Задача | План, ч | Статус |
 |---|---|---:|---|
-| [P7](https://github.com/shaggybee/iOS-FakeNFT/issues/43) | Модели NFT/автора и получение NFT текущего пользователя | 2.5 | Бэклог |
-| [P8](https://github.com/shaggybee/iOS-FakeNFT/issues/44) | Список NFT по макету: картинка, название, автор, цена | 3 | Бэклог |
-| [P9](https://github.com/shaggybee/iOS-FakeNFT/issues/45) | Сортировка, по умолчанию рейтинг; сохранение выбора | 2 | Бэклог |
-| [P10](https://github.com/shaggybee/iOS-FakeNFT/issues/46) | Пустой список, загрузка, ошибки и навигация | 1.5 | Бэклог |
-| [P11](https://github.com/shaggybee/iOS-FakeNFT/issues/47) | Тесты, взаимное ревью и обработка замечаний | 3 | Бэклог |
+| [P7](https://github.com/shaggybee/iOS-FakeNFT/issues/43) | Модели NFT/автора и получение NFT текущего пользователя | 2.5 | Реализовано, тесты прошли; API возвращает 502 |
+| [P8](https://github.com/shaggybee/iOS-FakeNFT/issues/44) | Список NFT по макету: картинка, название, автор, цена | 3 | Реализовано, ожидает командного ревью |
+| [P9](https://github.com/shaggybee/iOS-FakeNFT/issues/45) | Сортировка, по умолчанию рейтинг; сохранение выбора | 2 | Реализовано, тесты прошли |
+| [P10](https://github.com/shaggybee/iOS-FakeNFT/issues/46) | Пустой список, загрузка, ошибки и навигация | 1.5 | Реализовано, тесты прошли |
+| [P11](https://github.com/shaggybee/iOS-FakeNFT/issues/47) | Тесты, взаимное ревью и обработка замечаний | 3 | 32 unit-теста и 7 UI-сценариев прошли; командное ревью/approve ожидаются |
 
 Готовность: раздел открывается из профиля; показаны реальные NFT; сортировка сохраняется после перезапуска; пройдено командное ревью. В сдачу входят первая и вторая части.
+
+Текущее состояние второй части и ограничения интеграции — в [описании итерации](profile-iteration-2.md). Состав третьей части остаётся в бэклоге. Подтверждение approve партнёра по команде для второй части пока не получено.
 
 ## 3/3 — «Избранные NFT» и интеграция (12 часов)
 
