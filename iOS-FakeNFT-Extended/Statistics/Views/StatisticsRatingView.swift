@@ -4,6 +4,7 @@
 //
 //  Created by el on 22.10.2026.
 //
+
 import SwiftUI
 
 struct StatisticsRatingView: View {
@@ -75,10 +76,10 @@ private struct RatingScreen: View {
         }
         .confirmationDialog("Сортировка", isPresented: $isSortPresented, titleVisibility: .visible) {
             Button("По имени") {
-                viewModel.sortByName()
+                viewModel.sortUsers(by: .name)
             }
             Button("По рейтингу") {
-                viewModel.sortByRating()
+                viewModel.sortUsers(by: .rating)
             }
             Button("Закрыть", role: .cancel) {
                 

@@ -22,7 +22,6 @@ final class ServicesAssembly {
         )
     }
     
-    // Эпик: статистика
     var usersService: UsersService {
         UsersServiceImpl(networkClient: networkClient)
     }
