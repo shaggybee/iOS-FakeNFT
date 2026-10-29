@@ -2,6 +2,8 @@
 
 Ответственный: AntonA22. Эпик: [#36](https://github.com/shaggybee/iOS-FakeNFT/issues/36). [Общая доска](https://github.com/users/shaggybee/projects/1).
 
+PR второй итерации: [#89 — Мои NFT и сохранение сортировки](https://github.com/shaggybee/iOS-FakeNFT/pull/89).
+
 ## Объём сдачи
 
 В приложении доступны первая и вторая части эпика: основной профиль, редактирование, сайт пользователя и список «Мои NFT». Первая часть одобрена Kirchberg и слита [PR #54](https://github.com/shaggybee/iOS-FakeNFT/pull/54). Новая ветка feature/profile-iteration-2 создана от epic/profile после этого слияния (база: 68cba59).
@@ -31,6 +33,8 @@ SwiftUI + MVVM, @Observable и @MainActor для ViewModel, actor/Sendable дл�
 Список получает массивы nfts/likes из загруженного профиля при открытии. Чтобы перечитать изменённый на сервере состав NFT, нужно обновить профиль перед открытием списка. Pull-to-refresh списка повторяет загрузку NFT/авторов по этим ID; кэш NFT используется общим сервисом.
 
 ## Проверки
+
+Открыть iOS-FakeNFT-Extended.xcodeproj, выбрать схему iOS-FakeNFT-Extended и симулятор с iOS 17+. Учебный API_TOKEN должен находиться в игнорируемом Configurations/Secrets.xcconfig (образец — Secrets.xcconfig.example). Запустить приложение и открыть «Мои NFT» из профиля; тесты запускаются через Product → Test.
 
 Debug-сборка на iPhone 16 / iOS 18.4, Xcode 16.3 — успешно. **32 unit-теста и 7 UI-сценариев прошли.** Основной прогон проверил все unit-тесты и четыре прежних UI-сценария; три новых UI-сценария отдельно прошли после исправления области нажатия строки «Мои NFT».
 
