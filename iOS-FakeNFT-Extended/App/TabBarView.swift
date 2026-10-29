@@ -3,7 +3,7 @@ import SwiftUI
 struct TabBarView: View {
     var body: some View {
         TabView {
-            Text("Профиль")
+            ProfileRootView()
                 .tabItem {
                     Label {
                         Text("Профиль")
