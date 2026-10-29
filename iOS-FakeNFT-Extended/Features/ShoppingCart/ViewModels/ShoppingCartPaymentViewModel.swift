@@ -11,6 +11,7 @@ import Foundation
 @Observable
 final class ShoppingCartPaymentViewModel {
     private(set) var viewState: ViewState<[Currency]> = .idle
+    private(set) var isPaying = false
     
     let currenciesService: CurrenciesServiceProtocol
     var selectedCurrency: Currency?
@@ -24,6 +25,7 @@ final class ShoppingCartPaymentViewModel {
         return items
     }
     var isCurrenciesListEmpty: Bool { currencies.isEmpty }
+    var canPay: Bool { selectedCurrency != nil }
     
     init(currenciesService: CurrenciesServiceProtocol) {
         self.currenciesService = currenciesService
@@ -44,6 +46,10 @@ final class ShoppingCartPaymentViewModel {
             isFetchingCurrenciesErrorShown = true
             viewState = .error(nil)
         }
+    }
+    
+    func pay() async {
+        isPaying = true
     }
     
     func getPreparedCurrencyCellModel(from currency: Currency) -> PaymentCurrencyCellModel {

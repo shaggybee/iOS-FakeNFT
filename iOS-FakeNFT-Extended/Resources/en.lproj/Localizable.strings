@@ -26,3 +26,6 @@
 "Payment.selection"="Выберите способ оплаты";
 "Payment.emptyCurrenciesList"="Нет доступных валют для оплаты";
 "Payment.loadCurrenciesError" = "Не удалось получить список валют";
+"Payment.pay" = "Оплатить";
+"Payment.agreement" = "Совершая покупку, вы соглашаетесь с условиями";
+"Payment.agreementLink" = "Пользовательского соглашения";

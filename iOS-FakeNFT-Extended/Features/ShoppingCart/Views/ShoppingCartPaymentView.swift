@@ -44,6 +44,7 @@ struct ShoppingCartPaymentView: View {
         .navigationTitle("Payment.selection")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        .allowsHitTesting(!viewModel.isPaying)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -52,6 +53,7 @@ struct ShoppingCartPaymentView: View {
                     Image(.backward24)
                         .tint(.blackPrimary)
                 }
+                .disabled(viewModel.isPaying)
             }
         }
         .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingCurrenciesErrorShown) {
@@ -61,6 +63,11 @@ struct ShoppingCartPaymentView: View {
                 }
             }
             Button("Button.cancel", role: .cancel) { }
+        }
+        .overlay {
+            if viewModel.isPaying {
+                BlockingProgressView()
+            }
         }
         .task {
             await viewModel.loadCurrencies()
@@ -75,16 +82,44 @@ struct ShoppingCartPaymentView: View {
                         PaymentCurrencyCellView(
                             model: viewModel.getPreparedCurrencyCellModel(from: currency),
                             isSelected: currency.id == viewModel.selectedCurrency?.id
-                        ) {
-                            viewModel.selectedCurrency = currency
-                        }
+                        ) { viewModel.selectedCurrency = currency }
                     }
                 }
             }
             .scrollIndicators(.hidden)
             .padding(.horizontal, 16)
             .padding(.top, 20)
+            
+            footerBlock
         }
+    }
+    
+    private var footerBlock: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Payment.agreement")
+                    .foregroundStyle(.blackPrimary)
+                    .font(AppFont.regular13)
+                Button {
+                    // TODO добавить переход к пользовательскому соглашению
+                } label: {
+                    Text("Payment.agreementLink")
+                        .foregroundStyle(.blueUniversal)
+                        .font(AppFont.regular13)
+                }
+            }
+            
+            BaseButton(title: NSLocalizedString("Payment.pay", comment: ""), action: {
+                Task { await viewModel.pay() }
+            })
+            .disabled(!viewModel.canPay)
+        }
+        .padding(16)
+        .background(
+            UnevenRoundedRectangle(topLeadingRadius: 12, topTrailingRadius: 12)
+                .fill(.lightGrey)
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
 }
 
