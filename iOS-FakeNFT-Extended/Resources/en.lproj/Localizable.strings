@@ -24,3 +24,5 @@
 "Sorting.byPrice" = "По цене";
 "Sorting.byRating" = "По рейтингу";
 "Payment.selection"="Выберите способ оплаты";
+"Payment.emptyCurrenciesList"="Нет доступных валют для оплаты";
+"Payment.loadCurrenciesError" = "Не удалось получить список валют";

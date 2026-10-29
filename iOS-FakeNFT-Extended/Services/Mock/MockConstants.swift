@@ -77,49 +77,49 @@ enum MockConstants {
             id: "1",
             title: "Bitcoin",
             name: "ВТС",
-            image: Bundle.main.url(forResource: "bitcoin32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")
         ),
         Currency(
             id: "2",
             title: "Dogecoin",
             name: "DOGE",
-            image: Bundle.main.url(forResource: "dogecoin32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Dogecoin_(DOGE).png")
         ),
         Currency(
             id: "3",
             title: "Tether",
             name: "USDT",
-            image: Bundle.main.url(forResource: "tether32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png")
         ),
         Currency(
             id: "4",
             title: "Apecoin",
             name: "APE",
-            image: Bundle.main.url(forResource: "apeCoin32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png")
         ),
         Currency(
             id: "5",
             title: "Solana",
             name: "SOL",
-            image: Bundle.main.url(forResource: "solana32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png")
         ),
         Currency(
             id: "6",
             title: "Ethereum",
             name: "ETH",
-            image: Bundle.main.url(forResource: "etherium32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Ethereum_(ETH).png")
         ),
         Currency(
             id: "7",
             title: "Cardano",
             name: "ADA",
-            image: Bundle.main.url(forResource: "cardano32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png")
         ),
         Currency(
             id: "8",
             title: "Shiba Inu",
             name: "SHIB",
-            image: Bundle.main.url(forResource: "shibaInu32", withExtension: "png")
+            image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png")
         ),
     ]
 }

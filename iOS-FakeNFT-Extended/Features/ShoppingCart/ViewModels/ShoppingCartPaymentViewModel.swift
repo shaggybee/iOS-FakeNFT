@@ -45,4 +45,13 @@ final class ShoppingCartPaymentViewModel {
             viewState = .error(nil)
         }
     }
+    
+    func getPreparedCurrencyCellModel(from currency: Currency) -> PaymentCurrencyCellModel {
+        PaymentCurrencyCellModel(
+            id: currency.id,
+            title: currency.title,
+            name: currency.name,
+            imageUrl: currency.image
+        )
+    }
 }
