@@ -7,13 +7,13 @@ actor ProfileUITestService: ProfileService {
     private var profile: UserProfile
     private var failsFirstLoad: Bool
 
-    init(failsFirstLoad: Bool, unavailableWebsite: Bool = false) {
+    init(failsFirstLoad: Bool, unavailableWebsite: Bool = false, emptyNFTs: Bool = false) {
         self.failsFirstLoad = failsFirstLoad
         profile = UserProfile(
             id: "1", name: "Студент Практикума", avatar: "",
             description: "Изучаю цифровое искусство и собираю коллекцию NFT.",
             website: unavailableWebsite ? "https://127.0.0.1:65534" : "https://practicum.yandex.ru/ios-developer",
-            nfts: ["1", "2", "3"], likes: ["4", "5"]
+            nfts: emptyNFTs ? [] : ["1", "2", "3"], likes: ["4", "5"]
         )
     }
 

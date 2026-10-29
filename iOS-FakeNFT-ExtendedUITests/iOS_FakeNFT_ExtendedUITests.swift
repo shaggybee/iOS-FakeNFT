@@ -7,7 +7,7 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
         app.launchArguments = ["--profile-ui-testing", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
         app.launch()
         XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["Мои NFT (3)"].exists)
+        XCTAssertEqual(app.buttons["profile.my-nfts"].label, "Мои NFT (3)")
         attachScreenshot("Профиль")
         app.buttons["profile.edit"].tap()
         let name = app.textFields["profile.edit.name"]
@@ -71,6 +71,78 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
         XCTAssertTrue(retry.waitForExistence(timeout: 10))
         app.buttons["Готово"].tap()
         XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testMyNFTSortingPersistsAfterRelaunch() throws {
+        let app = XCUIApplication()
+        let arguments = ["--profile-ui-testing", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launchArguments = arguments + ["-Profile.myNFTs.sort", "rating"]
+        app.launch()
+        let link = app.buttons["profile.my-nfts"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        link.tap()
+        let names = app.staticTexts.matching(identifier: "profile.nfts.name")
+        XCTAssertTrue(names.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(names.allElementsBoundByIndex.map(\.label), ["Spring", "April", "Lilo"])
+        attachScreenshot("Мои NFT")
+        let sort = app.buttons["profile.nfts.sort"]
+        sort.tap()
+        attachScreenshot("Сортировка NFT")
+        app.buttons["По названию"].tap()
+        XCTAssertEqual(names.allElementsBoundByIndex.map(\.label), ["April", "Lilo", "Spring"])
+        sort.tap()
+        app.buttons["По цене"].tap()
+        XCTAssertEqual(sort.value as? String, "По цене")
+        XCTAssertEqual(names.allElementsBoundByIndex.map(\.label), ["April", "Lilo", "Spring"])
+        attachScreenshot("Мои NFT после сортировки")
+
+        app.terminate()
+        app.launchArguments = arguments
+        app.launch()
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        link.tap()
+        XCTAssertTrue(sort.waitForExistence(timeout: 10))
+        XCTAssertEqual(sort.value as? String, "По цене")
+        XCTAssertEqual(names.allElementsBoundByIndex.map(\.label), ["April", "Lilo", "Spring"])
+        app.buttons["profile.nfts.back"].tap()
+        XCTAssertTrue(app.buttons["profile.my-nfts"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Каталог"].exists)
+    }
+
+    @MainActor
+    func testMyNFTEmptyStateAndBackNavigation() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--profile-ui-testing", "--profile-empty-nfts", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        let link = app.buttons["profile.my-nfts"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertEqual(link.label, "Мои NFT (0)")
+        link.tap()
+        XCTAssertTrue(app.staticTexts["У Вас ещё нет NFT"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["profile.nfts.sort"].exists)
+        attachScreenshot("Нет NFT")
+        app.buttons["profile.nfts.back"].tap()
+        XCTAssertTrue(link.waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testMyNFTLoadFailureCanBeDismissedAndRetried() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--profile-ui-testing", "--profile-nfts-fail-first-load", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        let link = app.buttons["profile.my-nfts"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        link.tap()
+        let alert = app.alerts["Не удалось загрузить NFT"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        attachScreenshot("Ошибка загрузки NFT")
+        alert.buttons["Отмена"].tap()
+        let retry = app.buttons["Повторить"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 5))
+        retry.tap()
+        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.nfts.name").count, 3)
     }
 
     @MainActor
