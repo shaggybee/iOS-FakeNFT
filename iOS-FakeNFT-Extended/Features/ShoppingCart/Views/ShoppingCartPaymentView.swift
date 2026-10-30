@@ -10,9 +10,12 @@ import SwiftUI
 struct ShoppingCartPaymentView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @Binding private var navigationPath: NavigationPath
+    
     @State private var viewModel: ShoppingCartPaymentViewModel
     
-    init(viewModel: ShoppingCartPaymentViewModel) {
+    init(viewModel: ShoppingCartPaymentViewModel, navigationPath: Binding<NavigationPath>) {
+        _navigationPath = navigationPath
         self.viewModel = viewModel
     }
     
@@ -105,7 +108,7 @@ struct ShoppingCartPaymentView: View {
                     .foregroundStyle(.blackPrimary)
                     .font(AppFont.regular13)
                 Button {
-                    // TODO добавить переход к пользовательскому соглашению
+                    navigationPath.append(ShoppingCartPath.agreement)
                 } label: {
                     Text("Payment.agreementLink")
                         .foregroundStyle(.blueUniversal)
@@ -128,6 +131,8 @@ struct ShoppingCartPaymentView: View {
 }
 
 #Preview {
+    @Previewable @State var navigationPath: NavigationPath = NavigationPath()
+    
     let viewModel = ShoppingCartPaymentViewModel(
         currenciesService: CurrenciesServiceMock(),
         shoppingCartService: ShoppingCartServiceMock(
@@ -136,5 +141,5 @@ struct ShoppingCartPaymentView: View {
         )
     )
     
-    ShoppingCartPaymentView(viewModel: viewModel)
+    ShoppingCartPaymentView(viewModel: viewModel, navigationPath: $navigationPath)
 }

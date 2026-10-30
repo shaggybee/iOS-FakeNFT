@@ -95,6 +95,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6306371E308641BB00E1F7C0 /* Docs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Docs; sourceTree = "<group>"; };
+		631AFE223095162A00A15FA3 /* AppWebView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AppWebView; sourceTree = "<group>"; };
 		6320F03E3082B9920095EB91 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		6320F05F3083E9610095EB91 /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
 		6320F0603083E9D10095EB91 /* Features */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Features; sourceTree = "<group>"; };
@@ -278,6 +279,7 @@
 		ABC5E1B32C31FC03002B4068 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				631AFE223095162A00A15FA3 /* AppWebView */,
 				63B85E8130867497003FDC64 /* LoadingView.swift */,
 				63B85E83308678D0003FDC64 /* BlockingProgressView.swift */,
 				63B85EA130867F80003FDC64 /* EmptyStateView.swift */,
@@ -305,6 +307,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				631AFE223095162A00A15FA3 /* AppWebView */,
 				6320F03E3082B9920095EB91 /* Resources */,
 				6320F05F3083E9610095EB91 /* App */,
 				6320F0603083E9D10095EB91 /* Features */,

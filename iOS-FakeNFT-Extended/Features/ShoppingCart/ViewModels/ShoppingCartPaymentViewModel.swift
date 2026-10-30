@@ -47,6 +47,10 @@ final class ShoppingCartPaymentViewModel {
     }
     
     func loadCurrencies() async {
+        if case .loaded = viewState {
+            return
+        }
+        
         viewState = .loading
         
         do {

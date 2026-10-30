@@ -32,3 +32,4 @@
 "Payment.agreementLink" = "Пользовательского соглашения";
 "Payment.paymentFailed" = "Не удалось произвести оплату";
 "Payment.cartClearingFailed" = "Не удалось очистить корзину";
+"ShoppingCartAgreement.loadError" = "Не удалось загрузить пользовательское соглашение";

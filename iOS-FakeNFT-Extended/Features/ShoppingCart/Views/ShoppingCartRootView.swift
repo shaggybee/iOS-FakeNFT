@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShoppingCartRootView: View {
     private var services: ServicesAssemblyProtocol
+    private let agreementUrl: String = "https://practicum.yandex.ru"
     
     @State private var navigationPath: NavigationPath = NavigationPath()
     @State private var shoppingCartViewModel: ShoppingCartViewModel
@@ -39,7 +40,13 @@ struct ShoppingCartRootView: View {
                         shoppingCartService: services.shoppingCartService
                     )
                     
-                    ShoppingCartPaymentView(viewModel: shoppingCartPaymentViewModel)
+                    ShoppingCartPaymentView(
+                        viewModel: shoppingCartPaymentViewModel,
+                        navigationPath: $navigationPath
+                    )
+                    .toolbar(.hidden, for: .tabBar)
+                case .agreement:
+                    ShoppingCartAgreementView(agreementUrl: agreementUrl)
                         .toolbar(.hidden, for: .tabBar)
                 }
             }
