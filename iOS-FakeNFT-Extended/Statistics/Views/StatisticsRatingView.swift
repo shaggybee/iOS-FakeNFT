@@ -22,8 +22,13 @@ private struct RatingScreen: View {
     @State private var viewModel: RatingViewModel
     @State private var isSortPresented = false
     @State private var isErrorPresented = false
+    @State private var selectedUserId: String?
+    
+    private let usersService: UsersService
     
     init(usersService: UsersService) {
+        self.usersService = usersService
+        
         _viewModel = State(initialValue: RatingViewModel(usersService: usersService))
     }
     
@@ -49,7 +54,13 @@ private struct RatingScreen: View {
                 
                 List {
                     ForEach(Array(viewModel.users.enumerated()), id: \.element.id) { index, user in
-                        RatingUserRow(position: index + 1, name: user.name, avatar: user.avatar, nftCount: user.nftCount)
+                        
+                        Button {
+                            selectedUserId = user.id
+                        } label: {
+                            RatingUserRow(position: index + 1, name: user.name, avatar: user.avatar, nftCount: user.nftCount)
+                        }
+                        .buttonStyle(.plain)
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -58,6 +69,9 @@ private struct RatingScreen: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
             }
+        }
+        .navigationDestination(item: $selectedUserId) { userId in
+            UserProfileView(userId: userId, usersService: usersService)
         }
         .task {
             await viewModel.loadUsers()
