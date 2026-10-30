@@ -19,6 +19,7 @@
 "Button.close" = "Закрыть";
 "Button.delete" = "Удалить";
 "Button.comeback" = "Вернуться";
+"Button.retry" = "Повторить";
 "Sorting.title" = "Сортировка";
 "Sorting.byTitle" = "По названию";
 "Sorting.byPrice" = "По цене";
@@ -29,3 +30,5 @@
 "Payment.pay" = "Оплатить";
 "Payment.agreement" = "Совершая покупку, вы соглашаетесь с условиями";
 "Payment.agreementLink" = "Пользовательского соглашения";
+"Payment.paymentFailed" = "Не удалось произвести оплату";
+"Payment.cartClearingFailed" = "Не удалось очистить корзину";

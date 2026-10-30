@@ -10,6 +10,7 @@ import Foundation
 protocol ShoppingCartServiceProtocol: Sendable {
     func loadShoppingCart() async throws -> [Nft]
     func deleteNfts(except ids: [String]) async throws -> Void
+    func pay(by currencyId: String) async throws
     func clear() async throws -> Void
 }
 
@@ -29,10 +30,14 @@ actor ShoppingCartService: ShoppingCartServiceProtocol {
     }
     
     func deleteNfts(except ids: [String]) async throws {
-        _ = try await orderService.updateOrder(nfts: ids)
+        try await orderService.updateOrder(nfts: ids)
+    }
+    
+    func pay(by currencyId: String) async throws {
+        try await orderService.pay(by: currencyId)
     }
     
     func clear() async throws {
-        _ = try await orderService.clear()
+        try await orderService.clear()
     }
 }

@@ -11,11 +11,15 @@ import Foundation
 @Observable
 final class ShoppingCartPaymentViewModel {
     private(set) var viewState: ViewState<[Currency]> = .idle
-    private(set) var isPaying = false
+    private(set) var payingState: PayingState = .idle
     
     let currenciesService: CurrenciesServiceProtocol
+    let shoppingCartService: ShoppingCartServiceProtocol
     var selectedCurrency: Currency?
     var isFetchingCurrenciesErrorShown: Bool = false
+    var isPaymentErrorAlertPresented: Bool = false
+    
+    var currenciesLoadToken: UUID = UUID()
     
     var currencies: [Currency] {
         guard case let .loaded(items) = viewState else {
@@ -27,8 +31,19 @@ final class ShoppingCartPaymentViewModel {
     var isCurrenciesListEmpty: Bool { currencies.isEmpty }
     var canPay: Bool { selectedCurrency != nil }
     
-    init(currenciesService: CurrenciesServiceProtocol) {
+    var paymentErrorMessage: String {
+        if case .error(let errorState) = payingState {
+            return errorState.alertMessage
+        }
+        return NSLocalizedString("Error.unknown", comment: "")
+    }
+    
+    init(
+        currenciesService: CurrenciesServiceProtocol,
+        shoppingCartService: ShoppingCartServiceProtocol
+    ) {
         self.currenciesService = currenciesService
+        self.shoppingCartService = shoppingCartService
     }
     
     func loadCurrencies() async {
@@ -48,8 +63,37 @@ final class ShoppingCartPaymentViewModel {
         }
     }
     
+    func retryLoadCurrencies() {
+        currenciesLoadToken = UUID()
+    }
+    
     func pay() async {
-        isPaying = true
+        guard let selectedCurrency else {
+            return
+        }
+        
+        do {
+            if payingState != .error(.cartClearingFailed) {
+                payingState = .paying
+                
+                try await shoppingCartService.pay(by: selectedCurrency.id)
+            }
+            payingState = .cartClearing
+            
+            try await shoppingCartService.clear()
+            
+            payingState = .paid
+        } catch {
+            guard !Task.isCancelled else { return }
+            
+            if payingState == .paying {
+                payingState = .error(.paymentFailed)
+            } else {
+                payingState = .error(.cartClearingFailed)
+            }
+            
+            isPaymentErrorAlertPresented = true
+        }
     }
     
     func getPreparedCurrencyCellModel(from currency: Currency) -> PaymentCurrencyCellModel {

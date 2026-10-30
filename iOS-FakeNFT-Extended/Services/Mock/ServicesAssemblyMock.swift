@@ -10,22 +10,18 @@ import Foundation
 @Observable
 @MainActor
 final class ServicesAssemblyMock: ServicesAssemblyProtocol {
-    var nftService: NftService {
-        NftServiceMock()
-    }
+    let nftService: NftService
+    let orderService: OrderServiceProtocol
+    let shoppingCartService: ShoppingCartServiceProtocol
+    let currenciesService: CurrenciesServiceProtocol
     
-    var orderService: OrderServiceProtocol {
-        OrderServiceMock()
-    }
-
-    var shoppingCartService: ShoppingCartServiceProtocol {
-        ShoppingCartServiceMock(
+    init() {
+        nftService = NftServiceMock()
+        orderService = OrderServiceMock()
+        shoppingCartService = ShoppingCartServiceMock(
             orderService: orderService,
             nftService: nftService
         )
-    }
-    
-    var currenciesService: CurrenciesServiceProtocol {
-        CurrenciesServiceMock()
+        currenciesService = CurrenciesServiceMock()
     }
 }

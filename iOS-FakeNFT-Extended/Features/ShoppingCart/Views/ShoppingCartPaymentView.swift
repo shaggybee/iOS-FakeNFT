@@ -32,9 +32,7 @@ struct ShoppingCartPaymentView: View {
                     ErrorStateView(
                         message: NSLocalizedString("Payment.loadCurrenciesError", comment: ""),
                         onRetry: {
-                            Task {
-                                await viewModel.loadCurrencies()
-                            }
+                            viewModel.retryLoadCurrencies()
                         })
                 }
             }
@@ -44,7 +42,7 @@ struct ShoppingCartPaymentView: View {
         .navigationTitle("Payment.selection")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .allowsHitTesting(!viewModel.isPaying)
+        .allowsHitTesting(viewModel.payingState != .paying)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -53,23 +51,29 @@ struct ShoppingCartPaymentView: View {
                     Image(.backward24)
                         .tint(.blackPrimary)
                 }
-                .disabled(viewModel.isPaying)
+                .disabled(viewModel.payingState == .paying)
             }
         }
         .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingCurrenciesErrorShown) {
             Button("Button.retry") {
+                viewModel.retryLoadCurrencies()
+            }
+            Button("Button.cancel", role: .cancel) { }
+        }
+        .alert(viewModel.paymentErrorMessage, isPresented: $viewModel.isPaymentErrorAlertPresented) {
+            Button("Button.retry") {
                 Task {
-                    await viewModel.loadCurrencies()
+                    await viewModel.pay()
                 }
             }
             Button("Button.cancel", role: .cancel) { }
         }
         .overlay {
-            if viewModel.isPaying {
+            if viewModel.payingState == .paying {
                 BlockingProgressView()
             }
         }
-        .task {
+        .task(id: viewModel.currenciesLoadToken) {
             await viewModel.loadCurrencies()
         }
     }
@@ -110,8 +114,8 @@ struct ShoppingCartPaymentView: View {
             }
             
             BaseButton(title: NSLocalizedString("Payment.pay", comment: ""), action: {
-                Task { await viewModel.pay() }
-            })
+                    Task { await viewModel.pay() }
+                })
             .disabled(!viewModel.canPay)
         }
         .padding(16)
@@ -124,5 +128,13 @@ struct ShoppingCartPaymentView: View {
 }
 
 #Preview {
-    ShoppingCartPaymentView(viewModel: ShoppingCartPaymentViewModel(currenciesService: CurrenciesServiceMock()))
+    let viewModel = ShoppingCartPaymentViewModel(
+        currenciesService: CurrenciesServiceMock(),
+        shoppingCartService: ShoppingCartServiceMock(
+            orderService: OrderServiceMock(),
+            nftService: NftServiceMock()
+        )
+    )
+    
+    ShoppingCartPaymentView(viewModel: viewModel)
 }

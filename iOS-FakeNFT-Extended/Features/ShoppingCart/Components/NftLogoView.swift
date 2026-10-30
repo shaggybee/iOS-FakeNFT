@@ -21,6 +21,7 @@ struct NftLogoView: View {
                     nftPlaceholder
                 } else {
                     LoadingView()
+                        .background(.whiteUniversal)
                 }
             }
         } else {

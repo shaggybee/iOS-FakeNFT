@@ -34,7 +34,10 @@ struct ShoppingCartRootView: View {
             .navigationDestination(for: ShoppingCartPath.self) { path in
                 switch path {
                 case .payment:
-                    let shoppingCartPaymentViewModel = ShoppingCartPaymentViewModel(currenciesService: services.currenciesService)
+                    let shoppingCartPaymentViewModel = ShoppingCartPaymentViewModel(
+                        currenciesService: services.currenciesService,
+                        shoppingCartService: services.shoppingCartService
+                    )
                     
                     ShoppingCartPaymentView(viewModel: shoppingCartPaymentViewModel)
                         .toolbar(.hidden, for: .tabBar)
