@@ -19,8 +19,17 @@
 "Button.close" = "Закрыть";
 "Button.delete" = "Удалить";
 "Button.comeback" = "Вернуться";
+"Button.retry" = "Повторить";
 "Sorting.title" = "Сортировка";
 "Sorting.byTitle" = "По названию";
 "Sorting.byPrice" = "По цене";
 "Sorting.byRating" = "По рейтингу";
 "Payment.selection"="Выберите способ оплаты";
+"Payment.emptyCurrenciesList"="Нет доступных валют для оплаты";
+"Payment.loadCurrenciesError" = "Не удалось получить список валют";
+"Payment.pay" = "Оплатить";
+"Payment.agreement" = "Совершая покупку, вы соглашаетесь с условиями";
+"Payment.agreementLink" = "Пользовательского соглашения";
+"Payment.paymentFailed" = "Не удалось произвести оплату";
+"Payment.cartClearingFailed" = "Не удалось очистить корзину";
+"ShoppingCartAgreement.loadError" = "Не удалось загрузить пользовательское соглашение";

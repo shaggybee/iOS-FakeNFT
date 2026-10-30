@@ -17,4 +17,12 @@ actor OrderServiceMock: OrderServiceProtocol {
     func updateOrder(nfts: [String]) async throws {
         // unused
     }
+    
+    func pay(by currencyId: String) async throws {
+        try await Task.sleep(for: .seconds(1))
+    }
+    
+    func clear() async throws {
+        try await Task.sleep(for: .seconds(1))
+    }
 }

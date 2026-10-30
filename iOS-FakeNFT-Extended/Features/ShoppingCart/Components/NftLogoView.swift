@@ -20,7 +20,10 @@ struct NftLogoView: View {
                 } else if phase.error != nil {
                     nftPlaceholder
                 } else {
-                    LoadingView()
+                    ProgressView()
+                        .background(.whiteUniversal)
+                        .tint(.blackUniversal)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         } else {
