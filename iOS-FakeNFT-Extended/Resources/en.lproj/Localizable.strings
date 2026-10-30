@@ -14,3 +14,4 @@
 "Sort.byNftCount" = "По количеству NFT";
 "Sort.title" = "Сортировка";
 "Tab.catalog" = "Каталог";
+"WebView.loadingError" = "Не удалось загрузить страницу";
