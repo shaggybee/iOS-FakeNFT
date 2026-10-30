@@ -35,7 +35,6 @@ struct CollectionView: View {
     // MARK: - Properties
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
     @State private var viewModel: CollectionViewModel
 
     // MARK: - Init
@@ -58,10 +57,8 @@ struct CollectionView: View {
             .task {
                 await viewModel.onAppear()
             }
-            .onChange(of: viewModel.presentedAuthorWebsite) { _, url in
-                guard let url else { return }
-                openURL(url)
-                viewModel.presentedAuthorWebsite = nil
+            .navigationDestination(item: $viewModel.presentedAuthorWebsite) { url in
+                WebView(url: url)
             }
             .alert(
                 String(localized: "Error.title"),
