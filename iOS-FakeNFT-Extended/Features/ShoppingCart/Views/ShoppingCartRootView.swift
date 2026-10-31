@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ShoppingCartRootView: View {
+    private let agreementUrl: String = "https://practicum.yandex.ru"
     private var services: ServicesAssemblyProtocol
     
     @State private var navigationPath: NavigationPath = NavigationPath()
-    @State private var viewModel: ShoppingCartRootViewModel = ShoppingCartRootViewModel()
     @State private var shoppingCartViewModel: ShoppingCartViewModel
     
     init(services: ServicesAssemblyProtocol) {
@@ -46,18 +46,20 @@ struct ShoppingCartRootView: View {
                     )
                     .toolbar(.hidden, for: .tabBar)
                 case .agreement:
-                    ShoppingCartAgreementView(agreementUrl: viewModel.agreementUrl)
+                    ShoppingCartAgreementView(agreementUrl: agreementUrl)
                         .toolbar(.hidden, for: .tabBar)
                 case .paymentSuccess:
                     PaymentSuccessView(onBackToCartTap: {
                         navigationPath.removeLast(navigationPath.count)
                         
-                        viewModel.reloadNfts()
+                        shoppingCartViewModel.retryNftsLoad()
                     })
+                    .navigationBarBackButtonHidden()
+                    .toolbar(.hidden, for: .tabBar)
                 }
             }
         }
-        .task(id: viewModel.nftsLoadToken) {
+        .task {
             await shoppingCartViewModel.loadNfts()
         }
     }

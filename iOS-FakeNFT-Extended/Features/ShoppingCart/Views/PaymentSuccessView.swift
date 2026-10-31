@@ -35,8 +35,6 @@ struct PaymentSuccessView: View {
         }
         .frame(maxWidth: .infinity)
         .background(.whitePrimary)
-        .navigationBarBackButtonHidden()
-        .toolbar(.hidden, for: .tabBar)
     }
 }
 

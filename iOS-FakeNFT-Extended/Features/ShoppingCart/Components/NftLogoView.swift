@@ -26,6 +26,7 @@ struct NftLogoView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .id(url)
         } else {
             nftPlaceholder
         }
