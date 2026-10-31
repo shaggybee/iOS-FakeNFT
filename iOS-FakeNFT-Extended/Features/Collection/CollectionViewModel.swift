@@ -16,6 +16,7 @@ final class CollectionViewModel {
     private(set) var state: ViewState<CollectionScreenModel> = .idle
     var isLikeErrorPresented = false
     var isCartErrorPresented = false
+    var isLoadErrorAlertPresented = false
     var presentedAuthorWebsite: URL?
 
     private let collectionId: String
@@ -124,6 +125,7 @@ private extension CollectionViewModel {
                 return
             }
             state = .error(error)
+            isLoadErrorAlertPresented = true
         }
     }
 

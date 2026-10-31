@@ -76,6 +76,10 @@ struct CollectionView: View {
             } message: {
                 Text(String(localized: "Collection.cartError"))
             }
+            .loadErrorAlert(
+                isPresented: $viewModel.isLoadErrorAlertPresented,
+                onRetry: viewModel.retryButtonTapped
+            )
     }
 
     // MARK: - Private Views

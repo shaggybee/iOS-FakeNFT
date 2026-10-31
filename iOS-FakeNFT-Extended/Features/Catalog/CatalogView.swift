@@ -45,6 +45,10 @@ struct CatalogView: View {
         .onAppear {
             viewModel.onAppear()
         }
+        .loadErrorAlert(
+            isPresented: $viewModel.isLoadErrorAlertPresented,
+            onRetry: viewModel.loadErrorAlertRetryTapped
+        )
     }
 
     // MARK: - Private Views
