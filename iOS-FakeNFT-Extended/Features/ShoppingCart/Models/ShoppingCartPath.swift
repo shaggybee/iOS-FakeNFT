@@ -10,4 +10,5 @@ import Foundation
 enum ShoppingCartPath: Hashable {
     case payment
     case agreement
+    case paymentSuccess
 }

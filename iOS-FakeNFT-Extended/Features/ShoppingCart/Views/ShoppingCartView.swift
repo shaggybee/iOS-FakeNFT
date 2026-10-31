@@ -129,6 +129,9 @@ struct ShoppingCartView: View {
                     }
                 }
             }
+            .refreshable(action: {
+                await viewModel.loadNfts()
+            })
             .scrollIndicators(.hidden)
             .padding(.horizontal, 16)
             

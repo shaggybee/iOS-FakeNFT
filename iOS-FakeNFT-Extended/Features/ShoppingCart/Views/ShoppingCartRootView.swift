@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ShoppingCartRootView: View {
     private var services: ServicesAssemblyProtocol
-    private let agreementUrl: String = "https://practicum.yandex.ru"
     
     @State private var navigationPath: NavigationPath = NavigationPath()
+    @State private var viewModel: ShoppingCartRootViewModel = ShoppingCartRootViewModel()
     @State private var shoppingCartViewModel: ShoppingCartViewModel
     
     init(services: ServicesAssemblyProtocol) {
@@ -46,12 +46,18 @@ struct ShoppingCartRootView: View {
                     )
                     .toolbar(.hidden, for: .tabBar)
                 case .agreement:
-                    ShoppingCartAgreementView(agreementUrl: agreementUrl)
+                    ShoppingCartAgreementView(agreementUrl: viewModel.agreementUrl)
                         .toolbar(.hidden, for: .tabBar)
+                case .paymentSuccess:
+                    PaymentSuccessView(onBackToCartTap: {
+                        navigationPath.removeLast(navigationPath.count)
+                        
+                        viewModel.reloadNfts()
+                    })
                 }
             }
         }
-        .task {
+        .task(id: viewModel.nftsLoadToken) {
             await shoppingCartViewModel.loadNfts()
         }
     }

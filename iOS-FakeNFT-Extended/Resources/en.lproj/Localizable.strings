@@ -32,4 +32,6 @@
 "Payment.agreementLink" = "Пользовательского соглашения";
 "Payment.paymentFailed" = "Не удалось произвести оплату";
 "Payment.cartClearingFailed" = "Не удалось очистить корзину";
+"Payment.successTitle" = "Успех! Оплата прошла, поздравляем с покупкой!";
+"Payment.backToCart" = "Вернуться в корзину";
 "ShoppingCartAgreement.loadError" = "Не удалось загрузить пользовательское соглашение";

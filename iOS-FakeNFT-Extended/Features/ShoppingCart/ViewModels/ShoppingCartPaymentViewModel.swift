@@ -31,6 +31,13 @@ final class ShoppingCartPaymentViewModel {
     var isCurrenciesListEmpty: Bool { currencies.isEmpty }
     var canPay: Bool { selectedCurrency != nil }
     
+    var isProcessing: Bool {
+        payingState == .paying || payingState == .cartClearing
+    }
+    var isInteractionEnabled: Bool {
+        payingState != .paying && payingState != .cartClearing
+    }
+    
     var paymentErrorMessage: String {
         if case .error(let errorState) = payingState {
             return errorState.alertMessage

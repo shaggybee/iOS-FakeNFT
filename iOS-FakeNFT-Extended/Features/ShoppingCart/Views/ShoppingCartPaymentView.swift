@@ -45,7 +45,7 @@ struct ShoppingCartPaymentView: View {
         .navigationTitle("Payment.selection")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .allowsHitTesting(viewModel.payingState != .paying)
+        .allowsHitTesting(viewModel.isInteractionEnabled)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -54,7 +54,7 @@ struct ShoppingCartPaymentView: View {
                     Image(.backward24)
                         .tint(.blackPrimary)
                 }
-                .disabled(viewModel.payingState == .paying)
+                .disabled(viewModel.isProcessing)
             }
         }
         .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingCurrenciesErrorShown) {
@@ -72,12 +72,17 @@ struct ShoppingCartPaymentView: View {
             Button("Button.cancel", role: .cancel) { }
         }
         .overlay {
-            if viewModel.payingState == .paying {
+            if viewModel.isProcessing {
                 BlockingProgressView()
             }
         }
         .task(id: viewModel.currenciesLoadToken) {
             await viewModel.loadCurrencies()
+        }
+        .onChange(of: viewModel.payingState) { _, newState in
+            if newState == .paid {
+                navigationPath.append(ShoppingCartPath.paymentSuccess)
+            }
         }
     }
     
@@ -117,8 +122,8 @@ struct ShoppingCartPaymentView: View {
             }
             
             BaseButton(title: NSLocalizedString("Payment.pay", comment: ""), action: {
-                    Task { await viewModel.pay() }
-                })
+                Task { await viewModel.pay() }
+            })
             .disabled(!viewModel.canPay)
         }
         .padding(16)
