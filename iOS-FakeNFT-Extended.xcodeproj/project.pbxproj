@@ -10,8 +10,6 @@
 		6303A36A30877FBE00925C37 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303A36930877FBE00925C37 /* BaseButton.swift */; };
 		6303A3883087831F00925C37 /* ErrorStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303A3873087831F00925C37 /* ErrorStateView.swift */; };
 		6303A4DC3087A2EE00925C37 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303A4DB3087A2EE00925C37 /* RatingView.swift */; };
-		C011EC71000000000000001B /* View+LoadErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001C /* View+LoadErrorAlert.swift */; };
-		C011EC710000000000000019 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001A /* WebView.swift */; };
 		6320F0403082BDC00095EB91 /* AppSystemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6320F03F3082BDC00095EB91 /* AppSystemIcon.swift */; };
 		63B85E8230867497003FDC64 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B85E8130867497003FDC64 /* LoadingView.swift */; };
 		63B85E84308678D0003FDC64 /* BlockingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B85E83308678D0003FDC64 /* BlockingProgressView.swift */; };
@@ -45,6 +43,8 @@
 		C011EC710000000000000013 /* OrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000014 /* OrderRequest.swift */; };
 		C011EC710000000000000015 /* UpdateOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000016 /* UpdateOrderRequest.swift */; };
 		C011EC710000000000000017 /* OrderNfts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000018 /* OrderNfts.swift */; };
+		C011EC710000000000000019 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001A /* WebView.swift */; };
+		C011EC71000000000000001B /* View+LoadErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001C /* View+LoadErrorAlert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,8 +68,6 @@
 		6303A36930877FBE00925C37 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
 		6303A3873087831F00925C37 /* ErrorStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorStateView.swift; sourceTree = "<group>"; };
 		6303A4DB3087A2EE00925C37 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
-		C011EC71000000000000001C /* View+LoadErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LoadErrorAlert.swift"; sourceTree = "<group>"; };
-		C011EC71000000000000001A /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		6320F03F3082BDC00095EB91 /* AppSystemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSystemIcon.swift; sourceTree = "<group>"; };
 		6320F14F3083F5B00095EB91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		63B85E8130867497003FDC64 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -105,6 +103,8 @@
 		C011EC710000000000000014 /* OrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRequest.swift; sourceTree = "<group>"; };
 		C011EC710000000000000016 /* UpdateOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateOrderRequest.swift; sourceTree = "<group>"; };
 		C011EC710000000000000018 /* OrderNfts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderNfts.swift; sourceTree = "<group>"; };
+		C011EC71000000000000001A /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		C011EC71000000000000001C /* View+LoadErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LoadErrorAlert.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */

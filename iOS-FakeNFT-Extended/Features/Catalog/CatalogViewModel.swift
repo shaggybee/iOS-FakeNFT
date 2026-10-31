@@ -20,6 +20,7 @@ final class CatalogViewModel {
     var isLoadErrorAlertPresented = false
 
     private let collectionsService: CollectionsServiceProtocol
+    private let router: CatalogRouter
     private let userDefaults: UserDefaults
     private var collections: [NftCollection] = []
     private var nextPage = 0
@@ -34,9 +35,11 @@ final class CatalogViewModel {
 
     init(
         collectionsService: CollectionsServiceProtocol,
+        router: CatalogRouter,
         userDefaults: UserDefaults = .standard
     ) {
         self.collectionsService = collectionsService
+        self.router = router
         self.userDefaults = userDefaults
         self.sortOption = userDefaults.string(forKey: Constants.sortOptionKey)
             .flatMap(CatalogSortOption.init(rawValue:)) ?? .nftCount
@@ -51,6 +54,10 @@ final class CatalogViewModel {
 
     func retryButtonTapped() {
         Task { await loadFirstPage() }
+    }
+
+    func cellTapped(_ cell: CatalogCellModel) {
+        router.push(.collection(id: cell.id))
     }
 
     func cellDidAppear(_ cell: CatalogCellModel) {

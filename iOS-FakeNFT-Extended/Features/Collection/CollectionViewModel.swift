@@ -17,13 +17,13 @@ final class CollectionViewModel {
     var isLikeErrorPresented = false
     var isCartErrorPresented = false
     var isLoadErrorAlertPresented = false
-    var presentedAuthorWebsite: URL?
 
     private let collectionId: String
     private let collectionService: CollectionServiceProtocol
     private let nftService: NftService
     private let likesService: LikesServiceProtocol
     private let cartService: CartServiceProtocol
+    private let router: CatalogRouter
     private var collection: NftCollection?
     private var nfts: [Nft] = []
     private var likes: Set<String> = []
@@ -40,13 +40,15 @@ final class CollectionViewModel {
         collectionService: CollectionServiceProtocol,
         nftService: NftService,
         likesService: LikesServiceProtocol,
-        cartService: CartServiceProtocol
+        cartService: CartServiceProtocol,
+        router: CatalogRouter
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
         self.nftService = nftService
         self.likesService = likesService
         self.cartService = cartService
+        self.router = router
     }
 
     // MARK: - Public Methods
@@ -61,7 +63,8 @@ final class CollectionViewModel {
     }
 
     func authorTapped() {
-        presentedAuthorWebsite = collection?.website
+        guard let website = collection?.website else { return }
+        router.push(.webView(website))
     }
 
     func likeButtonTapped(_ nft: CollectionNftCellModel) {

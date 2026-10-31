@@ -57,9 +57,6 @@ struct CollectionView: View {
             .task {
                 await viewModel.onAppear()
             }
-            .navigationDestination(item: $viewModel.presentedAuthorWebsite) { url in
-                WebView(url: url)
-            }
             .alert(
                 String(localized: "Error.title"),
                 isPresented: $viewModel.isLikeErrorPresented
@@ -194,7 +191,8 @@ struct CollectionView: View {
                 collectionService: CollectionServiceMock(),
                 nftService: NftServiceMock(),
                 likesService: LikesServiceMock(),
-                cartService: CartServiceMock()
+                cartService: CartServiceMock(),
+                router: CatalogRouter()
             )
         )
     }

@@ -14,23 +14,25 @@ struct CatalogView: View {
     // MARK: - Properties
 
     @State private var viewModel: CatalogViewModel
-    @State private var selectedCollectionId: String?
+    @Bindable private var router: CatalogRouter
     private let makeCollectionViewModel: (String) -> CollectionViewModel
 
     // MARK: - Init
 
     init(
         viewModel: CatalogViewModel,
+        router: CatalogRouter,
         makeCollectionViewModel: @escaping (String) -> CollectionViewModel
     ) {
         _viewModel = State(initialValue: viewModel)
+        self.router = router
         self.makeCollectionViewModel = makeCollectionViewModel
     }
 
     // MARK: - Body
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $router.path) {
             content
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -38,9 +40,7 @@ struct CatalogView: View {
                         sortButton
                     }
                 }
-                .navigationDestination(item: $selectedCollectionId) { collectionId in
-                    CollectionView(viewModel: makeCollectionViewModel(collectionId))
-                }
+                .navigationDestination(for: CatalogRoute.self, destination: destination)
         }
         .onAppear {
             viewModel.onAppear()
@@ -52,6 +52,16 @@ struct CatalogView: View {
     }
 
     // MARK: - Private Views
+
+    @ViewBuilder
+    private func destination(_ route: CatalogRoute) -> some View {
+        switch route {
+        case .collection(let id):
+            CollectionView(viewModel: makeCollectionViewModel(id))
+        case .webView(let url):
+            WebView(url: url)
+        }
+    }
 
     @ViewBuilder
     private var content: some View {
@@ -76,7 +86,7 @@ struct CatalogView: View {
         List {
             ForEach(cells) { cell in
                 Button {
-                    selectedCollectionId = cell.id
+                    viewModel.cellTapped(cell)
                 } label: {
                     CatalogCellView(
                         coverURL: cell.coverURL,
@@ -149,15 +159,19 @@ private extension CatalogView {
 // MARK: - Preview
 
 #Preview {
+    let router = CatalogRouter()
+
     CatalogView(
-        viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
+        viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub(), router: router),
+        router: router,
         makeCollectionViewModel: { collectionId in
             CollectionViewModel(
                 collectionId: collectionId,
                 collectionService: CollectionServiceMock(),
                 nftService: NftServiceMock(),
                 likesService: LikesServiceMock(),
-                cartService: CartServiceMock()
+                cartService: CartServiceMock(),
+                router: router
             )
         }
     )
