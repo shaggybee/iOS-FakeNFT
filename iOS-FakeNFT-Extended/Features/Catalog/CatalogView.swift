@@ -42,8 +42,8 @@ struct CatalogView: View {
                 }
                 .navigationDestination(for: CatalogRoute.self, destination: destination)
         }
-        .onAppear {
-            viewModel.onAppear()
+        .task {
+            await viewModel.onAppear()
         }
         .loadErrorAlert(
             isPresented: $viewModel.isLoadErrorAlertPresented,
@@ -88,10 +88,7 @@ struct CatalogView: View {
                 Button {
                     viewModel.cellTapped(cell)
                 } label: {
-                    CatalogCellView(
-                        coverURL: cell.coverURL,
-                        title: cell.title
-                    )
+                    CatalogCellView(model: cell)
                 }
                 .buttonStyle(.plain)
                 .listRowInsets(Constants.rowInsets)

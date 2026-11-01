@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NftCollection: Decodable, Identifiable, Hashable {
+struct NftCollection: Decodable, Identifiable {
 
     // MARK: - Properties
 

@@ -16,7 +16,7 @@ extension CollectionNftCellModel {
             imageURL: nft.images.first,
             name: nft.name,
             rating: nft.rating,
-            priceText: "\(nft.price.formatted()) ETH",
+            priceText: String(format: String(localized: "Collection.price"), nft.price.formatted()),
             isLiked: index < 3,
             isInCart: index < 3
         )

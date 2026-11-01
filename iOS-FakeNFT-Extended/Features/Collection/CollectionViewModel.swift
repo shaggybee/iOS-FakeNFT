@@ -23,7 +23,7 @@ final class CollectionViewModel {
     private let nftService: NftService
     private let likesService: LikesServiceProtocol
     private let cartService: CartServiceProtocol
-    private let router: CatalogRouter
+    private let router: CatalogRouterProtocol
     private var collection: NftCollection?
     private var nfts: [Nft] = []
     private var likes: Set<String> = []
@@ -41,7 +41,7 @@ final class CollectionViewModel {
         nftService: NftService,
         likesService: LikesServiceProtocol,
         cartService: CartServiceProtocol,
-        router: CatalogRouter
+        router: CatalogRouterProtocol
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
@@ -183,7 +183,7 @@ private extension CollectionViewModel {
             imageURL: nft.images.first,
             name: nft.name,
             rating: nft.rating,
-            priceText: "\(nft.price.formatted()) ETH",
+            priceText: String(format: String(localized: "Collection.price"), nft.price.formatted()),
             isLiked: likes.contains(nft.id),
             isInCart: cart.contains(nft.id)
         )

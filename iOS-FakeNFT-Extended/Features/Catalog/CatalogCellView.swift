@@ -21,15 +21,14 @@ struct CatalogCellView: View {
 
     // MARK: - Properties
 
-    let coverURL: URL?
-    let title: String
+    let model: CatalogCellModel
 
     // MARK: - Body
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             cover
-            Text(title)
+            Text(model.title)
                 .font(AppFont.bold17)
                 .foregroundStyle(.blackPrimary)
                 .lineLimit(1)
@@ -43,7 +42,7 @@ struct CatalogCellView: View {
         Color(.lightGrey)
             .frame(height: Constants.coverHeight)
             .overlay(alignment: .top) {
-                KFImage(coverURL)
+                KFImage(model.coverURL)
                     .placeholder { ProgressView() }
                     .resizable()
                     .scaledToFill()
@@ -57,8 +56,11 @@ struct CatalogCellView: View {
 
 #Preview {
     CatalogCellView(
-        coverURL: NftCollection.mocks[0].cover,
-        title: "Peach (11)"
+        model: CatalogCellModel(
+            id: NftCollection.mocks[0].id,
+            coverURL: NftCollection.mocks[0].cover,
+            title: "Peach (11)"
+        )
     )
     .padding()
 }

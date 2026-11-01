@@ -7,11 +7,18 @@
 
 import Foundation
 
+// MARK: - CatalogRouterProtocol
+
+@MainActor
+protocol CatalogRouterProtocol: AnyObject {
+    func push(_ route: CatalogRoute)
+}
+
 // MARK: - CatalogRouter
 
 @Observable
 @MainActor
-final class CatalogRouter {
+final class CatalogRouter: CatalogRouterProtocol {
 
     // MARK: - Properties
 

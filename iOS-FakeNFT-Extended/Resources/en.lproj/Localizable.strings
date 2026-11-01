@@ -5,6 +5,7 @@
 "Collection.cartError" = "Не удалось обновить корзину";
 "Collection.likeError" = "Не удалось обновить избранное";
 "Collection.loadingError" = "Не удалось загрузить коллекцию";
+"Collection.price" = "%@ ETH";
 "Common.cancel" = "Отмена";
 "Common.close" = "Закрыть";
 "Error.loadingData" = "Не удалось получить данные";
