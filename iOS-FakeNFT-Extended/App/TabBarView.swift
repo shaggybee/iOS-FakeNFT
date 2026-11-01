@@ -7,10 +7,10 @@ struct TabBarView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("Профиль")
+            Text("Tab.profile")
                 .tabItem {
                     Label {
-                        Text("Профиль")
+                        Text("Tab.profile")
                     } icon: {
                         Image(.profile30)
                     }
@@ -37,27 +37,27 @@ struct TabBarView: View {
             )
             .tabItem {
                 Label {
-                    Text("Каталог")
+                    Text("Tab.catalog")
                 } icon: {
                     Image(.catalog30)
                 }
             }
             .tag(Tab.catalog)
 
-            Text("Корзина")
+            Text("Tab.cart")
                 .tabItem {
                     Label {
-                        Text("Корзина")
+                        Text("Tab.cart")
                     } icon: {
                         Image(.basket30)
                     }
                 }
                 .tag(Tab.cart)
 
-            Text("Статистика")
+            Text("Tab.statistics")
                 .tabItem {
                     Label {
-                        Text("Статистика")
+                        Text("Tab.statistics")
                     } icon: {
                         Image(.statistics30)
                     }
