@@ -13,8 +13,9 @@ final class ShoppingCartPaymentViewModel {
     private(set) var viewState: ViewState<[Currency]> = .idle
     private(set) var payingState: PayingState = .idle
     
-    let currenciesService: CurrenciesServiceProtocol
-    let shoppingCartService: ShoppingCartServiceProtocol
+    private let currenciesService: CurrenciesServiceProtocol
+    private let shoppingCartService: ShoppingCartServiceProtocol
+    
     var selectedCurrency: Currency?
     var isFetchingCurrenciesErrorShown: Bool = false
     var isPaymentErrorAlertPresented: Bool = false
