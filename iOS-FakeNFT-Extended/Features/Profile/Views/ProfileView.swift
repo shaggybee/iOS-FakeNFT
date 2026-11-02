@@ -4,30 +4,21 @@ struct ProfileRootView: View {
     @Environment(ServicesAssembly.self) private var services
 
     var body: some View {
-        ProfileView(viewModel: ProfileViewModel(service: profileService))
+        ProfileView(viewModel: ProfileViewModel(service: services.profileService),
+                    showsDemoBadge: services.usesDemoProfileData)
     }
 
-    private var profileService: any ProfileService {
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") {
-            return ProfileUITestService(
-                failsFirstLoad: ProcessInfo.processInfo.arguments.contains("--profile-fail-first-load"),
-                unavailableWebsite: ProcessInfo.processInfo.arguments.contains("--profile-unavailable-website"),
-                emptyNFTs: ProcessInfo.processInfo.arguments.contains("--profile-empty-nfts")
-            )
-        }
-        #endif
-        return services.profileService
-    }
 }
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
     @State private var editingProfile: UserProfile?
     @State private var website: ProfileWebsite?
+    private let showsDemoBadge: Bool
 
-    init(viewModel: ProfileViewModel) {
+    init(viewModel: ProfileViewModel, showsDemoBadge: Bool = false) {
         _viewModel = State(initialValue: viewModel)
+        self.showsDemoBadge = showsDemoBadge
     }
 
     var body: some View {
@@ -73,6 +64,13 @@ struct ProfileView: View {
         case .loaded(let profile):
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
+                    if showsDemoBadge {
+                        Text("Profile.demo")
+                            .font(AppFont.regular13)
+                            .foregroundStyle(.greyUniversal)
+                            .padding(.top, 12)
+                            .accessibilityIdentifier("profile.demo")
+                    }
                     HStack(spacing: 16) {
                         ProfileAvatarView(url: profile.avatarURL, size: 70)
                         Text(profile.name)

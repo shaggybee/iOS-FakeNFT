@@ -1,19 +1,18 @@
 #if DEBUG
 import Foundation
 
-// Только для детерминированного запуска UI-тестов с явным launch argument.
-// В обычном запуске приложение всегда использует настоящий сетевой сервис.
-actor ProfileUITestService: ProfileService {
+// In-memory data for the Debug demo and isolated UI tests; never calls the API.
+actor MockProfileService: ProfileService {
     private var profile: UserProfile
     private var failsFirstLoad: Bool
 
-    init(failsFirstLoad: Bool, unavailableWebsite: Bool = false, emptyNFTs: Bool = false) {
+    init(failsFirstLoad: Bool = false, unavailableWebsite: Bool = false, emptyNFTs: Bool = false) {
         self.failsFirstLoad = failsFirstLoad
         profile = UserProfile(
             id: "1", name: "Студент Практикума", avatar: "",
             description: "Изучаю цифровое искусство и собираю коллекцию NFT.",
             website: unavailableWebsite ? "https://127.0.0.1:65534" : "https://practicum.yandex.ru/ios-developer",
-            nfts: emptyNFTs ? [] : ["1", "2", "3"], likes: ["4", "5"]
+            nfts: emptyNFTs ? [] : ["1", "2", "3"], likes: ["2", "5"]
         )
     }
 

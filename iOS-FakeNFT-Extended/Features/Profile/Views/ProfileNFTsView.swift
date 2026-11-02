@@ -7,27 +7,18 @@ struct ProfileNFTsRootView: View {
     var body: some View {
         ProfileNFTsView(viewModel: ProfileNFTsViewModel(
             profile: profile,
-            service: nftService,
+            service: services.profileNFTsService,
             sortStore: ProfileNFTSortStore()
         ))
     }
 
-    private var nftService: any ProfileNFTsService {
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") {
-            return ProfileNFTsUITestService(
-                failsFirstLoad: ProcessInfo.processInfo.arguments.contains("--profile-nfts-fail-first-load")
-            )
-        }
-        #endif
-        return services.profileNFTsService
-    }
 }
 
 struct ProfileNFTsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: ProfileNFTsViewModel
     @State private var showsSort = false
+    @State private var loadID = 0
 
     init(viewModel: ProfileNFTsViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -44,37 +35,40 @@ struct ProfileNFTsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { dismiss() } label: { Image(.backward24) }
-                        .accessibilityLabel("Назад")
+                        .accessibilityLabel(Text("ProfileNFT.back"))
                         .accessibilityIdentifier("profile.nfts.back")
                 }
                 if !viewModel.items.isEmpty {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button { showsSort = true } label: { Image(.sort40) }
-                            .accessibilityLabel("Сортировка")
+                            .accessibilityLabel(Text("ProfileNFT.sort.title"))
                             .accessibilityValue(viewModel.selection.title)
                             .accessibilityIdentifier("profile.nfts.sort")
                     }
                 }
             }
             .tint(.blackPrimary)
-            .confirmationDialog("Сортировка", isPresented: $showsSort, titleVisibility: .visible) {
+            .confirmationDialog("ProfileNFT.sort.title", isPresented: $showsSort, titleVisibility: .visible) {
                 ForEach(ProfileNFTSort.allCases, id: \.self) { option in
                     Button(option.title) { viewModel.selectSort(option) }
                 }
-                Button("Закрыть", role: .cancel) { }
+                Button("ProfileNFT.close", role: .cancel) { }
             }
-            .alert("Не удалось загрузить NFT", isPresented: $viewModel.showsError) {
-                Button("Повторить") { Task { await viewModel.load() } }
-                Button("Отмена", role: .cancel) { }
+            .alert("ProfileNFT.error.title", isPresented: $viewModel.showsError) {
+                Button("Error.repeat") { loadID += 1 }
+                Button("ProfileNFT.cancel", role: .cancel) { }
             } message: {
                 Text(viewModel.errorMessage)
             }
-            .task { await viewModel.loadIfNeeded() }
+            .task(id: loadID) {
+                if loadID == 0 { await viewModel.loadIfNeeded() }
+                else { await viewModel.load() }
+            }
     }
 
     private var title: String {
         if case .loaded(let items) = viewModel.state, items.isEmpty { return "" }
-        return "Мои NFT"
+        return NSLocalizedString("ProfileNFT.title", comment: "Owned NFTs screen title")
     }
 
     @ViewBuilder
@@ -82,8 +76,9 @@ struct ProfileNFTsView: View {
         switch viewModel.state {
         case .idle, .loading:
             LoadingView()
+                .accessibilityIdentifier("profile.nfts.loading")
         case .loaded(let items) where items.isEmpty:
-            EmptyStateView(message: "У Вас ещё нет NFT")
+            EmptyStateView(message: NSLocalizedString("ProfileNFT.empty", comment: "No owned NFTs"))
         case .loaded:
             List(viewModel.items) { item in
                 ProfileNFTCell(item: item, isLiked: viewModel.likedIDs.contains(item.id))
@@ -97,7 +92,7 @@ struct ProfileNFTsView: View {
             .refreshable { await viewModel.load() }
         case .error:
             ErrorStateView(message: viewModel.errorMessage) {
-                Task { await viewModel.load() }
+                loadID += 1
             }
             .padding(16)
         }

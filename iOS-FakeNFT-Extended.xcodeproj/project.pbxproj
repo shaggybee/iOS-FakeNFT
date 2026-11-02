@@ -415,7 +415,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "CONFIG_FILE=\"${SRCROOT}/Configurations/Secrets.xcconfig\"\n\nif [ ! -f \"$CONFIG_FILE\" ]; then\n  echo \"error: Файл конфигурации не найден по пути: $CONFIG_FILE. \"\n  echo \"error: Пожалуйста, скопируйте пример конфигурации: \"\n  echo \"error: cp ${SRCROOT}/Configurations/Secrets.xcconfig.example $CONFIG_FILE\"\n  exit 1\nfi\n\nif [ -z \"${API_TOKEN}\" ]; then\n  echo \"error: API_TOKEN отсутствует или пуст в файле $CONFIG_FILE. Пожалуйста, добавьте токен.\"\n  exit 1\nfi\n\nif [ \"${API_TOKEN}\" == \"API_KEY\" ]; then\n  echo \"error: Вы скопировали файл примера, но забыли заменить плейсхолдер API_TOKEN на реальный токен.\"\n  exit 1\nfi\n\necho \"Конфигурационный файл найден: $CONFIG_FILE\"\n";
+			shellScript = "if [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n  echo \"Debug: demo profile can run without API_TOKEN; live API requires Secrets.xcconfig.\"\n  exit 0\nfi\n\nCONFIG_FILE=\"${SRCROOT}/Configurations/Secrets.xcconfig\"\n\nif [ ! -f \"$CONFIG_FILE\" ]; then\n  echo \"error: Файл конфигурации не найден по пути: $CONFIG_FILE. \"\n  echo \"error: Пожалуйста, скопируйте пример конфигурации: \"\n  echo \"error: cp ${SRCROOT}/Configurations/Secrets.xcconfig.example $CONFIG_FILE\"\n  exit 1\nfi\n\nif [ -z \"${API_TOKEN}\" ]; then\n  echo \"error: API_TOKEN отсутствует или пуст в файле $CONFIG_FILE. Пожалуйста, добавьте токен.\"\n  exit 1\nfi\n\nif [ \"${API_TOKEN}\" == \"API_KEY\" ]; then\n  echo \"error: Вы скопировали файл примера, но забыли заменить плейсхолдер API_TOKEN на реальный токен.\"\n  exit 1\nfi\n\necho \"Конфигурационный файл найден: $CONFIG_FILE\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -639,6 +639,8 @@
 		};
 		ABC5E18E2C31F5B0002B4068 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 6320F14C3083F3F70095EB91 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Base.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -480,14 +480,68 @@ final class ProfileNFTsTests: XCTestCase {
     }
 
     func testCancelledNFTLoadRestoresStateWithoutAlert() async {
-        let service = StubProfileNFTsService(items: items, delay: .seconds(1))
+        let service = StubProfileNFTsService(items: items, delay: .seconds(60))
         let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
         let task = Task { await model.load() }
-        await Task.yield()
+        await service.waitForLoad(count: 1)
+        XCTAssertTrue(model.isLoading)
         task.cancel()
         await task.value
         guard case .idle = model.state else { return XCTFail("Expected idle after cancellation") }
         XCTAssertFalse(model.showsError)
+        let wasCancelled = await service.wasCancelled
+        XCTAssertTrue(wasCancelled)
+    }
+
+    func testCancelledRetryRestoresErrorWithoutShowingAnotherAlert() async {
+        let service = StubProfileNFTsService(items: items, failures: 1, delayAfterFailure: .seconds(60))
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
+        await model.load()
+        guard case .error = model.state else { return XCTFail("Expected first request to fail") }
+        let retry = Task { await model.load() }
+        await service.waitForLoad(count: 2)
+        XCTAssertTrue(model.isLoading)
+        XCTAssertFalse(model.showsError)
+        retry.cancel()
+        await retry.value
+        guard case .error = model.state else { return XCTFail("Expected previous error after cancellation") }
+        XCTAssertFalse(model.showsError)
+        let wasCancelled = await service.wasCancelled
+        XCTAssertTrue(wasCancelled)
+    }
+
+    func testDebugDemoLoadsLocalImagesAndRetainsEditedProfileWithoutNetwork() async throws {
+        let client = RecordingNetworkClient(profile: profile)
+        let assembly = ServicesAssembly(networkClient: client, nftStorage: NftStorageImpl(), profileDataMode: .demo)
+        XCTAssertTrue(assembly.usesDemoProfileData)
+        let profile = try await assembly.profileService.loadProfile()
+        let nfts = try await assembly.profileNFTsService.loadNFTs(ids: profile.nfts)
+        XCTAssertEqual(nfts.count, 3)
+        for item in nfts {
+            let url = try XCTUnwrap(item.nft.images.first)
+            XCTAssertTrue(url.isFileURL)
+            XCTAssertNotNil(UIImage(contentsOfFile: url.path))
+        }
+        _ = try await assembly.profileService.updateProfile(fields: ["name": "Demo Anton"])
+        let reloaded = try await assembly.profileService.loadProfile()
+        XCTAssertEqual(reloaded.name, "Demo Anton")
+        XCTAssertEqual(reloaded.nfts, profile.nfts)
+        XCTAssertEqual(reloaded.likes, profile.likes)
+        let requests = await client.requests
+        XCTAssertTrue(requests.isEmpty)
+    }
+
+    func testProfileDataModeUsesExplicitLiveAndUITestOverrides() {
+        XCTAssertEqual(ProfileDataMode.debugMode(arguments: []), .demo)
+        XCTAssertEqual(ProfileDataMode.debugMode(arguments: ["--profile-live-api"]), .live)
+        XCTAssertEqual(ProfileDataMode.debugMode(arguments: ["--profile-live-api", "--profile-ui-testing"]), .uiTesting)
+    }
+
+    func testLiveAssemblyUsesRealServices() {
+        let assembly = ServicesAssembly(networkClient: RecordingNetworkClient(profile: profile), nftStorage: NftStorageImpl(), profileDataMode: .live)
+        XCTAssertFalse(assembly.usesDemoProfileData)
+        XCTAssertTrue(assembly.profileService is ProfileServiceImpl)
+        XCTAssertTrue(assembly.profileNFTsService is ProfileNFTsServiceImpl)
     }
 
     func testRepeatedNFTLoadDoesNotDuplicateRequest() async {
@@ -511,17 +565,35 @@ private actor StubProfileNFTsService: ProfileNFTsService {
     let items: [ProfileNFT]
     var failures: Int
     let delay: Duration
+    let delayAfterFailure: Duration
     private(set) var calls: [[String]] = []
+    private(set) var wasCancelled = false
+    private var loadWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
 
-    init(items: [ProfileNFT], failures: Int = 0, delay: Duration = .zero) {
+    init(items: [ProfileNFT], failures: Int = 0, delay: Duration = .zero, delayAfterFailure: Duration = .zero) {
         self.items = items
         self.failures = failures
         self.delay = delay
+        self.delayAfterFailure = delayAfterFailure
+    }
+
+    func waitForLoad(count: Int) async {
+        if calls.count >= count { return }
+        await withCheckedContinuation { loadWaiters.append((count, $0)) }
     }
 
     func loadNFTs(ids: [String]) async throws -> [ProfileNFT] {
         calls.append(ids)
-        if delay != .zero { try await Task.sleep(for: delay) }
+        let ready = loadWaiters.filter { $0.0 <= calls.count }
+        loadWaiters.removeAll { $0.0 <= calls.count }
+        for (_, continuation) in ready { continuation.resume() }
+        do {
+            let duration = failures == 0 && delayAfterFailure != .zero ? delayAfterFailure : delay
+            if duration != .zero { try await Task.sleep(for: duration) }
+        } catch is CancellationError {
+            wasCancelled = true
+            throw CancellationError()
+        }
         if failures > 0 {
             failures -= 1
             throw URLError(.notConnectedToInternet)

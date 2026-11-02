@@ -5,6 +5,7 @@ protocol ProfileNFTsService: Sendable {
 }
 
 actor ProfileNFTsServiceImpl: ProfileNFTsService {
+    private static let maximumConcurrentRequests = 4
     private let nftService: any NftService
     private let networkClient: any NetworkClient
 
@@ -38,7 +39,7 @@ actor ProfileNFTsServiceImpl: ProfileNFTsService {
     ) async throws -> [Value] {
         try await withThrowingTaskGroup(of: Value.self) { group in
             var pending = ids.makeIterator()
-            for _ in 0..<min(4, ids.count) {
+            for _ in 0..<min(maximumConcurrentRequests, ids.count) {
                 if let id = pending.next() { group.addTask { try await operation(id) } }
             }
             var values: [Value] = []

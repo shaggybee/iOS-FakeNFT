@@ -7,9 +7,9 @@ enum ProfileNFTSort: String, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .price: "По цене"
-        case .rating: "По рейтингу"
-        case .name: "По названию"
+        case .price: NSLocalizedString("ProfileNFT.sort.price", comment: "NFT sorting by price")
+        case .rating: NSLocalizedString("ProfileNFT.sort.rating", comment: "NFT sorting by rating")
+        case .name: NSLocalizedString("ProfileNFT.sort.name", comment: "NFT sorting by name")
         }
     }
 

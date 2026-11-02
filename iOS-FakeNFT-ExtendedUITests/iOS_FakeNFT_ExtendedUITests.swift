@@ -146,6 +146,59 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 
     @MainActor
+    func testDefaultDebugDemoCanBeViewedWithoutAPI() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["profile.demo"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["profile.name"].exists)
+        attachScreenshot("Демонстрационный профиль")
+        app.buttons["profile.my-nfts"].tap()
+        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.nfts.name").count, 3)
+        attachScreenshot("Демонстрационные NFT с локальными изображениями")
+        app.buttons["profile.nfts.back"].tap()
+        let edit = app.buttons["profile.edit"]
+        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        XCTAssertTrue(edit.isHittable)
+        edit.tap()
+        XCTAssertTrue(app.textFields["profile.edit.name"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testMyNFTAlertRetryLoadsItems() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--profile-ui-testing", "--profile-nfts-fail-first-load", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.my-nfts"].waitForExistence(timeout: 10))
+        app.buttons["profile.my-nfts"].tap()
+        let alert = app.alerts["Не удалось загрузить NFT"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        alert.buttons["Повторить"].tap()
+        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
+    }
+
+    @MainActor
+    func testLeavingDuringNFTRetryAllowsReopeningScreen() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--profile-ui-testing", "--profile-nfts-fail-first-load", "--profile-nfts-slow-retry",
+                               "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
+        app.launch()
+        let link = app.buttons["profile.my-nfts"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        link.tap()
+        let alert = app.alerts["Не удалось загрузить NFT"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        alert.buttons["Повторить"].tap()
+        XCTAssertTrue(app.activityIndicators.firstMatch.waitForExistence(timeout: 5))
+        app.buttons["profile.nfts.back"].tap()
+        XCTAssertTrue(link.waitForExistence(timeout: 5))
+        link.tap()
+        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.alerts["Не удалось загрузить NFT"].exists)
+    }
+
+    @MainActor
     private func attachScreenshot(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
