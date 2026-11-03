@@ -4,20 +4,9 @@ struct ProfileRootView: View {
     @Environment(ServicesAssembly.self) private var services
 
     var body: some View {
-        ProfileView(viewModel: ProfileViewModel(service: profileService))
+        ProfileView(viewModel: ProfileViewModel(service: services.profileService))
     }
 
-    private var profileService: any ProfileService {
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") {
-            return ProfileUITestService(
-                failsFirstLoad: ProcessInfo.processInfo.arguments.contains("--profile-fail-first-load"),
-                unavailableWebsite: ProcessInfo.processInfo.arguments.contains("--profile-unavailable-website")
-            )
-        }
-        #endif
-        return services.profileService
-    }
 }
 
 struct ProfileView: View {
@@ -99,7 +88,14 @@ struct ProfileView: View {
                     }
 
                     VStack(spacing: 0) {
-                        menuRow("Мои NFT", count: profile.nfts.count)
+                        NavigationLink {
+                            ProfileNFTsRootView(profile: profile)
+                        } label: {
+                            menuRow("Мои NFT", count: profile.nfts.count)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Мои NFT (\(profile.nfts.count))")
+                        .accessibilityIdentifier("profile.my-nfts")
                         menuRow("Избранные NFT", count: profile.likes.count)
                     }
                     .padding(.top, 28)
@@ -126,7 +122,7 @@ struct ProfileView: View {
                 .font(.system(size: 16, weight: .semibold))
         }
         .frame(minHeight: 54)
-        // Навигация в списки включается во второй и третьей итерациях эпика.
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 }
