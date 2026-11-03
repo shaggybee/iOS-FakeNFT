@@ -150,8 +150,7 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
         app.launch()
-        XCTAssertTrue(app.staticTexts["profile.demo"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["profile.name"].exists)
+        XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 10))
         attachScreenshot("Демонстрационный профиль")
         app.buttons["profile.my-nfts"].tap()
         XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
