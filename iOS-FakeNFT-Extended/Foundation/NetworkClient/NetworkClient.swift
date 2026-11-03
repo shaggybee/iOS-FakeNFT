@@ -78,10 +78,14 @@ actor DefaultNetworkClient: NetworkClient {
 
 enum FormURLEncoder {
     static func encode(_ parameters: [String: String]) -> Data {
+        encode(parameters.sorted { $0.key < $1.key }.map { URLQueryItem(name: $0.key, value: $0.value) })
+    }
+
+    static func encode(_ parameters: [URLQueryItem]) -> Data {
         let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
-        let encoded = parameters.sorted { $0.key < $1.key }.map { key, value in
-            let key = key.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
-            let value = value.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+        let encoded = parameters.map { item in
+            let key = item.name.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            let value = (item.value ?? "").addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
             return key + "=" + value
         }.joined(separator: "&")
         return Data(encoded.utf8)

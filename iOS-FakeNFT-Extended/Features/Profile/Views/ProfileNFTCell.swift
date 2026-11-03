@@ -6,7 +6,7 @@ struct ProfileNFTCell: View {
 
     var body: some View {
         HStack(spacing: 20) {
-            artwork
+            ProfileNFTArtwork(url: item.nft.images.first)
             .frame(width: 108, height: 108)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .accessibilityHidden(true)
@@ -48,18 +48,4 @@ struct ProfileNFTCell: View {
         .frame(minHeight: 108)
     }
 
-    @ViewBuilder
-    private var artwork: some View {
-        if let url = item.nft.images.first, url.isFileURL,
-           let image = UIImage(contentsOfFile: url.path) {
-            Image(uiImage: image).resizable().scaledToFill()
-        } else {
-            AsyncImage(url: item.nft.images.first) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Rectangle().fill(.lightGrey)
-                    .overlay { Image(systemName: AppSystemIcon.photo).foregroundStyle(.greyUniversal) }
-            }
-        }
-    }
 }

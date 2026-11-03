@@ -5,7 +5,6 @@ protocol ProfileNFTsService: Sendable {
 }
 
 actor ProfileNFTsServiceImpl: ProfileNFTsService {
-    private static let maximumConcurrentRequests = 4
     private let nftService: any NftService
     private let networkClient: any NetworkClient
 
@@ -18,11 +17,11 @@ actor ProfileNFTsServiceImpl: ProfileNFTsService {
         var seen = Set<String>()
         let ids = ids.filter { seen.insert($0).inserted }
         guard !ids.isEmpty else { return [] }
-        let nfts = try await Self.load(ids: ids) { [nftService] id in
+        let nfts = try await ProfileConcurrentLoader.load(ids: ids) { [nftService] id in
             try await nftService.loadNft(id: id)
         }
         let authorIDs = Array(Set(nfts.map(\.author)))
-        let authors: [NFTAuthor] = try await Self.load(ids: authorIDs) { [networkClient] id in
+        let authors: [NFTAuthor] = try await ProfileConcurrentLoader.load(ids: authorIDs) { [networkClient] id in
             try await networkClient.send(request: ProfileNFTAuthorRequest(id: id))
         }
         let authorsByID = Dictionary(authors.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
@@ -32,8 +31,13 @@ actor ProfileNFTsServiceImpl: ProfileNFTsService {
         }
     }
 
+}
+
+enum ProfileConcurrentLoader {
+    private static let maximumConcurrentRequests = 4
+
     // Limit simultaneous requests and cancel the remaining work if any item fails.
-    private static func load<Value: Sendable>(
+    static func load<Value: Sendable>(
         ids: [String],
         operation: @escaping @Sendable (String) async throws -> Value
     ) async throws -> [Value] {

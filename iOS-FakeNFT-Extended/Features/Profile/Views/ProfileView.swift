@@ -13,6 +13,7 @@ struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
     @State private var editingProfile: UserProfile?
     @State private var website: ProfileWebsite?
+    @State private var loadID = 0
 
     init(viewModel: ProfileViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -37,7 +38,7 @@ struct ProfileView: View {
                         }
                     }
                 }
-                .task { await viewModel.loadIfNeeded() }
+                .task(id: loadID) { await viewModel.load() }
                 .sheet(item: $website) { site in ProfileWebsiteView(url: site.url) }
                 .fullScreenCover(item: $editingProfile) { profile in
                     ProfileEditView(profile: profile, service: viewModel.service) { updated in
@@ -45,7 +46,7 @@ struct ProfileView: View {
                     }
                 }
                 .alert("Не удалось загрузить профиль", isPresented: $viewModel.showsError) {
-                    Button("Повторить") { Task { await viewModel.load() } }
+                    Button("Повторить") { loadID += 1 }
                     Button("Отмена", role: .cancel) { }
                 } message: {
                     Text(viewModel.errorMessage)
@@ -96,7 +97,13 @@ struct ProfileView: View {
                         .buttonStyle(.plain)
                         .accessibilityLabel("Мои NFT (\(profile.nfts.count))")
                         .accessibilityIdentifier("profile.my-nfts")
-                        menuRow("Избранные NFT", count: profile.likes.count)
+                        NavigationLink {
+                            ProfileFavoritesRootView { updated in viewModel.accept(updated) }
+                        } label: {
+                            menuRow(NSLocalizedString("ProfileFavorites.title", comment: "Favorite NFTs"), count: profile.likes.count)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("profile.favorites")
                     }
                     .padding(.top, 28)
                 }
@@ -107,7 +114,7 @@ struct ProfileView: View {
             .disabled(viewModel.isLoading)
         case .error:
             ErrorStateView(message: viewModel.errorMessage) {
-                Task { await viewModel.load() }
+                loadID += 1
             }
             .padding(16)
         }

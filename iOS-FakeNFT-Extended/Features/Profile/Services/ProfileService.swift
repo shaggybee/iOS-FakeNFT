@@ -3,6 +3,7 @@ import Foundation
 protocol ProfileService: Sendable {
     func loadProfile() async throws -> UserProfile
     func updateProfile(fields: [String: String]) async throws -> UserProfile
+    func updateLikes(_ ids: [String]) async throws -> UserProfile
 }
 
 actor ProfileServiceImpl: ProfileService {
@@ -19,6 +20,10 @@ actor ProfileServiceImpl: ProfileService {
     func updateProfile(fields: [String: String]) async throws -> UserProfile {
         try await networkClient.send(request: ProfileRequest(fields: fields))
     }
+
+    func updateLikes(_ ids: [String]) async throws -> UserProfile {
+        try await networkClient.send(request: ProfileLikesUpdateRequest(ids: ids))
+    }
 }
 
 struct ProfileRequest: NetworkRequest {
@@ -30,7 +35,19 @@ struct ProfileRequest: NetworkRequest {
 
     var endpoint: URL? { URL(string: RequestConstants.baseURL + "/api/v1/profile/1") }
     var httpMethod: HttpMethod { fields == nil ? .get : .put }
-    var formParameters: [String: String]? { fields }
+    var formParameters: [URLQueryItem]? {
+        fields?.sorted { $0.key < $1.key }.map { URLQueryItem(name: $0.key, value: $0.value) }
+    }
+}
+
+struct ProfileLikesUpdateRequest: NetworkRequest {
+    let ids: [String]
+    var endpoint: URL? { URL(string: RequestConstants.baseURL + "/api/v1/profile/1") }
+    var httpMethod: HttpMethod { .put }
+    var formParameters: [URLQueryItem]? {
+        ids.isEmpty ? [URLQueryItem(name: "likes", value: "null")]
+            : ids.map { URLQueryItem(name: "likes", value: $0) }
+    }
 }
 
 enum ProfileErrorMessage {

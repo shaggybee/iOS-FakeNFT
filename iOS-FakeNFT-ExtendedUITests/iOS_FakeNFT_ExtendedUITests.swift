@@ -198,6 +198,109 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 
     @MainActor
+    func testFavoritesRemovalUpdatesProfileAndEmptyState() throws {
+        let app = favoritesApp()
+        app.launch()
+        let link = app.buttons["profile.favorites"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertTrue(link.label.contains("(2)"))
+        link.tap()
+        let spring = app.buttons["profile.favorites.remove.2"]
+        XCTAssertTrue(spring.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.favorites.name").count, 2)
+        attachScreenshot("Избранные NFT")
+        spring.tap()
+        XCTAssertTrue(spring.waitForNonExistence(timeout: 10))
+        app.buttons["profile.favorites.back"].tap()
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertTrue(link.label.contains("(1)"))
+        app.buttons["profile.my-nfts"].tap()
+        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
+        app.buttons["profile.nfts.back"].tap()
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        link.tap()
+        let charm = app.buttons["profile.favorites.remove.5"]
+        XCTAssertTrue(charm.waitForExistence(timeout: 10))
+        charm.tap()
+        XCTAssertTrue(app.staticTexts["У Вас ещё нет избранных NFT"].waitForExistence(timeout: 10))
+        attachScreenshot("Избранное после удаления последнего NFT")
+        app.buttons["profile.favorites.back"].tap()
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertTrue(link.label.contains("(0)"))
+        XCTAssertTrue(app.tabBars.buttons["Каталог"].exists)
+        attachScreenshot("Счётчик избранного обновлён")
+    }
+
+    @MainActor
+    func testFavoritesEmptyStateAndBackNavigation() throws {
+        let app = favoritesApp(["--profile-empty-favorites"])
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.favorites"].waitForExistence(timeout: 10))
+        app.buttons["profile.favorites"].tap()
+        XCTAssertTrue(app.staticTexts["У Вас ещё нет избранных NFT"].waitForExistence(timeout: 10))
+        attachScreenshot("Нет избранных NFT")
+        app.buttons["profile.favorites.back"].tap()
+        XCTAssertTrue(app.buttons["profile.my-nfts"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor
+    func testFavoritesLoadFailureCanRetry() throws {
+        let app = favoritesApp(["--profile-favorites-fail-first-load"])
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.favorites"].waitForExistence(timeout: 10))
+        app.buttons["profile.favorites"].tap()
+        let alert = app.alerts["Не удалось обновить избранное"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        attachScreenshot("Ошибка загрузки избранного")
+        alert.buttons["Повторить"].tap()
+        XCTAssertTrue(app.buttons["profile.favorites.remove.2"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor
+    func testFavoritesRemovalFailureKeepsCardAndRetriesMutation() throws {
+        let app = favoritesApp(["--profile-favorites-fail-first-removal"])
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.favorites"].waitForExistence(timeout: 10))
+        app.buttons["profile.favorites"].tap()
+        let remove = app.buttons["profile.favorites.remove.2"]
+        XCTAssertTrue(remove.waitForExistence(timeout: 10))
+        remove.tap()
+        let alert = app.alerts["Не удалось обновить избранное"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.favorites.name").count, 2)
+        attachScreenshot("Ошибка удаления из избранного")
+        alert.buttons["Повторить"].tap()
+        XCTAssertTrue(remove.waitForNonExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.favorites.name").count, 1)
+    }
+
+    @MainActor
+    func testFavoritesRemovalFailureCanBeCancelledWithoutLosingCard() throws {
+        let app = favoritesApp(["--profile-favorites-fail-first-removal"])
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.favorites"].waitForExistence(timeout: 10))
+        app.buttons["profile.favorites"].tap()
+        let remove = app.buttons["profile.favorites.remove.2"]
+        XCTAssertTrue(remove.waitForExistence(timeout: 10))
+        remove.tap()
+        let alert = app.alerts["Не удалось обновить избранное"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 10))
+        alert.buttons["Отмена"].tap()
+        XCTAssertTrue(remove.exists)
+        app.buttons["profile.favorites.back"].tap()
+        let link = app.buttons["profile.favorites"]
+        XCTAssertTrue(link.waitForExistence(timeout: 10))
+        XCTAssertTrue(link.label.contains("(2)"))
+    }
+
+    @MainActor
+    private func favoritesApp(_ arguments: [String] = []) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["--profile-ui-testing", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"] + arguments
+        return app
+    }
+
+    @MainActor
     private func attachScreenshot(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name

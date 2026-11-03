@@ -19,6 +19,11 @@ actor MockProfileNFTsService: ProfileNFTsService {
             failsFirstLoad = false
             throw URLError(.notConnectedToInternet)
         }
+        return ProfileMockNFTs.items.filter { ids.contains($0.id) }
+    }
+}
+enum ProfileMockNFTs {
+    static var items: [ProfileNFT] {
         let author = NFTAuthor(id: "author", name: "John Doe")
         let items = [
             Nft(id: "1", images: [Bundle.main.url(forResource: "profile-demo-lilo", withExtension: "png")].compactMap { $0 },
@@ -26,9 +31,28 @@ actor MockProfileNFTsService: ProfileNFTsService {
             Nft(id: "2", images: [Bundle.main.url(forResource: "profile-demo-spring", withExtension: "png")].compactMap { $0 },
                 name: "Spring", rating: 5, price: Decimal(string: "3.25") ?? 0, author: author.id),
             Nft(id: "3", images: [Bundle.main.url(forResource: "profile-demo-april", withExtension: "png")].compactMap { $0 },
-                name: "April", rating: 4, price: Decimal(string: "0.99") ?? 0, author: author.id)
+                name: "April", rating: 4, price: Decimal(string: "0.99") ?? 0, author: author.id),
+            Nft(id: "5", images: [Bundle.main.url(forResource: "profile-demo-lilo", withExtension: "png")].compactMap { $0 },
+                name: "Charm", rating: 4, price: Decimal(string: "2.10") ?? 0, author: author.id)
         ]
-        return items.filter { ids.contains($0.id) }.map { ProfileNFT(nft: $0, author: author) }
+        return items.map { ProfileNFT(nft: $0, author: author) }
+    }
+}
+
+actor MockFavoriteNFTService: NftService {
+    private var failsFirstLoad: Bool
+    init(failsFirstLoad: Bool = false) { self.failsFirstLoad = failsFirstLoad }
+
+    func loadNft(id: String) async throws -> Nft {
+        try Task.checkCancellation()
+        if failsFirstLoad {
+            failsFirstLoad = false
+            throw URLError(.notConnectedToInternet)
+        }
+        guard let item = ProfileMockNFTs.items.first(where: { $0.id == id }) else {
+            throw NetworkClientError.parsingError
+        }
+        return item.nft
     }
 }
 #endif

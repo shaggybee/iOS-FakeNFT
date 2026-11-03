@@ -11,12 +11,12 @@ protocol NetworkRequest: Sendable {
     var endpoint: URL? { get }
     var httpMethod: HttpMethod { get }
     var dto: Encodable? { get }
-    var formParameters: [String: String]? { get }
+    var formParameters: [URLQueryItem]? { get }
 }
 
 // default values
 extension NetworkRequest {
     var httpMethod: HttpMethod { .get }
     var dto: Encodable? { nil }
-    var formParameters: [String: String]? { nil }
+    var formParameters: [URLQueryItem]? { nil }
 }
