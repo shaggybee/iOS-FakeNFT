@@ -17,20 +17,19 @@ struct TabBarView: View {
                 }
                 .tag(Tab.profile)
 
-            // TODO: вернуть сервисы из servicesAssembly, когда API станет доступен
             CatalogView(
                 viewModel: CatalogViewModel(
-                    collectionsService: CollectionsServiceStub(),
+                    collectionsService: servicesAssembly.collectionsService,
                     router: catalogRouter
                 ),
                 router: catalogRouter,
-                makeCollectionViewModel: { [catalogRouter] collectionId in
+                makeCollectionViewModel: { [catalogRouter, servicesAssembly] collectionId in
                     CollectionViewModel(
                         collectionId: collectionId,
-                        collectionService: CollectionServiceMock(),
-                        nftService: NftServiceMock(),
-                        likesService: LikesServiceMock.shared,
-                        cartService: CartServiceMock.shared,
+                        collectionService: servicesAssembly.collectionService,
+                        nftService: servicesAssembly.nftService,
+                        likesService: servicesAssembly.likesService,
+                        cartService: servicesAssembly.cartService,
                         router: catalogRouter
                     )
                 }
