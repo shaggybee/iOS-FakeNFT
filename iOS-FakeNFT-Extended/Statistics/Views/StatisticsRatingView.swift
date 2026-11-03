@@ -108,3 +108,4 @@ private struct RatingScreen: View {
             networkClient: DefaultNetworkClient(),
             nftStorage: NftStorageImpl()))
 }
+

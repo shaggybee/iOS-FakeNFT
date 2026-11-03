@@ -38,7 +38,7 @@ final class UserProfileViewModel {
         do {
             self.user = try await usersService.loadUser(id: userId)
         } catch {
-            errorMessage = "Не удалось найти пользователя"
+            errorMessage = NSLocalizedString("Error.userNotFound", comment: "Ошибка: пользователь не был найден")
         }
     }
 }

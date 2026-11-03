@@ -37,6 +37,7 @@
 		DB45CC71308BA2B10056B7C3 /* UsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */; };
 		DB4942B8308CA1D700DE3C38 /* RatingUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */; };
 		DB4942BB308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md in Resources */ = {isa = PBXBuildFile; fileRef = DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */; };
+		DB621BB4309A2DDD002BA5E8 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB621BB3309A2DDC002BA5E8 /* BackButton.swift */; };
 		DBA8D1843094D7DB00EE8AC7 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA8D1833094D7DA00EE8AC7 /* UserProfileView.swift */; };
 		DBA8D1863094E48300EE8AC7 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA8D1853094E48200EE8AC7 /* UserProfileViewModel.swift */; };
 		DBA8D1883094E8A400EE8AC7 /* UserByIdRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA8D1873094E8A000EE8AC7 /* UserByIdRequest.swift */; };
@@ -97,6 +98,7 @@
 		DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRequest.swift; sourceTree = "<group>"; };
 		DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingUser.swift; sourceTree = "<group>"; };
 		DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ElinaM_statistics-decomposition.md"; sourceTree = "<group>"; };
+		DB621BB3309A2DDC002BA5E8 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		DBA8D1833094D7DA00EE8AC7 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		DBA8D1853094E48200EE8AC7 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		DBA8D1873094E8A000EE8AC7 /* UserByIdRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserByIdRequest.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 		DB1DE8A3308A08D5002DAECC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DB621BB3309A2DDC002BA5E8 /* BackButton.swift */,
 				DBA8D1893094EBD200EE8AC7 /* WebView.swift */,
 				DBA8D18B3094EBE800EE8AC7 /* UserWebsiteView.swift */,
 				DBA8D1833094D7DA00EE8AC7 /* UserProfileView.swift */,
@@ -544,6 +547,7 @@
 				ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */,
 				DBA8D18F3094F14F00EE8AC7 /* MockUsersService.swift in Sources */,
 				63B85E84308678D0003FDC64 /* BlockingProgressView.swift in Sources */,
+				DB621BB4309A2DDD002BA5E8 /* BackButton.swift in Sources */,
 				63B8605C3086AABA003FDC64 /* ViewState.swift in Sources */,
 				ABC5E1B02C31FB90002B4068 /* RequestConstants.swift in Sources */,
 				DBA8D1863094E48300EE8AC7 /* UserProfileViewModel.swift in Sources */,

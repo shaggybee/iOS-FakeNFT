@@ -4,3 +4,5 @@
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
+"Error.userNotFound" = "Не удалось найти пользователя";
+"Error.usersLoadFailed" = "Не удалось загрузить пользователей";

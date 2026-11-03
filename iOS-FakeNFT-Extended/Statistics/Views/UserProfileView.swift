@@ -7,9 +7,11 @@
 
 import SwiftUI
 
+private enum Constants {
+    static let avatarSpacing: CGFloat = 16
+}
+
 struct UserProfileView: View {
-    
-    @Environment(\.dismiss) private var dismiss
     
     @State private var viewModel: UserProfileViewModel
     
@@ -25,25 +27,16 @@ struct UserProfileView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 22, weight: .medium))//!
-                    .foregroundStyle(.blackPrimary)
-                    .frame(width: 24, height: 24, alignment: .leading)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .padding(.bottom, 20)
+            BackButton()
+                .padding(.bottom, 20)
             
             if let user = viewModel.user {
-                HStack(spacing: 16) {
+                HStack(spacing: Constants.avatarSpacing) {
                     AsyncImage(url: URL(string: user.avatar)) { image in image
                             .resizable()
                             .scaledToFill()
                     } placeholder: {
-                        Image("profile30")
+                        Image(.profile30)
                             .resizable()
                             .scaledToFit()
                             .foregroundStyle(.greyUniversal)
