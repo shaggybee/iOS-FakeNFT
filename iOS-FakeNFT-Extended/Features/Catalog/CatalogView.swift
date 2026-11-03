@@ -67,7 +67,7 @@ struct CatalogView: View {
     private var content: some View {
         switch viewModel.state {
         case .idle, .loading:
-            LoadingView()
+            CatalogSkeletonView()
         case .error:
             ErrorStateView(
                 message: String(localized: "Catalog.loadingError"),
@@ -114,7 +114,7 @@ struct CatalogView: View {
                 .tint(.blackPrimary)
         } else if viewModel.isNextPageFailed {
             BaseButton(
-                title: String(localized: "Error.repeat"),
+                title: String(localized: "Error.retry"),
                 height: 44,
                 action: viewModel.nextPageRetryButtonTapped
             )

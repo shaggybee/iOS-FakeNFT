@@ -19,7 +19,7 @@ extension View {
             isPresented: isPresented
         ) {
             Button(String(localized: "Common.cancel"), role: .cancel) {}
-            Button(String(localized: "Error.repeat"), action: onRetry)
+            Button(String(localized: "Error.retry"), action: onRetry)
         }
     }
 }

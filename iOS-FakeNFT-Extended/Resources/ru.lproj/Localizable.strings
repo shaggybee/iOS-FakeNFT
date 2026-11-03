@@ -10,7 +10,7 @@
 "Common.close" = "Закрыть";
 "Error.loadingData" = "Не удалось получить данные";
 "Error.network" = "Произошла ошибка сети";
-"Error.repeat" = "Повторить";
+"Error.retry" = "Повторить";
 "Error.title" = "Ошибка";
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Sort.byName" = "По названию";

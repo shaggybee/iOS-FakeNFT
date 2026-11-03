@@ -19,7 +19,7 @@ struct ErrorStateView: View {
                 .multilineTextAlignment(.center)
             
             BaseButton(
-                title: String(localized: "Error.repeat"),
+                title: String(localized: "Error.retry"),
                 height: 44,
                 action: onRetry
             )

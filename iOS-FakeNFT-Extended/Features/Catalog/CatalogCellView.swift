@@ -43,7 +43,7 @@ struct CatalogCellView: View {
             .frame(height: Constants.coverHeight)
             .overlay(alignment: .top) {
                 KFImage(model.coverURL)
-                    .placeholder { ProgressView() }
+                    .placeholder { Skeleton() }
                     .resizable()
                     .scaledToFill()
             }
