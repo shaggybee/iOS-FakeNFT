@@ -35,7 +35,6 @@ struct CollectionView: View {
     // MARK: - Properties
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
     @State private var viewModel: CollectionViewModel
 
     // MARK: - Init
@@ -58,11 +57,6 @@ struct CollectionView: View {
             .task {
                 await viewModel.onAppear()
             }
-            .onChange(of: viewModel.presentedAuthorWebsite) { _, url in
-                guard let url else { return }
-                openURL(url)
-                viewModel.presentedAuthorWebsite = nil
-            }
             .alert(
                 String(localized: "Error.title"),
                 isPresented: $viewModel.isLikeErrorPresented
@@ -79,6 +73,10 @@ struct CollectionView: View {
             } message: {
                 Text(String(localized: "Collection.cartError"))
             }
+            .loadErrorAlert(
+                isPresented: $viewModel.isLoadErrorAlertPresented,
+                onRetry: viewModel.retryButtonTapped
+            )
     }
 
     // MARK: - Private Views
@@ -193,7 +191,8 @@ struct CollectionView: View {
                 collectionService: CollectionServiceMock(),
                 nftService: NftServiceMock(),
                 likesService: LikesServiceMock(),
-                cartService: CartServiceMock()
+                cartService: CartServiceMock(),
+                router: CatalogRouter()
             )
         )
     }

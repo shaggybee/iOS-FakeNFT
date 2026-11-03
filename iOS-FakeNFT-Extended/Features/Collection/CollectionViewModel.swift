@@ -16,13 +16,14 @@ final class CollectionViewModel {
     private(set) var state: ViewState<CollectionScreenModel> = .idle
     var isLikeErrorPresented = false
     var isCartErrorPresented = false
-    var presentedAuthorWebsite: URL?
+    var isLoadErrorAlertPresented = false
 
     private let collectionId: String
     private let collectionService: CollectionServiceProtocol
     private let nftService: NftService
     private let likesService: LikesServiceProtocol
     private let cartService: CartServiceProtocol
+    private let router: CatalogRouterProtocol
     private var collection: NftCollection?
     private var nfts: [Nft] = []
     private var likes: Set<String> = []
@@ -39,13 +40,15 @@ final class CollectionViewModel {
         collectionService: CollectionServiceProtocol,
         nftService: NftService,
         likesService: LikesServiceProtocol,
-        cartService: CartServiceProtocol
+        cartService: CartServiceProtocol,
+        router: CatalogRouterProtocol
     ) {
         self.collectionId = collectionId
         self.collectionService = collectionService
         self.nftService = nftService
         self.likesService = likesService
         self.cartService = cartService
+        self.router = router
     }
 
     // MARK: - Public Methods
@@ -60,7 +63,8 @@ final class CollectionViewModel {
     }
 
     func authorTapped() {
-        presentedAuthorWebsite = collection?.website
+        guard let website = collection?.website else { return }
+        router.push(.webView(website))
     }
 
     func likeButtonTapped(_ nft: CollectionNftCellModel) {
@@ -124,6 +128,7 @@ private extension CollectionViewModel {
                 return
             }
             state = .error(error)
+            isLoadErrorAlertPresented = true
         }
     }
 
@@ -178,7 +183,7 @@ private extension CollectionViewModel {
             imageURL: nft.images.first,
             name: nft.name,
             rating: nft.rating,
-            priceText: "\(nft.price.formatted()) ETH",
+            priceText: String(format: String(localized: "Collection.price"), nft.price.formatted()),
             isLiked: likes.contains(nft.id),
             isInCart: cart.contains(nft.id)
         )

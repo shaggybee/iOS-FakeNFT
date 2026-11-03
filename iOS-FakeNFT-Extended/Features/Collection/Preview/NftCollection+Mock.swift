@@ -18,6 +18,6 @@ extension NftCollection {
         description: "Персиковый — как облака над закатным солнцем в океане. "
         + "В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
         author: "John Doe",
-        website: nil
+        website: URL(string: "https://practicum.yandex.ru/ios-developer/")
     )
 }

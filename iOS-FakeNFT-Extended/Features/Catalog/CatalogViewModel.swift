@@ -17,15 +17,17 @@ final class CatalogViewModel {
     private(set) var isLoadingNextPage = false
     private(set) var isNextPageFailed = false
     var isSortDialogPresented = false
+    var isLoadErrorAlertPresented = false
 
     private let collectionsService: CollectionsServiceProtocol
-    private let userDefaults: UserDefaults
+    private let router: CatalogRouterProtocol
+    private let sortStorage: CatalogSortStorageProtocol
     private var collections: [NftCollection] = []
     private var nextPage = 0
     private var hasMorePages = true
     private var sortOption: CatalogSortOption {
         didSet {
-            userDefaults.set(sortOption.rawValue, forKey: Constants.sortOptionKey)
+            sortStorage.saveSortOption(sortOption)
         }
     }
 
@@ -33,23 +35,28 @@ final class CatalogViewModel {
 
     init(
         collectionsService: CollectionsServiceProtocol,
-        userDefaults: UserDefaults = .standard
+        router: CatalogRouterProtocol,
+        sortStorage: CatalogSortStorageProtocol = CatalogSortStorageImpl()
     ) {
         self.collectionsService = collectionsService
-        self.userDefaults = userDefaults
-        self.sortOption = userDefaults.string(forKey: Constants.sortOptionKey)
-            .flatMap(CatalogSortOption.init(rawValue:)) ?? .nftCount
+        self.router = router
+        self.sortStorage = sortStorage
+        self.sortOption = sortStorage.loadSortOption() ?? .nftCount
     }
 
     // MARK: - Public Methods
 
-    func onAppear() {
+    func onAppear() async {
         guard case .idle = state else { return }
-        Task { await loadFirstPage() }
+        await loadFirstPage()
     }
 
     func retryButtonTapped() {
         Task { await loadFirstPage() }
+    }
+
+    func cellTapped(_ cell: CatalogCellModel) {
+        router.push(.collection(id: cell.id))
     }
 
     func cellDidAppear(_ cell: CatalogCellModel) {
@@ -63,6 +70,14 @@ final class CatalogViewModel {
 
     func nextPageRetryButtonTapped() {
         Task { await loadNextPage() }
+    }
+
+    func loadErrorAlertRetryTapped() {
+        if case .error = state {
+            retryButtonTapped()
+        } else if isNextPageFailed {
+            nextPageRetryButtonTapped()
+        }
     }
 
     func sortButtonTapped() {
@@ -83,7 +98,6 @@ private extension CatalogViewModel {
     enum Constants {
         static let pageSize = 10
         static let prefetchThreshold = 3
-        static let sortOptionKey = "catalogSortOption"
     }
 }
 
@@ -111,7 +125,12 @@ private extension CatalogViewModel {
             updatePagination(afterLoading: firstPage, itemsCount: page.count)
             state = collections.isEmpty ? .empty : .loaded(cellModels)
         } catch {
+            guard !Task.isCancelled else {
+                state = .idle
+                return
+            }
             state = .error(error)
+            isLoadErrorAlertPresented = true
         }
     }
 
@@ -132,6 +151,7 @@ private extension CatalogViewModel {
             state = .loaded(cellModels)
         } catch {
             isNextPageFailed = true
+            isLoadErrorAlertPresented = true
         }
     }
 

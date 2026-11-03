@@ -3,13 +3,14 @@ import SwiftUI
 struct TabBarView: View {
     @Environment(ServicesAssembly.self) private var servicesAssembly
     @State private var selectedTab: Tab = .catalog
+    @State private var catalogRouter = CatalogRouter()
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("Профиль")
+            Text("Tab.profile")
                 .tabItem {
                     Label {
-                        Text("Профиль")
+                        Text("Tab.profile")
                     } icon: {
                         Image(.profile30)
                     }
@@ -18,40 +19,45 @@ struct TabBarView: View {
 
             // TODO: вернуть сервисы из servicesAssembly, когда API станет доступен
             CatalogView(
-                viewModel: CatalogViewModel(collectionsService: CollectionsServiceStub()),
-                makeCollectionViewModel: { collectionId in
+                viewModel: CatalogViewModel(
+                    collectionsService: CollectionsServiceStub(),
+                    router: catalogRouter
+                ),
+                router: catalogRouter,
+                makeCollectionViewModel: { [catalogRouter] collectionId in
                     CollectionViewModel(
                         collectionId: collectionId,
                         collectionService: CollectionServiceMock(),
                         nftService: NftServiceMock(),
                         likesService: LikesServiceMock.shared,
-                        cartService: CartServiceMock.shared
+                        cartService: CartServiceMock.shared,
+                        router: catalogRouter
                     )
                 }
             )
             .tabItem {
                 Label {
-                    Text("Каталог")
+                    Text("Tab.catalog")
                 } icon: {
                     Image(.catalog30)
                 }
             }
             .tag(Tab.catalog)
 
-            Text("Корзина")
+            Text("Tab.cart")
                 .tabItem {
                     Label {
-                        Text("Корзина")
+                        Text("Tab.cart")
                     } icon: {
                         Image(.basket30)
                     }
                 }
                 .tag(Tab.cart)
 
-            Text("Статистика")
+            Text("Tab.statistics")
                 .tabItem {
                     Label {
-                        Text("Статистика")
+                        Text("Tab.statistics")
                     } icon: {
                         Image(.statistics30)
                     }
