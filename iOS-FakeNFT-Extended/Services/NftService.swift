@@ -1,7 +1,8 @@
 import Foundation
 
-protocol NftService {
+protocol NftService: Sendable {
     func loadNft(id: String) async throws -> Nft
+    func loadNfts(ids: [String]) async throws -> [Nft]
 }
 
 @MainActor
@@ -24,5 +25,25 @@ final class NftServiceImpl: NftService {
         let nft: Nft = try await networkClient.send(request: request)
         await storage.saveNft(nft)
         return nft
+    }
+
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        let uniqueIds = Set(ids)
+
+        return try await withThrowingTaskGroup(of: Nft.self) { group in
+            for id in uniqueIds {
+                group.addTask {
+                    try await self.loadNft(id: id)
+                }
+            }
+
+            var nftsById: [String: Nft] = [:]
+
+            for try await nft in group {
+                nftsById[nft.id] = nft
+            }
+
+            return ids.compactMap { nftsById[$0] }
+        }
     }
 }
