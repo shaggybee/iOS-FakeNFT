@@ -29,8 +29,9 @@ struct TabBarView: View {
                         Image(.basket30)
                     }
                 }
-            
-            StatisticsRatingView()
+            NavigationStack {
+                StatisticsRatingView()
+            }
                 .tabItem {
                     Label {
                         Text("Статистика")

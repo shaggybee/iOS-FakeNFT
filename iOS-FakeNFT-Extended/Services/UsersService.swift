@@ -4,10 +4,12 @@
 //
 //  Created by el on 23.10.2026.
 //
+
 import Foundation
 
 protocol UsersService {
     func loadUsers() async throws -> [User]
+    func loadUser(id: String) async throws -> User
 }
 
 @MainActor
@@ -25,4 +27,10 @@ final class UsersServiceImpl: UsersService {
         return users
     }
     
+    func loadUser(id: String) async throws -> User {
+        let request = UserByIdRequest(id: id)
+        let user: User = try await networkClient.send(request: request)
+        return user
+    }
+
 }

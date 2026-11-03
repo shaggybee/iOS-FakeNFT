@@ -69,7 +69,7 @@ final class RatingViewModel {
             applySorting()
             
         } catch {
-            errorMessage = "Не удалось загрузить пользователей"
+            errorMessage = NSLocalizedString("Error.usersLoadFailed", comment: "Ошибка: не удалось загрузить пользователей")
         }
     }
 }

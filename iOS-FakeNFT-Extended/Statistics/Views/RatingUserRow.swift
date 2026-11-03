@@ -22,7 +22,7 @@ struct RatingUserRow: View {
                 AsyncImage(url: URL(string: avatar)) { phase in
                     switch phase {
                     case .empty, .failure:
-                        Image("profile30")
+                        Image(.profile30)
                             .foregroundStyle(.greyUniversal)
                     case .success(let image):
                         image
@@ -30,7 +30,7 @@ struct RatingUserRow: View {
                             .scaledToFit()
         
                     @unknown default:
-                        Image("profile30")
+                        Image(.profile30)
                             .foregroundStyle(.greyUniversal)
                     }
                 }
