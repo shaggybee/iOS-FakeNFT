@@ -96,7 +96,7 @@ final class ShoppingCartViewModel {
             name: nft.name,
             rating: nft.rating,
             price: nft.price,
-            imageUrl: URL(string: nft.images.first ?? "")
+            imageUrl: nft.images.first
         )
     }
     

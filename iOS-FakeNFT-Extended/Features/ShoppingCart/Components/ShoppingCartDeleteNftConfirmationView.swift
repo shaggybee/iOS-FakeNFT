@@ -16,7 +16,7 @@ struct ShoppingCartDeleteNftConfirmationView: View {
     var body: some View {
         VStack(spacing: 20) {
             VStack(spacing: 12) {
-                NftLogoView(url: URL(string: nft.images.first ?? ""))
+                NftLogoView(url: nft.images.first)
                     .frame(width: 108, height: 108)
                     .clipShape(.rect(cornerRadius: 12))
                 
@@ -57,10 +57,10 @@ struct ShoppingCartDeleteNftConfirmationView: View {
         nft: Nft(
             id: "1",
             name: "тестовый 1",
-            images: [""],
-            description: "",
+            images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Peach.png")].compactMap({ $0 }),
             rating: 1,
             price: 12,
+            description: "",
             author: ""),
         onDeleteTap: {},
         onCancelTap: {}

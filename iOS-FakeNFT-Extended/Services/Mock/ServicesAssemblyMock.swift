@@ -16,7 +16,7 @@ final class ServicesAssemblyMock: ServicesAssemblyProtocol {
     let currenciesService: CurrenciesServiceProtocol
     
     init() {
-        nftService = NftServiceMock()
+        nftService = NftServiceMock(nfts: [])
         orderService = OrderServiceMock()
         shoppingCartService = ShoppingCartServiceMock(
             orderService: orderService,

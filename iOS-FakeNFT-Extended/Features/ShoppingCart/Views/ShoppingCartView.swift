@@ -40,6 +40,8 @@ struct ShoppingCartView: View {
                             viewModel.retryNftsLoad()
                         })
                 }
+            case .empty:
+                EmptyStateView(message: NSLocalizedString("ShoppingCart.empty", comment: ""))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

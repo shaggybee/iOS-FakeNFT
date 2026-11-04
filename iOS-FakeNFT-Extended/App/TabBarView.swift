@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct TabBarView: View {
-    @Environment(ServicesAssembly.self) private var servicesAssembly
     @State private var selectedTab: Tab = .catalog
     @State private var catalogRouter = CatalogRouter()
-
+    
     let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
     
     var body: some View {
@@ -18,20 +17,20 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.profile)
-
+            
             CatalogView(
                 viewModel: CatalogViewModel(
-                    collectionsService: servicesAssembly.collectionsService,
+                    collectionsService: services.collectionsService,
                     router: catalogRouter
                 ),
                 router: catalogRouter,
-                makeCollectionViewModel: { [catalogRouter, servicesAssembly] collectionId in
+                makeCollectionViewModel: { [catalogRouter, services] collectionId in
                     CollectionViewModel(
                         collectionId: collectionId,
-                        collectionService: servicesAssembly.collectionService,
-                        nftService: servicesAssembly.nftService,
-                        likesService: servicesAssembly.likesService,
-                        cartService: servicesAssembly.cartService,
+                        collectionService: services.collectionService,
+                        nftService: services.nftService,
+                        likesService: services.likesService,
+                        cartService: services.cartService,
                         router: catalogRouter
                     )
                 }
@@ -45,7 +44,6 @@ struct TabBarView: View {
             }
             .tag(Tab.catalog)
             
-            // TODO как будет доступен API не забыть удалить и прокинуть действительный
             ShoppingCartRootView(services: services)
                 .tabItem {
                     Label {
@@ -55,7 +53,7 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.cart)
-
+            
             Text("Tab.statistics")
                 .tabItem {
                     Label {

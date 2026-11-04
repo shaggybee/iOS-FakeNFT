@@ -10,19 +10,15 @@ protocol ServicesAssemblyProtocol {
 
 @Observable
 @MainActor
-final class ServicesAssembly {
-
-
 final class ServicesAssembly: ServicesAssemblyProtocol {
     private let networkClient: NetworkClient
-    private let nftStorage: NftStorage
-
+    
     let nftService: NftService
     let collectionsService: CollectionsServiceProtocol
     let collectionService: CollectionServiceProtocol
     let likesService: LikesServiceProtocol
     let cartService: CartServiceProtocol
-
+    
     init(
         networkClient: NetworkClient,
         nftStorage: NftStorage
@@ -35,12 +31,13 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
         collectionService = CollectionServiceImpl(networkClient: networkClient)
         likesService = LikesServiceImpl(networkClient: networkClient)
         cartService = CartServiceImpl(networkClient: networkClient)
+        self.networkClient = networkClient
     }
     
     var orderService: OrderServiceProtocol {
         OrderService(networkClient: networkClient)
     }
-
+    
     var shoppingCartService: ShoppingCartServiceProtocol {
         ShoppingCartService(
             orderService: orderService,

@@ -38,6 +38,8 @@ struct ShoppingCartPaymentView: View {
                             viewModel.retryLoadCurrencies()
                         })
                 }
+            case .empty:
+                EmptyStateView(message: NSLocalizedString("Payment.emptyCurrenciesList", comment: ""))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
