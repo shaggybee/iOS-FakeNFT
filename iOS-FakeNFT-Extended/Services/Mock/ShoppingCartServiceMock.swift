@@ -11,6 +11,8 @@ actor ShoppingCartServiceMock: ShoppingCartServiceProtocol {
     private let orderService: OrderServiceProtocol
     private let nftService: NftService
     
+    private var nftIDs: Set<String> = ["0", "1", "2"]
+    
     var loadedNfts: [Nft] = []
     var isStorageInit: Bool = false
     
@@ -47,5 +49,13 @@ actor ShoppingCartServiceMock: ShoppingCartServiceProtocol {
         _ = try await orderService.clear()
         
         loadedNfts = []
+    }
+    
+    func loadOrder() async throws -> Set<String> {
+        nftIDs
+    }
+
+    func updateCart(with nftIDs: Set<String>) async throws {
+        self.nftIDs = nftIDs
     }
 }

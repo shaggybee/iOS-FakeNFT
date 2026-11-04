@@ -30,7 +30,7 @@ struct TabBarView: View {
                         collectionService: services.collectionService,
                         nftService: services.nftService,
                         likesService: services.likesService,
-                        cartService: services.cartService,
+                        cartService: services.shoppingCartService,
                         router: catalogRouter
                     )
                 }

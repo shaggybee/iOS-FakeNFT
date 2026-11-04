@@ -17,7 +17,8 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
     let collectionsService: CollectionsServiceProtocol
     let collectionService: CollectionServiceProtocol
     let likesService: LikesServiceProtocol
-    let cartService: CartServiceProtocol
+    let orderService: OrderServiceProtocol
+    let shoppingCartService: ShoppingCartServiceProtocol
     
     init(
         networkClient: NetworkClient,
@@ -30,19 +31,12 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
         collectionsService = CollectionsServiceImpl(networkClient: networkClient)
         collectionService = CollectionServiceImpl(networkClient: networkClient)
         likesService = LikesServiceImpl(networkClient: networkClient)
-        cartService = CartServiceImpl(networkClient: networkClient)
-        self.networkClient = networkClient
-    }
-    
-    var orderService: OrderServiceProtocol {
-        OrderService(networkClient: networkClient)
-    }
-    
-    var shoppingCartService: ShoppingCartServiceProtocol {
-        ShoppingCartService(
+        orderService = OrderService(networkClient: networkClient)
+        shoppingCartService = ShoppingCartService(
             orderService: orderService,
             nftService: nftService
         )
+        self.networkClient = networkClient
     }
     
     var currenciesService: CurrenciesServiceProtocol {
