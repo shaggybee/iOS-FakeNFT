@@ -47,6 +47,7 @@ actor ShoppingCartService: ShoppingCartServiceProtocol {
     
     func pay(by currencyId: String) async throws {
         try await orderService.pay(by: currencyId)
+        try await orderService.completeOrder()
     }
     
     func clear() async throws {

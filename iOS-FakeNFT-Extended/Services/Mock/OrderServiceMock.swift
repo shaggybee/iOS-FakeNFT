@@ -22,6 +22,10 @@ actor OrderServiceMock: OrderServiceProtocol {
         try await Task.sleep(for: .seconds(1))
     }
     
+    func completeOrder() async throws {
+        try await Task.sleep(for: .seconds(1))
+    }
+
     func clear() async throws {
         try await Task.sleep(for: .seconds(1))
     }

@@ -30,6 +30,18 @@ struct OrderUpdateRequest: NetworkRequest {
     }
 }
 
+struct OrderCompleteRequest: NetworkRequest {
+    var httpMethod: HttpMethod { .post }
+    
+    let nftIDs: [String]
+
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+    }
+
+    var formParameters: [URLQueryItem]? { nftIDs.map { URLQueryItem(name: "nfts", value: $0) }}
+}
+
 struct OrderClearRequest: NetworkRequest {
     var httpMethod: HttpMethod { .put }
 

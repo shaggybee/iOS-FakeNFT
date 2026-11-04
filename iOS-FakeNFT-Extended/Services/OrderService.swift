@@ -11,6 +11,7 @@ protocol OrderServiceProtocol: Sendable {
     func loadOrder() async throws -> Order
     func updateOrder(nfts: [String]) async throws
     func pay(by currencyId: String) async throws
+    func completeOrder() async throws
     func clear() async throws
 }
 
@@ -32,6 +33,12 @@ actor OrderService: OrderServiceProtocol {
     
     func pay(by currencyId: String) async throws {
         _ = try await networkClient.send(request: OrderPaymentRequest(currencyId: currencyId))
+    }
+    
+    func completeOrder() async throws {
+        let order: Order = try await networkClient.send(request: OrderRequest())
+        
+        _ = try await networkClient.send(request: OrderCompleteRequest(nftIDs: order.nfts))
     }
     
     func clear() async throws {
