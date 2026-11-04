@@ -15,11 +15,11 @@ enum NftSortOption: String, CaseIterable {
     var title: String {
         switch self {
         case .title:
-            NSLocalizedString("Sorting.byTitle", comment: "")
+            NSLocalizedString("Sort.byName", comment: "")
         case .rating:
-            NSLocalizedString("Sorting.byRating", comment: "")
+            NSLocalizedString("Sort.byRating", comment: "")
         case .price:
-            NSLocalizedString("Sorting.byPrice", comment: "")
+            NSLocalizedString("Sort.byPrice", comment: "")
         }
     }
 }

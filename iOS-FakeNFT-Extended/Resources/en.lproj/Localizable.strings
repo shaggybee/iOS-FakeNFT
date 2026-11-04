@@ -24,12 +24,15 @@
 "Error.retry" = "Retry";
 "Error.title" = "Error";
 "Error.unknown" = "An unknown error occurred";
+"Error.fetchData" = "Failed to fetch data";
 
 // MARK: - Sorting
 
 "Sort.byName" = "By name";
 "Sort.byNftCount" = "By NFT count";
 "Sort.title" = "Sort";
+"Sort.byPrice" = "By price";
+"Sort.byRating" = "By rating";
 
 // MARK: - Tab Bar
 
@@ -41,3 +44,39 @@
 // MARK: - WebView
 
 "WebView.loadingError" = "Failed to load page";
+
+// MARK: - Shopping Cart
+
+"ShoppingCart.price" = "Price";
+"ShoppingCart.pay" = "Pay";
+"ShoppingCart.empty" = "Cart is empty";
+"ShoppingCart.toPay" = "To pay";
+"ShoppingCart.loadError" = "Failed to load cart items";
+"ShoppingCart.deleteNftError" = "Failed to remove NFT";
+"ShoppingCart.deleteNftConfirmation" = "Are you sure you want to remove the item from the cart?";
+
+// MARK: - Button
+
+"Button.cancel" = "Cancel";
+"Button.close" = "Close";
+"Button.delete" = "Delete";
+"Button.comeback" = "Come back";
+"Button.retry" = "Retry";
+
+// MARK: - Payment
+
+"Payment.selection" = "Choose a payment method";
+"Payment.emptyCurrenciesList" = "No available currencies for payment";
+"Payment.loadCurrenciesError" = "Failed to load currency list";
+"Payment.pay" = "Pay";
+"Payment.agreement" = "By making a purchase, you agree to the terms";
+"Payment.agreementLink" = "User Agreement";
+"Payment.paymentFailed" = "Payment failed";
+"Payment.cartClearingFailed" = "Failed to clear cart";
+"Payment.successTitle" = "Success! Payment completed. Congratulations on your purchase!";
+"Payment.backToCart" = "Back to cart";
+
+// MARK: - Shopping Cart Agreement
+
+"ShoppingCartAgreement.loadError" = "Failed to load user agreement";
+

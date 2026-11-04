@@ -65,7 +65,7 @@ struct ShoppingCartView: View {
                 }
             }
         }
-        .confirmationDialog(Text("Sorting.title"), isPresented: $isSortSheetPresented, titleVisibility: .visible) {
+        .confirmationDialog(Text("Sort.title"), isPresented: $isSortSheetPresented, titleVisibility: .visible) {
             ForEach(viewModel.sortOptions, id: \.self) { option in
                 Button(option.title) {
                     sortOption = option
