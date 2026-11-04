@@ -54,8 +54,11 @@ final class CollectionViewModel {
     // MARK: - Public Methods
 
     func onAppear() async {
-        guard case .idle = state else { return }
-        await load()
+        if case .idle = state {
+            await load()
+        } else {
+            await reloadCart()
+        }
     }
 
     func retryButtonTapped() {
@@ -100,6 +103,17 @@ final class CollectionViewModel {
         cartSyncTask = Task {
             await previousTask?.value
             await syncCart(cartToSave)
+        }
+    }
+    
+    func reloadCart() async {
+        do {
+            let cart = try await cartService.loadOrder()
+            self.cart = cart
+            self.confirmedCart = cart
+            updateLoadedState()
+        } catch {
+            isCartErrorPresented = true
         }
     }
 }
