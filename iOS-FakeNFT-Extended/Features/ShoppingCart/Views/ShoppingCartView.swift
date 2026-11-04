@@ -37,9 +37,7 @@ struct ShoppingCartView: View {
                     ErrorStateView(
                         message: NSLocalizedString("ShoppingCart.loadError", comment: ""),
                         onRetry: {
-                            Task {
-                                await viewModel.loadNfts()
-                            }
+                            viewModel.retryNftsLoad()
                         })
                 }
             }
@@ -48,9 +46,7 @@ struct ShoppingCartView: View {
         .background(.whitePrimary)
         .alert(Text("Error.fetchData"), isPresented: $viewModel.isFetchingNftsErrorShown) {
             Button("Button.retry") {
-                Task {
-                    await viewModel.loadNfts()
-                }
+                viewModel.retryNftsLoad()
             }
             Button("Button.cancel", role: .cancel) { }
         }
@@ -115,6 +111,9 @@ struct ShoppingCartView: View {
         .onChange(of: sortOption, initial: true) {
             viewModel.apply(sort: $1)
         }
+        .onDisappear {
+            viewModel.cancelNftsLoad()
+        }
     }
     
     private var content: some View {
@@ -129,6 +128,9 @@ struct ShoppingCartView: View {
                     }
                 }
             }
+            .refreshable(action: {
+                viewModel.retryNftsLoad()
+            })
             .scrollIndicators(.hidden)
             .padding(.horizontal, 16)
             

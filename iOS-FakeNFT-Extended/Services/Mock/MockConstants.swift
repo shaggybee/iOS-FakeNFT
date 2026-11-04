@@ -71,4 +71,55 @@ enum MockConstants {
             price: 8.49,
             author: "")
     ]
+    
+    static let currencies: [Currency] = [
+        Currency(
+            id: "1",
+            title: "Bitcoin",
+            name: "ВТС",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")
+        ),
+        Currency(
+            id: "2",
+            title: "Dogecoin",
+            name: "DOGE",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Dogecoin_(DOGE).png")
+        ),
+        Currency(
+            id: "3",
+            title: "Tether",
+            name: "USDT",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png")
+        ),
+        Currency(
+            id: "4",
+            title: "Apecoin",
+            name: "APE",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png")
+        ),
+        Currency(
+            id: "5",
+            title: "Solana",
+            name: "SOL",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png")
+        ),
+        Currency(
+            id: "6",
+            title: "Ethereum",
+            name: "ETH",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Ethereum_(ETH).png")
+        ),
+        Currency(
+            id: "7",
+            title: "Cardano",
+            name: "ADA",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png")
+        ),
+        Currency(
+            id: "8",
+            title: "Shiba Inu",
+            name: "SHIB",
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png")
+        ),
+    ]
 }

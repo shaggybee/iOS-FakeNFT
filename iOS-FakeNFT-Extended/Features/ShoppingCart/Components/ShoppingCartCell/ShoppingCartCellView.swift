@@ -38,7 +38,7 @@ struct ShoppingCartCellView: View {
             }
             
             VStack(alignment: .leading, spacing: 2) {
-                Text("Цена")
+                Text("ShoppingCart.price")
                     .font(AppFont.regular17)
                     .foregroundStyle(.blackPrimary)
                 

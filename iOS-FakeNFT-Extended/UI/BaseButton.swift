@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct BaseButton: View {
+    @Environment(\.isEnabled) private var isEnabled
+    
     let title: String
     let height: CGFloat
     let action: () -> Void
@@ -29,7 +31,7 @@ struct BaseButton: View {
                 .foregroundStyle(.whitePrimary)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
-                .background(.blackPrimary)
+                .background(isEnabled ? .blackPrimary : .blackPrimary.opacity(0.5))
                 .clipShape(.rect(cornerRadius: 16))
         }
     }

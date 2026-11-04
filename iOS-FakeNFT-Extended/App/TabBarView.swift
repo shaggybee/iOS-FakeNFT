@@ -5,6 +5,8 @@ struct TabBarView: View {
     @State private var selectedTab: Tab = .catalog
     @State private var catalogRouter = CatalogRouter()
 
+    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             Text("Tab.profile")
@@ -44,7 +46,7 @@ struct TabBarView: View {
             .tag(Tab.catalog)
             
             // TODO как будет доступен API не забыть удалить и прокинуть действительный
-            ShoppingCartRootView(shoppingCartService: ServicesAssemblyMock().shoppingCartService)
+            ShoppingCartRootView(services: services)
                 .tabItem {
                     Label {
                         Text("Tab.cart")
