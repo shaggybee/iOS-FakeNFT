@@ -14,43 +14,36 @@ struct OrderRequest: NetworkRequest {
 }
 
 struct OrderUpdateRequest: NetworkRequest {
-    private struct OrderUpdateDTO: Encodable {
-        let nfts: [String]
-    }
+    let nftIDs: [String]
     
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+    }
+
+    var httpMethod: HttpMethod { .put }
+    
+    var formParameters: [URLQueryItem]? {
+        guard !nftIDs.isEmpty else {
+            return [URLQueryItem(name: "nfts", value: "null")]
+        }
+        return nftIDs.map { URLQueryItem(name: "nfts", value: $0) }
+    }
+}
+
+struct OrderClearRequest: NetworkRequest {
     var httpMethod: HttpMethod { .put }
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
-    let dto: Encodable?
-
-    init(nfts: [String]) {
-        self.dto = OrderUpdateDTO(nfts: nfts)
-    }
-}
-
-struct OrderClearRequest: NetworkRequest {
-    private struct OrderClearDTO: Encodable {
-        let nfts: [String]
-    }
-    
-    var httpMethod: HttpMethod { .post }
-
-    var endpoint: URL? {
-        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
-    }
-
-    let dto: Encodable?
-
-    init(nfts: [String]) {
-        self.dto = OrderClearDTO(nfts: nfts)
-    }
+    var formParameters: [URLQueryItem]? { [URLQueryItem(name: "nfts", value: "null")] }
 }
 
 struct OrderPaymentRequest: NetworkRequest {
     let currencyId: String
+    
+    var httpMethod: HttpMethod { .get }
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1/payment/\(currencyId)")

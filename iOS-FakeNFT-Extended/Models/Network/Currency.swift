@@ -11,5 +11,12 @@ struct Currency: Decodable, Sendable, Equatable {
     let id: String
     let title: String
     let name: String
-    let image: URL?
+    let imageURL: URL?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case name
+        case imageURL = "image"
+    }
 }

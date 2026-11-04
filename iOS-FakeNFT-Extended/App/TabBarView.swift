@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TabBarView: View {
-    let services = ServicesAssemblyMock()
+    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
     
     var body: some View {
         TabView {

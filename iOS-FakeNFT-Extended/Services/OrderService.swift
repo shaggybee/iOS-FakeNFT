@@ -27,7 +27,7 @@ actor OrderService: OrderServiceProtocol {
     }
     
     func updateOrder(nfts: [String]) async throws {
-        _ = try await networkClient.send(request: OrderUpdateRequest(nfts: nfts))
+        _ = try await networkClient.send(request: OrderUpdateRequest(nftIDs: nfts))
     }
     
     func pay(by currencyId: String) async throws {
@@ -35,6 +35,6 @@ actor OrderService: OrderServiceProtocol {
     }
     
     func clear() async throws {
-        _ = try await networkClient.send(request: OrderClearRequest(nfts: []))
+        _ = try await networkClient.send(request: OrderClearRequest())
     }
 }

@@ -98,12 +98,7 @@ final class ShoppingCartPaymentViewModel {
         } catch {
             guard !Task.isCancelled else { return }
             
-            if payingState == .paying {
-                payingState = .error(.paymentFailed)
-            } else {
-                payingState = .error(.cartClearingFailed)
-            }
-            
+            payingState = .error(payingState == .paying ? .paymentFailed : .cartClearingFailed)
             isPaymentErrorAlertPresented = true
         }
     }
@@ -113,7 +108,7 @@ final class ShoppingCartPaymentViewModel {
             id: currency.id,
             title: currency.title,
             name: currency.name,
-            imageUrl: currency.image
+            imageUrl: currency.imageURL
         )
     }
 }

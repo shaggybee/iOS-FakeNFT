@@ -11,7 +11,7 @@ struct PaymentSuccessView: View {
     let onBackToCartTap: () -> Void
     
     var body: some View {
-        VStack(alignment: .center, spacing: .zero) {
+        VStack(spacing: .zero) {
             Spacer()
             
             Image(.paymentSuccess)
