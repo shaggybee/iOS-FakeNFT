@@ -191,7 +191,10 @@ struct CollectionView: View {
                 collectionService: CollectionServiceMock(),
                 nftService: NftServiceMock(),
                 likesService: LikesServiceMock(),
-                cartService: CartServiceMock(),
+                cartService: ShoppingCartServiceMock(
+                    orderService: OrderServiceMock(),
+                    nftService: NftServiceMock()
+                ),
                 router: CatalogRouter()
             )
         )

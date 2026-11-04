@@ -19,7 +19,9 @@ extension Nft {
             name: name,
             images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/\(name)/1.png")].compactMap { $0 },
             rating: 2,
-            price: 1
+            price: 1,
+            description: "",
+            author: ""
         )
     }
 }

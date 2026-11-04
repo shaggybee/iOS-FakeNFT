@@ -22,7 +22,7 @@ final class CollectionViewModel {
     private let collectionService: CollectionServiceProtocol
     private let nftService: NftService
     private let likesService: LikesServiceProtocol
-    private let cartService: CartServiceProtocol
+    private let cartService: ShoppingCartServiceProtocol
     private let router: CatalogRouterProtocol
     private var collection: NftCollection?
     private var nfts: [Nft] = []
@@ -40,7 +40,7 @@ final class CollectionViewModel {
         collectionService: CollectionServiceProtocol,
         nftService: NftService,
         likesService: LikesServiceProtocol,
-        cartService: CartServiceProtocol,
+        cartService: ShoppingCartServiceProtocol,
         router: CatalogRouterProtocol
     ) {
         self.collectionId = collectionId
@@ -113,7 +113,7 @@ private extension CollectionViewModel {
         do {
             async let collection = collectionService.loadCollection(id: collectionId)
             async let likes = likesService.loadLikes()
-            async let cart = cartService.loadCart()
+            async let cart = cartService.loadOrder()
             let loadedCollection = try await collection
             nfts = try await nftService.loadNfts(ids: loadedCollection.nfts)
             self.likes = try await likes

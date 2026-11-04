@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct TabBarView: View {
-    @Environment(ServicesAssembly.self) private var servicesAssembly
     @State private var selectedTab: Tab = .catalog
     @State private var catalogRouter = CatalogRouter()
-
+    
+    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             Text("Tab.profile")
@@ -16,20 +17,20 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.profile)
-
+            
             CatalogView(
                 viewModel: CatalogViewModel(
-                    collectionsService: servicesAssembly.collectionsService,
+                    collectionsService: services.collectionsService,
                     router: catalogRouter
                 ),
                 router: catalogRouter,
-                makeCollectionViewModel: { [catalogRouter, servicesAssembly] collectionId in
+                makeCollectionViewModel: { [catalogRouter, services] collectionId in
                     CollectionViewModel(
                         collectionId: collectionId,
-                        collectionService: servicesAssembly.collectionService,
-                        nftService: servicesAssembly.nftService,
-                        likesService: servicesAssembly.likesService,
-                        cartService: servicesAssembly.cartService,
+                        collectionService: services.collectionService,
+                        nftService: services.nftService,
+                        likesService: services.likesService,
+                        cartService: services.shoppingCartService,
                         router: catalogRouter
                     )
                 }
@@ -42,8 +43,8 @@ struct TabBarView: View {
                 }
             }
             .tag(Tab.catalog)
-
-            Text("Tab.cart")
+            
+            ShoppingCartRootView(services: services)
                 .tabItem {
                     Label {
                         Text("Tab.cart")
@@ -52,7 +53,7 @@ struct TabBarView: View {
                     }
                 }
                 .tag(Tab.cart)
-
+            
             Text("Tab.statistics")
                 .tabItem {
                     Label {
