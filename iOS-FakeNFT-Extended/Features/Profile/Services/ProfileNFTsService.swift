@@ -1,36 +1,24 @@
 import Foundation
 
 protocol ProfileNFTsService: Sendable {
-    func loadNFTs(ids: [String]) async throws -> [ProfileNFT]
+    func loadNFTs(ids: [String]) async throws -> [Nft]
 }
 
 actor ProfileNFTsServiceImpl: ProfileNFTsService {
     private let nftService: any NftService
-    private let networkClient: any NetworkClient
 
-    init(nftService: any NftService, networkClient: any NetworkClient) {
+    init(nftService: any NftService) {
         self.nftService = nftService
-        self.networkClient = networkClient
     }
 
-    func loadNFTs(ids: [String]) async throws -> [ProfileNFT] {
+    func loadNFTs(ids: [String]) async throws -> [Nft] {
         var seen = Set<String>()
         let ids = ids.filter { seen.insert($0).inserted }
         guard !ids.isEmpty else { return [] }
-        let nfts = try await ProfileConcurrentLoader.load(ids: ids) { [nftService] id in
+        return try await ProfileConcurrentLoader.load(ids: ids) { [nftService] id in
             try await nftService.loadNft(id: id)
         }
-        let authorIDs = Array(Set(nfts.map(\.author)))
-        let authors: [NFTAuthor] = try await ProfileConcurrentLoader.load(ids: authorIDs) { [networkClient] id in
-            try await networkClient.send(request: ProfileNFTAuthorRequest(id: id))
-        }
-        let authorsByID = Dictionary(authors.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        return try nfts.map { nft in
-            guard let author = authorsByID[nft.author] else { throw NetworkClientError.parsingError }
-            return ProfileNFT(nft: nft, author: author)
-        }
     }
-
 }
 
 enum ProfileConcurrentLoader {
@@ -54,15 +42,5 @@ enum ProfileConcurrentLoader {
             }
             return values
         }
-    }
-}
-
-struct ProfileNFTAuthorRequest: NetworkRequest {
-    let id: String
-
-    var endpoint: URL? {
-        let allowed = CharacterSet.urlPathAllowed.subtracting(CharacterSet(charactersIn: "/?#"))
-        guard let id = id.addingPercentEncoding(withAllowedCharacters: allowed) else { return nil }
-        return URL(string: RequestConstants.baseURL + "/api/v1/users/" + id)
     }
 }

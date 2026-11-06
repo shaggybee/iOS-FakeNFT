@@ -13,15 +13,15 @@ enum ProfileNFTSort: String, CaseIterable, Sendable {
         }
     }
 
-    func sorted(_ items: [ProfileNFT]) -> [ProfileNFT] {
+    func sorted(_ items: [Nft]) -> [Nft] {
         items.sorted { lhs, rhs in
             switch self {
-            case .price where lhs.nft.price != rhs.nft.price:
-                return lhs.nft.price < rhs.nft.price
-            case .rating where lhs.nft.rating != rhs.nft.rating:
-                return lhs.nft.rating > rhs.nft.rating
+            case .price where lhs.price != rhs.price:
+                return lhs.price < rhs.price
+            case .rating where lhs.rating != rhs.rating:
+                return lhs.rating > rhs.rating
             default:
-                let nameOrder = lhs.nft.name.localizedCaseInsensitiveCompare(rhs.nft.name)
+                let nameOrder = lhs.name.localizedCaseInsensitiveCompare(rhs.name)
                 return nameOrder == .orderedSame ? lhs.id < rhs.id : nameOrder == .orderedAscending
             }
         }

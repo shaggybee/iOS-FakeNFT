@@ -4,7 +4,7 @@ import Observation
 @Observable
 @MainActor
 final class ProfileNFTsViewModel {
-    private(set) var state: ViewState<[ProfileNFT]> = .idle
+    private(set) var state: ViewState<[Nft]> = .idle
     private(set) var selection: ProfileNFTSort
     private(set) var errorMessage = ""
     var showsError = false
@@ -21,7 +21,7 @@ final class ProfileNFTsViewModel {
         selection = sortStore.selection
     }
 
-    var items: [ProfileNFT] {
+    var items: [Nft] {
         guard case .loaded(let items) = state else { return [] }
         return selection.sorted(items)
     }
