@@ -1,5 +1,5 @@
 //
-//  WebView.swift
+//  WebViewStatistics.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by el on 30.10.2026.
@@ -8,7 +8,7 @@
 import SwiftUI
 import WebKit
 
-struct WebView: UIViewRepresentable {
+struct WebViewStatistics: UIViewRepresentable {
     let url: URL
     
     func makeUIView(context: Context) -> WKWebView {

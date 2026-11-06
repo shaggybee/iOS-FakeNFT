@@ -15,7 +15,14 @@ struct UserProfileView: View {
     
     @State private var viewModel: UserProfileViewModel
     
-    init(userId: String, usersService: UsersService) {
+    private let nftService: NftService
+    private let usersService: UsersService
+    
+    init(userId: String, usersService: UsersService, nftService: NftService) {
+        
+        self.usersService = usersService
+        self.nftService = nftService
+        
         _viewModel = State(
             initialValue: UserProfileViewModel(
                 userId: userId,
@@ -67,8 +74,8 @@ struct UserProfileView: View {
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(.blackPrimary, lineWidth: 1))
                     .padding(.top, 28)
                 }
-                Button {
-                    // Переход к коллекции (модуль 3)
+                NavigationLink {
+                UserNFTCollectionView(userId: user.id, usersService: usersService , nftService: nftService)
                 } label: {
                     HStack {
                         Text("Коллекция NFT (\(user.nfts.count))")
@@ -94,5 +101,5 @@ struct UserProfileView: View {
 }
 
 #Preview {
-    UserProfileView(userId: "1", usersService: MockUsersService())
+    UserProfileView(userId: "1", usersService: MockUsersService(), nftService: NftServiceImpl(networkClient: DefaultNetworkClient(), storage: NftStorageImpl()))
 }

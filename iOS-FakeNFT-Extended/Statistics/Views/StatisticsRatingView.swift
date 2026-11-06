@@ -13,7 +13,7 @@ struct StatisticsRatingView: View {
     private var serviceAssembly
     
     var body: some View {
-        RatingScreen(usersService: serviceAssembly.usersService)
+        RatingScreen(usersService: serviceAssembly.usersService, nftService: serviceAssembly.nftService )
     }
 }
 
@@ -25,9 +25,11 @@ private struct RatingScreen: View {
     @State private var selectedUserId: String?
     
     private let usersService: UsersService
+    private let nftService: NftService
     
-    init(usersService: UsersService) {
+    init(usersService: UsersService, nftService: NftService) {
         self.usersService = usersService
+        self.nftService = nftService
         
         _viewModel = State(initialValue: RatingViewModel(usersService: usersService))
     }
@@ -71,7 +73,7 @@ private struct RatingScreen: View {
             }
         }
         .navigationDestination(item: $selectedUserId) { userId in
-            UserProfileView(userId: userId, usersService: usersService)
+            UserProfileView(userId: userId, usersService: usersService, nftService: nftService)
         }
         .task {
             await viewModel.loadUsers()
@@ -102,10 +104,20 @@ private struct RatingScreen: View {
     }
 }
 
-#Preview {
+/*#Preview {
     StatisticsRatingView()
         .environment(ServicesAssembly(
             networkClient: DefaultNetworkClient(),
             nftStorage: NftStorageImpl()))
+}
+
+*/
+
+#Preview {
+    NavigationStack {
+        RatingScreen(
+            usersService: MockUsersService(), nftService: MockNftService()
+        )
+    }
 }
 

@@ -23,6 +23,7 @@ private enum Constants {
 final class RatingViewModel {
     
     private let usersService: UsersService
+    
     private var sortOption: RatingSortOption = {
         let savedValue = UserDefaults.standard.string(forKey: Constants.sortOptionKey) ?? "rating"
         return RatingSortOption(rawValue: savedValue) ?? .rating
