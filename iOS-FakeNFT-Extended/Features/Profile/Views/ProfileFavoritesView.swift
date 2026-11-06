@@ -94,6 +94,7 @@ struct ProfileFavoritesView: View {
 }
 
 private struct ProfileFavoriteCell: View {
+    @Environment(\.locale) private var locale
     let item: Nft
     let isRemoving: Bool
     let onRemove: () -> Void
@@ -127,7 +128,7 @@ private struct ProfileFavoriteCell: View {
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(String(format: NSLocalizedString("ProfileNFT.rating", comment: "Rating"),
                                                max(0, min(5, item.rating))))
-                Text(item.price.formatted(.number.locale(Locale(identifier: "ru_RU")).precision(.fractionLength(2))) + " ETH")
+                Text(item.price.formatted(.number.locale(locale).precision(.fractionLength(2))) + " ETH")
                     .font(AppFont.regular13)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)

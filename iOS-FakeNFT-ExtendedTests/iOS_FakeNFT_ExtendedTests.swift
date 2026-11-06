@@ -772,6 +772,37 @@ final class ProfileFavoritesTests: XCTestCase {
         XCTAssertEqual(calls, ["1", "1"])
     }
 
+    func testRemovalRefreshesFavoritesAddedByAnotherClient() async {
+        let service = ControlledFavoritesService(profile: profile(["1", "2"]), items: nfts,
+                                                addedLikesOnRemoval: ["3"])
+        var accepted: [UserProfile] = []
+        let model = ProfileFavoritesViewModel(service: service) { accepted.append($0) }
+        await model.load()
+        await model.remove(id: "1")
+        XCTAssertEqual(model.items.map(\.id), ["2", "3"])
+        XCTAssertEqual(accepted.last?.likes, ["2", "3"])
+        XCTAssertEqual(accepted.count, 2)
+        let loads = await service.loadCalls
+        XCTAssertEqual(loads, 2)
+    }
+
+    func testRefreshFailureAfterConfirmedRemovalRetriesOnlyLoading() async {
+        let service = ControlledFavoritesService(profile: profile(["1", "2"]), items: nfts,
+                                                addedLikesOnRemoval: ["3"], failsRefreshAfterRemoval: true)
+        var accepted: [UserProfile] = []
+        let model = ProfileFavoritesViewModel(service: service) { accepted.append($0) }
+        await model.load()
+        await model.remove(id: "1")
+        guard case .error = model.state else { return XCTFail("Expected refresh error") }
+        XCTAssertTrue(model.showsError)
+        XCTAssertEqual(accepted.last?.likes, ["2", "3"])
+        await model.retry()
+        XCTAssertEqual(model.items.map(\.id), ["2", "3"])
+        XCTAssertFalse(model.showsError)
+        let removals = await service.removalCalls
+        XCTAssertEqual(removals, ["1"])
+    }
+
     func testLoadFailureRetryLoadsCollection() async {
         let service = ControlledFavoritesService(profile: profile(["1"]), items: [nfts[0]], failsLoad: true)
         let model = ProfileFavoritesViewModel(service: service) { _ in }
@@ -859,6 +890,8 @@ private actor ControlledFavoritesService: ProfileFavoritesService {
     var failsRemoval: Bool
     let delaysLoad: Bool
     let delaysRemoval: Bool
+    let addedLikesOnRemoval: [String]
+    let failsRefreshAfterRemoval: Bool
     private(set) var loadCalls = 0
     private(set) var removalCalls: [String] = []
     private(set) var wasCancelled = false
@@ -866,10 +899,13 @@ private actor ControlledFavoritesService: ProfileFavoritesService {
     private var removalWaiters: [CheckedContinuation<Void, Never>] = []
 
     init(profile: UserProfile, items: [Nft], failsLoad: Bool = false, failsRemoval: Bool = false,
-         delaysLoad: Bool = false, delaysRemoval: Bool = false) {
+         delaysLoad: Bool = false, delaysRemoval: Bool = false,
+         addedLikesOnRemoval: [String] = [], failsRefreshAfterRemoval: Bool = false) {
         self.profile = profile; self.items = items
         self.failsLoad = failsLoad; self.failsRemoval = failsRemoval
         self.delaysLoad = delaysLoad; self.delaysRemoval = delaysRemoval
+        self.addedLikesOnRemoval = addedLikesOnRemoval
+        self.failsRefreshAfterRemoval = failsRefreshAfterRemoval
     }
     func waitForLoad() async {
         if loadCalls > 0 { return }
@@ -896,7 +932,9 @@ private actor ControlledFavoritesService: ProfileFavoritesService {
         try await delay(delaysRemoval)
         if failsRemoval { failsRemoval = false; throw URLError(.notConnectedToInternet) }
         profile = UserProfile(id: profile.id, name: profile.name, avatar: profile.avatar, description: profile.description,
-                              website: profile.website, nfts: profile.nfts, likes: profile.likes.filter { $0 != id })
+                              website: profile.website, nfts: profile.nfts,
+                              likes: profile.likes.filter { $0 != id } + addedLikesOnRemoval)
+        if failsRefreshAfterRemoval { failsLoad = true }
         return profile
     }
 }

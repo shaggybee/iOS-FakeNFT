@@ -58,16 +58,36 @@ final class ProfileFavoritesViewModel {
         guard !isBusy, items.contains(where: { $0.id == id }) else { return }
         removingID = id
         showsError = false
+        var confirmedProfile: UserProfile?
         defer { removingID = nil }
         do {
             let profile = try await service.removeFavorite(id: id)
             try Task.checkCancellation()
-            state = .loaded(items.filter { profile.likes.contains($0.id) })
+            confirmedProfile = profile
             failedRemovalID = nil
-            onProfileChanged(profile)
+            let byID = Dictionary(items.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            if profile.likes.contains(where: { byID[$0] == nil }) {
+                let snapshot = try await service.loadFavorites()
+                try Task.checkCancellation()
+                state = .loaded(snapshot.items)
+                onProfileChanged(snapshot.profile)
+            } else {
+                var seen = Set<String>()
+                state = .loaded(profile.likes.compactMap { id in
+                    seen.insert(id).inserted ? byID[id] : nil
+                })
+                onProfileChanged(profile)
+            }
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else { return }
-            failedRemovalID = id
+            if let profile = confirmedProfile {
+                // The PUT succeeded: retry the snapshot load, not the mutation.
+                state = .error(error)
+                failedRemovalID = nil
+                onProfileChanged(profile)
+            } else {
+                failedRemovalID = id
+            }
             errorMessage = ProfileErrorMessage.text(for: error)
             showsError = true
         }
