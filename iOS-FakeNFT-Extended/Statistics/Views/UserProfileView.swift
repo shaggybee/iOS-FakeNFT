@@ -56,7 +56,7 @@ struct UserProfileView: View {
                         .foregroundStyle(.blackPrimary)
                 }
                 
-                Text(user.description)
+                Text(user.description ?? "")
                     .font(AppFont.regular13)
                     .padding(.top, 20)
                     .foregroundStyle(.blackPrimary)

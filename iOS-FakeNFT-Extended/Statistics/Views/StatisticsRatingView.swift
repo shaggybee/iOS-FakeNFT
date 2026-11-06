@@ -104,20 +104,9 @@ private struct RatingScreen: View {
     }
 }
 
-/*#Preview {
+#Preview {
     StatisticsRatingView()
         .environment(ServicesAssembly(
             networkClient: DefaultNetworkClient(),
             nftStorage: NftStorageImpl()))
 }
-
-*/
-
-#Preview {
-    NavigationStack {
-        RatingScreen(
-            usersService: MockUsersService(), nftService: MockNftService()
-        )
-    }
-}
-
