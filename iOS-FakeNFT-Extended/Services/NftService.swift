@@ -45,3 +45,15 @@ actor NftServiceImpl: NftService {
         }
     }
 }
+
+// Single-item implementations can also serve a batch; the live implementation above loads concurrently.
+extension NftService {
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        var values: [Nft] = []
+        for id in ids {
+            try Task.checkCancellation()
+            values.append(try await loadNft(id: id))
+        }
+        return values
+    }
+}

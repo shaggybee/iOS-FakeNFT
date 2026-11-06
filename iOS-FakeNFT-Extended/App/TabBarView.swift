@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct TabBarView: View {
-    @State private var selectedTab: Tab = .catalog
+    @State private var selectedTab: Tab = Self.initialTab
     @State private var catalogRouter = CatalogRouter()
     
-    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
+    @Environment(ServicesAssembly.self) private var services
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("Tab.profile")
+            ProfileRootView()
                 .tabItem {
                     Label {
                         Text("Tab.profile")
@@ -69,6 +69,13 @@ struct TabBarView: View {
 }
 
 private extension TabBarView {
+    static var initialTab: Tab {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") { return .profile }
+        #endif
+        return .catalog
+    }
+
     enum Tab: Hashable {
         case profile
         case catalog

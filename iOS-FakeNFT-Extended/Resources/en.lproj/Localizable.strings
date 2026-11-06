@@ -80,3 +80,26 @@
 
 "ShoppingCartAgreement.loadError" = "Failed to load user agreement";
 
+
+// MARK: - Profile
+
+"Error.repeat" = "Retry";
+"ProfileNFT.sort.price" = "By price";
+"ProfileNFT.sort.rating" = "By rating";
+"ProfileNFT.sort.name" = "By name";
+"ProfileNFT.sort.title" = "Sort";
+"ProfileNFT.title" = "My NFTs";
+"ProfileNFT.empty" = "You have no NFTs yet";
+"ProfileNFT.error.title" = "Failed to load NFTs";
+"ProfileNFT.back" = "Back";
+"ProfileNFT.close" = "Close";
+"ProfileNFT.cancel" = "Cancel";
+"ProfileNFT.liked" = "In favorites";
+"ProfileNFT.notLiked" = "Not in favorites";
+"ProfileNFT.rating" = "Rating %d out of 5";
+"ProfileNFT.author" = "by %@";
+"ProfileNFT.price" = "Price";
+"ProfileFavorites.title" = "Favorite NFTs";
+"ProfileFavorites.empty" = "You have no favorite NFTs yet";
+"ProfileFavorites.error.title" = "Failed to update favorites";
+"ProfileFavorites.remove" = "Remove %@ from favorites";

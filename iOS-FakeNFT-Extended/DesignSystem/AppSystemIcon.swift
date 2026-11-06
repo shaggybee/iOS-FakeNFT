@@ -12,4 +12,6 @@ enum AppSystemIcon {
     static let plus = "plus.circle.fill"
     // галочка "выполнено"
     static let checkmark = "checkmark.circle.fill"
+    static let photo = "photo"
+    static let heartFilled = "heart.fill"
 }
