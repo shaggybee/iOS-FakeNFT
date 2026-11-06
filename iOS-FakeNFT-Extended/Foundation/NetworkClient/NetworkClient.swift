@@ -8,7 +8,7 @@ enum NetworkClientError: Error {
     case incorrectRequest(String)
 }
 
-protocol NetworkClient {
+protocol NetworkClient: Sendable {
     func send(request: NetworkRequest) async throws -> Data
     func send<T: Decodable>(request: NetworkRequest) async throws -> T
 }
@@ -55,15 +55,12 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = dtoEncoded
-        } else if let formParameters = request.formParameters {
-            var components = URLComponents()
-            components.queryItems = formParameters
+        if let parameters = request.formParameters {
             urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = components.percentEncodedQuery?.data(using: .utf8)
+            urlRequest.httpBody = FormURLEncoder.encode(parameters)
+        } else if let dto = request.dto {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = try encoder.encode(dto)
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
@@ -76,5 +73,21 @@ actor DefaultNetworkClient: NetworkClient {
         } catch {
             throw NetworkClientError.parsingError
         }
+    }
+}
+
+enum FormURLEncoder {
+    static func encode(_ parameters: [String: String]) -> Data {
+        encode(parameters.sorted { $0.key < $1.key }.map { URLQueryItem(name: $0.key, value: $0.value) })
+    }
+
+    static func encode(_ parameters: [URLQueryItem]) -> Data {
+        let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
+        let encoded = parameters.map { item in
+            let key = item.name.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            let value = (item.value ?? "").addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            return key + "=" + value
+        }.joined(separator: "&")
+        return Data(encoded.utf8)
     }
 }

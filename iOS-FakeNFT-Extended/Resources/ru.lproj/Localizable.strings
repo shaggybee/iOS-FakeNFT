@@ -48,3 +48,25 @@
 "Payment.successTitle" = "Успех! Оплата прошла, поздравляем с покупкой!";
 "Payment.backToCart" = "Вернуться в корзину";
 "ShoppingCartAgreement.loadError" = "Не удалось загрузить пользовательское соглашение";
+
+// MARK: - Profile
+"Error.repeat" = "Повторить";
+"ProfileNFT.sort.price" = "По цене";
+"ProfileNFT.sort.rating" = "По рейтингу";
+"ProfileNFT.sort.name" = "По названию";
+"ProfileNFT.sort.title" = "Сортировка";
+"ProfileNFT.title" = "Мои NFT";
+"ProfileNFT.empty" = "У Вас ещё нет NFT";
+"ProfileNFT.error.title" = "Не удалось загрузить NFT";
+"ProfileNFT.back" = "Назад";
+"ProfileNFT.close" = "Закрыть";
+"ProfileNFT.cancel" = "Отмена";
+"ProfileNFT.liked" = "В избранном";
+"ProfileNFT.notLiked" = "Не в избранном";
+"ProfileNFT.rating" = "Рейтинг %d из 5";
+"ProfileNFT.author" = "от %@";
+"ProfileNFT.price" = "Цена";
+"ProfileFavorites.title" = "Избранные NFT";
+"ProfileFavorites.empty" = "У Вас ещё нет избранных NFT";
+"ProfileFavorites.error.title" = "Не удалось обновить избранное";
+"ProfileFavorites.remove" = "Удалить %@ из избранного";

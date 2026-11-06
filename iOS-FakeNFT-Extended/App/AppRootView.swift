@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct AppRootView: App {
+    @State private var services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
     
     init() {
         configTabBar()
@@ -10,7 +11,7 @@ struct AppRootView: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl()))
+                .environment(services)
         }
     }
     
