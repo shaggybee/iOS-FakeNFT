@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TabBarView: View {
-    @State private var selectedTab: Tab = Self.initialTab
+    @State private var selectedTab: Tab = .profile
     @State private var catalogRouter = CatalogRouter()
     
     @Environment(ServicesAssembly.self) private var services
@@ -69,13 +69,6 @@ struct TabBarView: View {
 }
 
 private extension TabBarView {
-    static var initialTab: Tab {
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--profile-ui-testing") { return .profile }
-        #endif
-        return .catalog
-    }
-
     enum Tab: Hashable {
         case profile
         case catalog
