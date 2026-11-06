@@ -11,7 +11,7 @@ actor MockProfileNFTsService: ProfileNFTsService {
         self.delaysRetry = delaysRetry
     }
 
-    func loadNFTs(ids: [String]) async throws -> [ProfileNFT] {
+    func loadNFTs(ids: [String]) async throws -> [Nft] {
         loadCount += 1
         if delaysRetry && loadCount == 2 { try await Task.sleep(for: .seconds(60)) }
         try Task.checkCancellation()
@@ -23,19 +23,18 @@ actor MockProfileNFTsService: ProfileNFTsService {
     }
 }
 enum ProfileMockNFTs {
-    static var items: [ProfileNFT] {
-        let author = NFTAuthor(id: "author", name: "John Doe")
-        let items = [
+    static var items: [Nft] {
+        let author = "John Doe"
+        return [
             Nft(id: "1", images: [Bundle.main.url(forResource: "profile-demo-lilo", withExtension: "png")].compactMap { $0 },
-                name: "Lilo", rating: 3, price: 1.78, author: author.id),
+                name: "Lilo", rating: 3, price: 1.78, author: author),
             Nft(id: "2", images: [Bundle.main.url(forResource: "profile-demo-spring", withExtension: "png")].compactMap { $0 },
-                name: "Spring", rating: 5, price: 3.25, author: author.id),
+                name: "Spring", rating: 5, price: 3.25, author: author),
             Nft(id: "3", images: [Bundle.main.url(forResource: "profile-demo-april", withExtension: "png")].compactMap { $0 },
-                name: "April", rating: 4, price: 0.99, author: author.id),
+                name: "April", rating: 4, price: 0.99, author: author),
             Nft(id: "5", images: [Bundle.main.url(forResource: "profile-demo-lilo", withExtension: "png")].compactMap { $0 },
-                name: "Charm", rating: 4, price: 2.10, author: author.id)
+                name: "Charm", rating: 4, price: 2.10, author: author)
         ]
-        return items.map { ProfileNFT(nft: $0, author: author) }
     }
 }
 
@@ -52,7 +51,7 @@ actor MockFavoriteNFTService: NftService {
         guard let item = ProfileMockNFTs.items.first(where: { $0.id == id }) else {
             throw NetworkClientError.parsingError
         }
-        return item.nft
+        return item
     }
 }
 #endif

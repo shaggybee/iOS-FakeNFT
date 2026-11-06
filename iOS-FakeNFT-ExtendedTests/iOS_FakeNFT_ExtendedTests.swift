@@ -358,7 +358,7 @@ final class ProfileNFTsTests: XCTestCase {
                     nfts: ["1", "2", "3"], likes: ["2"])
     }
 
-    private var items: [ProfileNFT] {
+    private var items: [Nft] {
         [
             item("1", name: "Zebra", rating: 3, price: "1.78"),
             item("2", name: "Beta", rating: 5, price: "3.25"),
@@ -366,21 +366,18 @@ final class ProfileNFTsTests: XCTestCase {
         ]
     }
 
-    private func item(_ id: String, name: String, rating: Int, price: String) -> ProfileNFT {
-        ProfileNFT(nft: Nft(id: id, images: [], name: name, rating: rating,
-                            price: Double(price) ?? 0, author: "author"),
-                   author: NFTAuthor(id: "author", name: "John Doe"))
+    private func item(_ id: String, name: String, rating: Int, price: String) -> Nft {
+        Nft(id: id, images: [], name: name, rating: rating,
+            price: Double(price) ?? 0, author: "John Doe")
     }
 
-    func testNFTAndAuthorDecodeAPIFieldsWithSharedPrice() throws {
-        let json = Data(#"{"id":"1","name":"April","images":["https://example.com/1.png"],"rating":5,"price":8.81,"author":"49","description":"Art"}"#.utf8)
+    func testNFTDecodesAuthorDisplayNameAndSharedPrice() throws {
+        let json = Data(#"{"id":"1","name":"April","images":["https://example.com/1.png"],"rating":5,"price":8.81,"author":"Hardcore Archimedes","description":"Art"}"#.utf8)
         let nft = try JSONDecoder().decode(Nft.self, from: json)
         XCTAssertEqual(nft.price, 8.81, accuracy: 0.000001)
         XCTAssertEqual(nft.rating, 5)
-        XCTAssertEqual(nft.author, "49")
+        XCTAssertEqual(nft.author, "Hardcore Archimedes")
         XCTAssertEqual(nft.images.first?.host, "example.com")
-        let authorJSON = Data(#"{"id":"49","name":"John Doe","rating":10,"nfts":[]}"#.utf8)
-        XCTAssertEqual(try JSONDecoder().decode(NFTAuthor.self, from: authorJSON).name, "John Doe")
     }
 
     func testMalformedNFTPriceIsRejected() {
@@ -388,23 +385,37 @@ final class ProfileNFTsTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(Nft.self, from: json))
     }
 
-    func testServiceLoadsOnlyOwnedIDsAndDeduplicatesAuthors() async throws {
-        let client = ProfileNFTNetworkClient(nfts: items.map(\.nft), authors: [items[0].author])
+    func testServiceLoadsOnlyOwnedIDsWithoutUserRequests() async throws {
+        let client = ProfileNFTNetworkClient(nfts: items)
         let service = ProfileNFTsServiceImpl(
-            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl()), networkClient: client
+            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl())
         )
         let loaded = try await service.loadNFTs(ids: ["2", "1", "1"])
         XCTAssertEqual(Set(loaded.map(\.id)), Set(["1", "2"]))
-        XCTAssertTrue(loaded.allSatisfy { $0.author.name == "John Doe" })
+        XCTAssertTrue(loaded.allSatisfy { $0.author == "John Doe" })
         let paths = await client.paths
         XCTAssertEqual(paths.filter { $0.hasPrefix("/api/v1/nft/") }.sorted(), ["/api/v1/nft/1", "/api/v1/nft/2"])
-        XCTAssertEqual(paths.filter { $0.hasPrefix("/api/v1/users/") }, ["/api/v1/users/author"])
+        XCTAssertEqual(paths.count, 2)
+        XCTAssertTrue(paths.allSatisfy { $0.hasPrefix("/api/v1/nft/") })
+    }
+
+    func testServerAuthorNamesLoadThroughRealClientWithoutUserEndpoint() async throws {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [OwnedNFTContractURLProtocol.self]
+        let session = URLSession(configuration: configuration)
+        defer { session.invalidateAndCancel() }
+        let service = ProfileNFTsServiceImpl(nftService: NftServiceImpl(
+            networkClient: DefaultNetworkClient(session: session), storage: NftStorageImpl()
+        ))
+        let items = try await service.loadNFTs(ids: ["1", "2", "1"])
+        XCTAssertEqual(items.count, 2)
+        XCTAssertEqual(Set(items.map(\.author)), Set(["Hardcore Archimedes", "Hungry Darwin"]))
     }
 
     func testEmptyOwnedIDsDoNotSendRequests() async throws {
-        let client = ProfileNFTNetworkClient(nfts: [], authors: [])
+        let client = ProfileNFTNetworkClient(nfts: [])
         let service = ProfileNFTsServiceImpl(
-            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl()), networkClient: client
+            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl())
         )
         let loaded = try await service.loadNFTs(ids: [])
         XCTAssertTrue(loaded.isEmpty)
@@ -413,9 +424,9 @@ final class ProfileNFTsTests: XCTestCase {
     }
 
     func testMissingNFTFailsInsteadOfReturningPartialCollection() async {
-        let client = ProfileNFTNetworkClient(nfts: [items[0].nft], authors: [items[0].author])
+        let client = ProfileNFTNetworkClient(nfts: [items[0]])
         let service = ProfileNFTsServiceImpl(
-            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl()), networkClient: client
+            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl())
         )
         do {
             _ = try await service.loadNFTs(ids: ["1", "missing"])
@@ -424,7 +435,7 @@ final class ProfileNFTsTests: XCTestCase {
     }
 
     func testNFTServiceReusesSharedCache() async throws {
-        let client = ProfileNFTNetworkClient(nfts: items.map(\.nft), authors: [])
+        let client = ProfileNFTNetworkClient(nfts: items)
         let service = NftServiceImpl(networkClient: client, storage: NftStorageImpl())
         let first = try await service.loadNft(id: "1")
         let second = try await service.loadNft(id: "1")
@@ -435,9 +446,9 @@ final class ProfileNFTsTests: XCTestCase {
 
     func testCollectionLimitsConcurrentRequests() async throws {
         let many = (0..<12).map { item(String($0), name: "NFT", rating: 5, price: "1") }
-        let client = ProfileNFTNetworkClient(nfts: many.map(\.nft), authors: [many[0].author], delay: .milliseconds(10))
+        let client = ProfileNFTNetworkClient(nfts: many, delay: .milliseconds(10))
         let service = ProfileNFTsServiceImpl(
-            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl()), networkClient: client
+            nftService: NftServiceImpl(networkClient: client, storage: NftStorageImpl())
         )
         let loaded = try await service.loadNFTs(ids: many.map(\.id))
         XCTAssertEqual(loaded.count, 12)
@@ -533,7 +544,7 @@ final class ProfileNFTsTests: XCTestCase {
         let nfts = try await assembly.profileNFTsService.loadNFTs(ids: profile.nfts)
         XCTAssertEqual(nfts.count, 3)
         for item in nfts {
-            let url = try XCTUnwrap(item.nft.images.first)
+            let url = try XCTUnwrap(item.images.first)
             XCTAssertTrue(url.isFileURL)
             XCTAssertNotNil(UIImage(contentsOfFile: url.path))
         }
@@ -577,7 +588,7 @@ private final class StubProfileSortStore: ProfileNFTSortStoring {
 }
 
 private actor StubProfileNFTsService: ProfileNFTsService {
-    let items: [ProfileNFT]
+    let items: [Nft]
     var failures: Int
     let delay: Duration
     let delayAfterFailure: Duration
@@ -585,7 +596,7 @@ private actor StubProfileNFTsService: ProfileNFTsService {
     private(set) var wasCancelled = false
     private var loadWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
 
-    init(items: [ProfileNFT], failures: Int = 0, delay: Duration = .zero, delayAfterFailure: Duration = .zero) {
+    init(items: [Nft], failures: Int = 0, delay: Duration = .zero, delayAfterFailure: Duration = .zero) {
         self.items = items
         self.failures = failures
         self.delay = delay
@@ -597,7 +608,7 @@ private actor StubProfileNFTsService: ProfileNFTsService {
         await withCheckedContinuation { loadWaiters.append((count, $0)) }
     }
 
-    func loadNFTs(ids: [String]) async throws -> [ProfileNFT] {
+    func loadNFTs(ids: [String]) async throws -> [Nft] {
         calls.append(ids)
         let ready = loadWaiters.filter { $0.0 <= calls.count }
         loadWaiters.removeAll { $0.0 <= calls.count }
@@ -619,15 +630,13 @@ private actor StubProfileNFTsService: ProfileNFTsService {
 
 private actor ProfileNFTNetworkClient: NetworkClient {
     let nfts: [Nft]
-    let authors: [NFTAuthor]
     let delay: Duration
     private(set) var paths: [String] = []
     private var active = 0
     private(set) var maximumActive = 0
 
-    init(nfts: [Nft], authors: [NFTAuthor], delay: Duration = .zero) {
+    init(nfts: [Nft], delay: Duration = .zero) {
         self.nfts = nfts
-        self.authors = authors
         self.delay = delay
     }
 
@@ -642,9 +651,32 @@ private actor ProfileNFTNetworkClient: NetworkClient {
         if delay != .zero { try await Task.sleep(for: delay) }
         let id = request.endpoint?.lastPathComponent ?? ""
         if path.hasPrefix("/api/v1/nft/"), let nft = nfts.first(where: { $0.id == id }) as? Value { return nft }
-        if path.hasPrefix("/api/v1/users/"), let author = authors.first(where: { $0.id == id }) as? Value { return author }
         throw NetworkClientError.httpStatusCode(404)
     }
+}
+
+private final class OwnedNFTContractURLProtocol: URLProtocol, @unchecked Sendable {
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        guard let url = request.url else { return }
+        let id = url.lastPathComponent
+        let author = ["1": "Hardcore Archimedes", "2": "Hungry Darwin"][id]
+        let isNFT = request.httpMethod == "GET" && url.path.hasPrefix("/api/v1/nft/") && author != nil
+        guard let response = HTTPURLResponse(url: url, statusCode: isNFT ? 200 : 403,
+                                             httpVersion: "HTTP/1.1", headerFields: ["Content-Type": "application/json"]) else { return }
+        do {
+            let data = try JSONSerialization.data(withJSONObject: ["id": id, "name": "NFT " + id, "images": [],
+                                                                   "rating": 4, "price": 1.78,
+                                                                   "description": "Server-shaped fixture", "author": author ?? ""])
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
+        } catch {
+            client?.urlProtocol(self, didFailWithError: error)
+        }
+    }
+    override func stopLoading() { }
 }
 
 @MainActor

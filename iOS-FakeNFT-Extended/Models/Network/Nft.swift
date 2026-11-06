@@ -7,6 +7,7 @@ struct Nft: Decodable, Equatable, Sendable, Identifiable {
     let rating: Int
     let price: Double
     let description: String
+    // The NFT API returns an author's display name, not a /users identifier.
     let author: String
 
     init(id: String, name: String, images: [URL], rating: Int, price: Double,

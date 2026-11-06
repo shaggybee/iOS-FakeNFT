@@ -55,7 +55,7 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
         }
         #endif
         profileService = ProfileServiceImpl(networkClient: networkClient)
-        profileNFTsService = ProfileNFTsServiceImpl(nftService: nftService, networkClient: networkClient)
+        profileNFTsService = ProfileNFTsServiceImpl(nftService: nftService)
         profileFavoritesService = ProfileFavoritesServiceImpl(profileService: profileService, nftService: nftService)
         usesDemoProfileData = false
     }
