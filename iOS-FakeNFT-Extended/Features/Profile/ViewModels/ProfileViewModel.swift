@@ -27,6 +27,7 @@ final class ProfileViewModel {
         guard !isLoading else { return }
         let previous = state
         state = .loading
+        showsError = false
         do {
             let profile = try await service.loadProfile()
             try Task.checkCancellation()
