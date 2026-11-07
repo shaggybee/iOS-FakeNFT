@@ -1,28 +1,59 @@
 import Foundation
 
-protocol NftService {
+protocol NftService: Sendable {
     func loadNft(id: String) async throws -> Nft
+    func loadNfts(ids: [String]) async throws -> [Nft]
 }
 
-@MainActor
-final class NftServiceImpl: NftService {
-
+actor NftServiceImpl: NftService {
     private let networkClient: NetworkClient
     private let storage: NftStorage
-
+    
     init(networkClient: NetworkClient, storage: NftStorage) {
         self.storage = storage
         self.networkClient = networkClient
     }
-
+    
     func loadNft(id: String) async throws -> Nft {
         if let nft = await storage.getNft(with: id) {
             return nft
         }
-
+        
         let request = NFTRequest(id: id)
         let nft: Nft = try await networkClient.send(request: request)
         await storage.saveNft(nft)
         return nft
+    }
+
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        let uniqueIds = Set(ids)
+
+        return try await withThrowingTaskGroup(of: Nft.self) { group in
+            for id in uniqueIds {
+                group.addTask {
+                    try await self.loadNft(id: id)
+                }
+            }
+
+            var nftsById: [String: Nft] = [:]
+
+            for try await nft in group {
+                nftsById[nft.id] = nft
+            }
+
+            return ids.compactMap { nftsById[$0] }
+        }
+    }
+}
+
+// Single-item implementations can also serve a batch; the live implementation above loads concurrently.
+extension NftService {
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        var values: [Nft] = []
+        for id in ids {
+            try Task.checkCancellation()
+            values.append(try await loadNft(id: id))
+        }
+        return values
     }
 }

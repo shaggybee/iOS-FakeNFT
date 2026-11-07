@@ -17,7 +17,7 @@ struct UserWebsiteView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 16)
                 .padding(.bottom, 9)
-            WebView(url: url)
+            WebViewStatistics(url: url)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
