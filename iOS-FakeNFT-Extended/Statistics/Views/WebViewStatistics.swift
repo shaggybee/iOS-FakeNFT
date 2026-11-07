@@ -1,5 +1,5 @@
 //
-//  WebView.swift
+//  WebViewStatistics.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by el on 30.10.2026.

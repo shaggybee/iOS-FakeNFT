@@ -15,7 +15,18 @@ struct UserProfileView: View {
     
     @State private var viewModel: UserProfileViewModel
     
-    init(userId: String, usersService: UsersService) {
+    private let nftService: NftService
+    private let usersService: UsersService
+    private let likesService: LikesServiceProtocol
+    private let cartService: ShoppingCartServiceProtocol
+    
+    init(userId: String, usersService: UsersService, nftService: NftService, likesService: LikesServiceProtocol, cartService: ShoppingCartServiceProtocol) {
+        
+        self.usersService = usersService
+        self.nftService = nftService
+        self.likesService = likesService
+        self.cartService = cartService
+        
         _viewModel = State(
             initialValue: UserProfileViewModel(
                 userId: userId,
@@ -49,7 +60,7 @@ struct UserProfileView: View {
                         .foregroundStyle(.blackPrimary)
                 }
                 
-                Text(user.description)
+                Text(user.description ?? "")
                     .font(AppFont.regular13)
                     .padding(.top, 20)
                     .foregroundStyle(.blackPrimary)
@@ -67,8 +78,8 @@ struct UserProfileView: View {
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(.blackPrimary, lineWidth: 1))
                     .padding(.top, 28)
                 }
-                Button {
-                    // Переход к коллекции (модуль 3)
+                NavigationLink {
+                UserNFTCollectionView(userId: user.id, usersService: usersService , nftService: nftService, likesService: likesService, cartService: cartService)
                 } label: {
                     HStack {
                         Text("Коллекция NFT (\(user.nfts.count))")
@@ -94,5 +105,9 @@ struct UserProfileView: View {
 }
 
 #Preview {
-    UserProfileView(userId: "1", usersService: MockUsersService())
+    let nftService = MockNftService()
+    
+    NavigationStack {
+        UserProfileView(userId: "1", usersService: MockUsersService(), nftService: nftService, likesService: LikesServiceMock(), cartService: ShoppingCartServiceMock(orderService: OrderServiceMock(), nftService: nftService))
+    }
 }
