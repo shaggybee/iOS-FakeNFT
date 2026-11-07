@@ -13,7 +13,7 @@ struct StatisticsRatingView: View {
     private var serviceAssembly
     
     var body: some View {
-        RatingScreen(usersService: serviceAssembly.usersService, nftService: serviceAssembly.nftService )
+        RatingScreen(usersService: serviceAssembly.usersService, nftService: serviceAssembly.nftService, likesService: serviceAssembly.likesService, cartService: serviceAssembly.shoppingCartService)
     }
 }
 
@@ -26,10 +26,14 @@ private struct RatingScreen: View {
     
     private let usersService: UsersService
     private let nftService: NftService
+    private let likesService: LikesServiceProtocol
+    private let cartService: ShoppingCartServiceProtocol
     
-    init(usersService: UsersService, nftService: NftService) {
+    init(usersService: UsersService, nftService: NftService, likesService: LikesServiceProtocol, cartService: ShoppingCartServiceProtocol) {
         self.usersService = usersService
         self.nftService = nftService
+        self.likesService = likesService
+        self.cartService = cartService
         
         _viewModel = State(initialValue: RatingViewModel(usersService: usersService))
     }
@@ -73,7 +77,7 @@ private struct RatingScreen: View {
             }
         }
         .navigationDestination(item: $selectedUserId) { userId in
-            UserProfileView(userId: userId, usersService: usersService, nftService: nftService)
+            UserProfileView(userId: userId, usersService: usersService, nftService: nftService, likesService: likesService, cartService: cartService)
         }
         .task {
             await viewModel.loadUsers()

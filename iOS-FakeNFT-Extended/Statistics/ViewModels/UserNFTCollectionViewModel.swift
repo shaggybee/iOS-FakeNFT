@@ -24,25 +24,55 @@ final class UserNFTCollectionViewModel {
     private let usersService: UsersService
     private let nftService: NftService
     
-    init(userId: String, usersService: UsersService, nftService: NftService) {
+    private let likesService: LikesServiceProtocol
+    private let cartService: ShoppingCartServiceProtocol
+    
+    init(userId: String, usersService: UsersService, nftService: NftService, likesService: LikesServiceProtocol, cartService: ShoppingCartServiceProtocol) {
         self.userId = userId
         self.usersService = usersService
         self.nftService = nftService
+        self.likesService = likesService
+        self.cartService = cartService
     }
     
-    func toggleFavorite(id: String) {
+    func toggleFavorite(id: String) async {
+        let previousFavorites = favoriteIDs
         if favoriteIDs.contains(id) {
             favoriteIDs.remove(id)
         } else {
             favoriteIDs.insert(id)
         }
+        do {
+            try await likesService.updateLikes(favoriteIDs)
+        } catch {
+            favoriteIDs = previousFavorites
+            errorMessage = "Не удалось обновить избранное"
+        }
     }
     
-    func toggleCart(id: String) {
+    func toggleCart(id: String) async {
+        let previousCart = cartIDs
+        
         if cartIDs.contains(id) {
             cartIDs.remove(id)
         } else {
             cartIDs.insert(id)
+        }
+        
+        do {
+            try await cartService.updateCart(with: cartIDs)
+        } catch {
+            cartIDs = previousCart
+            errorMessage = "Не удалось обновить корзину"
+        }
+    }
+    
+    func loadFavoritesAndCart() async {
+        do {
+            favoriteIDs = try await likesService.loadLikes()
+            cartIDs = try await cartService.loadOrder()
+        } catch {
+            errorMessage = "Не удалось загрузить избранное или корзину"
         }
     }
     
@@ -63,18 +93,21 @@ final class UserNFTCollectionViewModel {
                 let nft = try await nftService.loadNft(id: nftId)
                 loadedNFTs.append(nft)
             }
-                nfts = loadedNFTs
-                
+            nfts = loadedNFTs
+            await loadFavoritesAndCart()
+            
         } catch {
-            errorMessage = "Errror" // TODO: добавить NSLocalizedString
+            errorMessage = "Errror"
         }
-        
-        
     }
 }
 
 #Preview {
+    let nftService = MockNftService()
+    
     NavigationStack {
-        UserNFTCollectionView(userId: "1", usersService: MockUsersService(), nftService: MockNftService())
+        UserNFTCollectionView(userId: "1", usersService: MockUsersService(), nftService: MockNftService(), likesService: LikesServiceMock(), cartService: ShoppingCartServiceMock(orderService: OrderServiceMock(), nftService: nftService))
     }
 }
+
+

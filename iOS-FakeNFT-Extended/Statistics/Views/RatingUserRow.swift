@@ -35,6 +35,7 @@ struct RatingUserRow: View {
                     }
                 }
                 .frame(width: 28, height: 28)
+                .clipShape(Circle())
     
                 Text(name)
                     .font(AppFont.bold22)

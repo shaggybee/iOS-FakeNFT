@@ -63,6 +63,8 @@ struct NFTCollectionCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(nft.name)
                         .font(AppFont.bold17)
+                        .lineLimit(3)
+                        .frame(height: 66, alignment: .topLeading)
                     Text(nft.price.formatted(.number.precision(.fractionLength(2))) + " ETH")
                         .font(AppFont.medium10)
                 }
@@ -84,12 +86,8 @@ struct NFTCollectionCardView: View {
         nft: Nft(id: "100", name: "Cat", images: [], rating: 2, price: 1.78, author: "Text"),
         isFavorite: false,
         isInCart: false,
-        onFavoriteTap: {
-            
-        },
-        onCartTap: {
-            
-        }
+        onFavoriteTap: {},
+        onCartTap: {}
     )
     .frame(width: 110)
     .padding()

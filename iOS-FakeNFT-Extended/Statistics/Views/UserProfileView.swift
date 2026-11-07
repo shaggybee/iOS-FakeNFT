@@ -17,11 +17,15 @@ struct UserProfileView: View {
     
     private let nftService: NftService
     private let usersService: UsersService
+    private let likesService: LikesServiceProtocol
+    private let cartService: ShoppingCartServiceProtocol
     
-    init(userId: String, usersService: UsersService, nftService: NftService) {
+    init(userId: String, usersService: UsersService, nftService: NftService, likesService: LikesServiceProtocol, cartService: ShoppingCartServiceProtocol) {
         
         self.usersService = usersService
         self.nftService = nftService
+        self.likesService = likesService
+        self.cartService = cartService
         
         _viewModel = State(
             initialValue: UserProfileViewModel(
@@ -75,7 +79,7 @@ struct UserProfileView: View {
                     .padding(.top, 28)
                 }
                 NavigationLink {
-                UserNFTCollectionView(userId: user.id, usersService: usersService , nftService: nftService)
+                UserNFTCollectionView(userId: user.id, usersService: usersService , nftService: nftService, likesService: likesService, cartService: cartService)
                 } label: {
                     HStack {
                         Text("Коллекция NFT (\(user.nfts.count))")
@@ -101,5 +105,9 @@ struct UserProfileView: View {
 }
 
 #Preview {
-    UserProfileView(userId: "1", usersService: MockUsersService(), nftService: NftServiceImpl(networkClient: DefaultNetworkClient(), storage: NftStorageImpl()))
+    let nftService = MockNftService()
+    
+    NavigationStack {
+        UserProfileView(userId: "1", usersService: MockUsersService(), nftService: nftService, likesService: LikesServiceMock(), cartService: ShoppingCartServiceMock(orderService: OrderServiceMock(), nftService: nftService))
+    }
 }

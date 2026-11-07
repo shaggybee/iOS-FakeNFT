@@ -12,10 +12,10 @@ struct UserNFTCollectionView: View {
     @State private var viewModel: UserNFTCollectionViewModel
     @State private var isErrorPresented = false
     
-    init(userId: String, usersService: UsersService, nftService: NftService) {
+    init(userId: String, usersService: UsersService, nftService: NftService, likesService: LikesServiceProtocol, cartService: ShoppingCartServiceProtocol) {
         _viewModel = State(
             initialValue: UserNFTCollectionViewModel(
-                userId: userId, usersService: usersService, nftService: nftService
+                userId: userId, usersService: usersService, nftService: nftService, likesService: likesService, cartService: cartService
             )
         )
     }
@@ -50,10 +50,14 @@ struct UserNFTCollectionView: View {
                                 isFavorite: viewModel.favoriteIDs.contains(nft.id),
                                 isInCart: viewModel.cartIDs.contains(nft.id) ,
                                 onFavoriteTap: {
-                                    viewModel.toggleFavorite(id: nft.id)
+                                    Task {
+                                        await viewModel.toggleFavorite(id: nft.id)
+                                    }
                                 },
                                 onCartTap: {
-                                    viewModel.toggleCart(id: nft.id)
+                                    Task {
+                                        await viewModel.toggleCart(id: nft.id)
+                                    }
                                 })
                         }
                     }
