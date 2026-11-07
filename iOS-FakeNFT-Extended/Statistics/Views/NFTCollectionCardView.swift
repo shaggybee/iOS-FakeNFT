@@ -44,7 +44,7 @@ struct NFTCollectionCardView: View {
                 Button {
                     onFavoriteTap()
                 } label: {
-                    Image(.faforites42)
+                    Image(.favorites42)
                         .renderingMode(.template)
                         .foregroundStyle(isFavorite ? Color.redUniversal : Color.whiteUniversal)
                         .frame(width: 42, height: 42)
@@ -81,7 +81,7 @@ struct NFTCollectionCardView: View {
 
 #Preview {
     NFTCollectionCardView(
-        nft: Nft(id: "100", name: "Cat", images: [], rating: 2, price: 1.78),
+        nft: Nft(id: "100", name: "Cat", images: [], rating: 2, price: 1.78, author: "Text"),
         isFavorite: false,
         isInCart: false,
         onFavoriteTap: {

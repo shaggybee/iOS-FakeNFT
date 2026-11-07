@@ -1,45 +1,81 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @State private var selectedTab: Tab = .profile
+    @State private var catalogRouter = CatalogRouter()
+    
+    @Environment(ServicesAssembly.self) private var services
+    
     var body: some View {
-        TabView {
-            Text("Профиль")
+        TabView(selection: $selectedTab) {
+            ProfileRootView()
                 .tabItem {
                     Label {
-                        Text("Профиль")
+                        Text("Tab.profile")
                     } icon: {
                         Image(.profile30)
                     }
                 }
+                .tag(Tab.profile)
             
-            Text("Каталог")
-                .tabItem {
-                    Label {
-                        Text("Каталог")
-                    } icon: {
-                        Image(.catalog30)
-                    }
+            CatalogView(
+                viewModel: CatalogViewModel(
+                    collectionsService: services.collectionsService,
+                    router: catalogRouter
+                ),
+                router: catalogRouter,
+                makeCollectionViewModel: { [catalogRouter, services] collectionId in
+                    CollectionViewModel(
+                        collectionId: collectionId,
+                        collectionService: services.collectionService,
+                        nftService: services.nftService,
+                        likesService: services.likesService,
+                        cartService: services.shoppingCartService,
+                        router: catalogRouter
+                    )
                 }
+            )
+            .tabItem {
+                Label {
+                    Text("Tab.catalog")
+                } icon: {
+                    Image(.catalog30)
+                }
+            }
+            .tag(Tab.catalog)
             
-            Text("Корзина")
+            ShoppingCartRootView(services: services)
                 .tabItem {
                     Label {
-                        Text("Корзина")
+                        Text("Tab.cart")
                     } icon: {
                         Image(.basket30)
                     }
                 }
+                .tag(Tab.cart)
+            
             NavigationStack {
                 StatisticsRatingView()
             }
+            
                 .tabItem {
                     Label {
-                        Text("Статистика")
+                        Text("Tab.statistics")
                     } icon: {
                         Image(.statistics30)
                     }
                 }
+                .tag(Tab.statistics)
         }
         .tint(.blueUniversal)
+    }
+}
+
+private extension TabBarView {
+    enum Tab: Hashable {
+        case profile
+        case catalog
+        case cart
+        case statistics
     }
 }

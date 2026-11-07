@@ -4,5 +4,7 @@
 <dict>
 	<key>API_TOKEN</key>
 	<string>${API_TOKEN}</string>
+	<key>UILaunchScreen</key>
+	<dict/>
 </dict>
 </plist>
