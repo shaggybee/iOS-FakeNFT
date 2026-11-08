@@ -105,3 +105,10 @@
 "ProfileFavorites.empty" = "You have no favorite NFTs yet";
 "ProfileFavorites.error.title" = "Failed to update favorites";
 "ProfileFavorites.remove" = "Remove %@ from favorites";
+
+// MARK: - Statistics NFT Collection
+
+"Statistics.favoritesUpdateError" = "Failed to update favorites";
+"Statistics.cartUpdateError" = "Failed to update cart";
+"Statistics.favoritesCartLoadError" = "Failed to load favorites or cart";
+"Statistics.nftLoadError" = "Failed to load NFT collection";

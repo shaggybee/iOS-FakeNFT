@@ -49,7 +49,7 @@ struct NFTCollectionCardView: View {
                         .foregroundStyle(isFavorite ? Color.redUniversal : Color.whiteUniversal)
                         .frame(width: 42, height: 42)
                 }
-                .padding(8)
+                .buttonStyle(.plain)
             }
             HStack(spacing: 0) {
                 ForEach(0..<5, id: \.self) { index in
@@ -64,7 +64,7 @@ struct NFTCollectionCardView: View {
                     Text(nft.name)
                         .font(AppFont.bold17)
                         .lineLimit(3)
-                        .frame(height: 66, alignment: .topLeading)
+                    
                     Text(nft.price.formatted(.number.precision(.fractionLength(2))) + " ETH")
                         .font(AppFont.medium10)
                 }

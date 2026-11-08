@@ -12,9 +12,5 @@ struct MockNftService: NftService {
     func loadNft(id: String) async throws -> Nft {
         Nft(id: id, name: "NFT \(id)", images: [], rating: 2, price: 1.78, author: "Text")
     }
-    
-    
-    
-    
 }
 

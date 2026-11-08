@@ -46,7 +46,7 @@ final class UserNFTCollectionViewModel {
             try await likesService.updateLikes(favoriteIDs)
         } catch {
             favoriteIDs = previousFavorites
-            errorMessage = "Не удалось обновить избранное"
+            errorMessage = NSLocalizedString("Statistics.favoritesUpdateError", comment: "Ошибка: не удалось обновить избранное")
         }
     }
     
@@ -63,7 +63,7 @@ final class UserNFTCollectionViewModel {
             try await cartService.updateCart(with: cartIDs)
         } catch {
             cartIDs = previousCart
-            errorMessage = "Не удалось обновить корзину"
+            errorMessage = NSLocalizedString("Statistics.cartUpdateError", comment: "Ошибка: не удалось обновить корзину")
         }
     }
     
@@ -72,7 +72,7 @@ final class UserNFTCollectionViewModel {
             favoriteIDs = try await likesService.loadLikes()
             cartIDs = try await cartService.loadOrder()
         } catch {
-            errorMessage = "Не удалось загрузить избранное или корзину"
+            errorMessage = NSLocalizedString("Statistics.favoritesCartLoadError", comment: "Ошибка: не удалось загрузить избранное или корзину")
         }
     }
     
@@ -97,7 +97,7 @@ final class UserNFTCollectionViewModel {
             await loadFavoritesAndCart()
             
         } catch {
-            errorMessage = "Errror"
+            errorMessage = NSLocalizedString("Statistics.nftLoadError", comment: "Ошибка: не удалось загрузить коллекцию NFT")
         }
     }
 }
@@ -109,5 +109,3 @@ final class UserNFTCollectionViewModel {
         UserNFTCollectionView(userId: "1", usersService: MockUsersService(), nftService: MockNftService(), likesService: LikesServiceMock(), cartService: ShoppingCartServiceMock(orderService: OrderServiceMock(), nftService: nftService))
     }
 }
-
-
