@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ProfileNFTCell: View {
+    @Environment(\.locale) private var locale
     let item: Nft
     let isLiked: Bool
     let isUpdating: Bool
@@ -56,9 +57,11 @@ struct ProfileNFTCell: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("ProfileNFT.price").font(AppFont.regular13)
-                    Text(item.price.formatted(.number.locale(Locale(identifier: "ru_RU")).precision(.fractionLength(2))) + " ETH")
+                    Text(String(format: NSLocalizedString("ProfileNFT.price.value", comment: "NFT price in ETH"),
+                                item.price.formatted(.number.locale(locale).precision(.fractionLength(2)))))
                         .font(AppFont.bold17)
                         .fixedSize(horizontal: true, vertical: false)
+                        .accessibilityIdentifier("profile.nfts.price")
                 }
             }
         }

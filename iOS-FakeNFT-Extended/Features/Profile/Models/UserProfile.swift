@@ -53,15 +53,15 @@ struct ProfileDraft: Equatable, Sendable {
 
     var validationMessage: String? {
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return "Введите имя."
+            return NSLocalizedString("ProfileValidation.name", comment: "Missing profile name")
         }
         if !website.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
            ProfileURL.webURL(from: website) == nil {
-            return "Укажите адрес сайта, начинающийся с https:// или http://."
+            return NSLocalizedString("ProfileValidation.website", comment: "Invalid profile website")
         }
         if !avatar.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
            ProfileURL.webURL(from: avatar) == nil {
-            return "Укажите ссылку на фото, начинающуюся с https:// или http://."
+            return NSLocalizedString("ProfileValidation.avatar", comment: "Invalid profile avatar URL")
         }
         return nil
     }

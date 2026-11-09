@@ -53,18 +53,18 @@ struct ProfileLikesUpdateRequest: NetworkRequest {
 enum ProfileErrorMessage {
     static func text(for error: Error) -> String {
         if let error = error as? URLError, error.code == .notConnectedToInternet {
-            return "Нет подключения к интернету. Проверьте соединение и попробуйте ещё раз."
+            return NSLocalizedString("ProfileError.offline", comment: "No internet connection")
         }
         if let error = error as? NetworkClientError {
             switch error {
             case .httpStatusCode(let code) where code == 401 || code == 403:
-                return "Сервер отклонил запрос. Проверьте учебный API-токен."
+                return NSLocalizedString("ProfileError.token", comment: "Rejected API token")
             case .parsingError:
-                return "Сервер вернул данные в неожиданном формате. Попробуйте ещё раз позже."
+                return NSLocalizedString("ProfileError.parsing", comment: "Unexpected server response")
             default:
                 break
             }
         }
-        return "Не удалось получить ответ сервера. Попробуйте ещё раз."
+        return NSLocalizedString("ProfileError.server", comment: "Server request failed")
     }
 }

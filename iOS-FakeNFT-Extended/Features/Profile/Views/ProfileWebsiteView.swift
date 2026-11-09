@@ -19,7 +19,7 @@ struct ProfileWebsiteView: View {
                     .accessibilityHidden(model.state == .failed)
 
                 if model.state == .loading {
-                    ProgressView("Загрузка сайта…")
+                    ProgressView("ProfileWebsite.loading")
                         .padding()
                         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                 }
@@ -28,12 +28,12 @@ struct ProfileWebsiteView: View {
                     VStack(spacing: 16) {
                         Image(systemName: "wifi.exclamationmark")
                             .font(.largeTitle)
-                        Text("Не удалось открыть сайт")
+                        Text("ProfileWebsite.error.title")
                             .font(.headline)
-                        Text("Проверьте подключение к интернету и попробуйте ещё раз.")
+                        Text("ProfileWebsite.error.message")
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
-                        Button("Повторить") { model.retry() }
+                        Button("Error.repeat") { model.retry() }
                             .buttonStyle(.borderedProminent)
                             .tint(.primary)
                             .accessibilityIdentifier("profile.website.retry")
@@ -41,11 +41,11 @@ struct ProfileWebsiteView: View {
                     .padding(24)
                 }
             }
-                .navigationTitle("Сайт пользователя")
+                .navigationTitle("ProfileWebsite.title")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Готово") { dismiss() }
+                        Button("Common.done") { dismiss() }
                     }
                 }
         }

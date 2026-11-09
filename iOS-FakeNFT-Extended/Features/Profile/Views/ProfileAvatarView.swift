@@ -17,6 +17,6 @@ struct ProfileAvatarView: View {
         .frame(width: size, height: size)
         .background(.lightGrey)
         .clipShape(Circle())
-        .accessibilityLabel("Фото профиля")
+        .accessibilityLabel(Text("Profile.avatar"))
     }
 }

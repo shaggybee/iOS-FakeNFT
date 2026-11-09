@@ -105,3 +105,37 @@
 "ProfileFavorites.remove" = "Remove %@ from favorites";
 
 "ProfileFavorites.add" = "Add %@ to favorites";
+
+// Profile editing, validation and website
+"Common.save" = "Save";
+"Common.done" = "Done";
+"Profile.edit" = "Edit profile";
+"Profile.avatar" = "Profile photo";
+"Profile.error.title" = "Failed to load profile";
+"Profile.menuCount" = "%@ (%ld)";
+"ProfileEdit.name" = "Name";
+"ProfileEdit.description" = "Description";
+"ProfileEdit.website" = "Website";
+"ProfileEdit.website.placeholder" = "https://example.com";
+"ProfileEdit.photo.actions" = "Change profile photo";
+"ProfileEdit.photo.change" = "Change photo";
+"ProfileEdit.photo.delete" = "Remove photo";
+"ProfileEdit.photo.url" = "Photo URL";
+"ProfileEdit.photo.placeholder" = "https://example.com/photo.jpg";
+"ProfileEdit.discard.title" = "Leave without saving?";
+"ProfileEdit.discard.confirm" = "Leave";
+"ProfileEdit.discard.cancel" = "Stay";
+"ProfileEdit.discard.message" = "Your profile changes will be lost.";
+"ProfileEdit.error.title" = "Failed to save profile";
+"ProfileWebsite.loading" = "Loading website…";
+"ProfileWebsite.error.title" = "Failed to open website";
+"ProfileWebsite.error.message" = "Check your internet connection and try again.";
+"ProfileWebsite.title" = "User website";
+"ProfileValidation.name" = "Enter your name.";
+"ProfileValidation.website" = "Enter a website address starting with https:// or http://.";
+"ProfileValidation.avatar" = "Enter a photo URL starting with https:// or http://.";
+"ProfileError.offline" = "No internet connection. Check your connection and try again.";
+"ProfileError.token" = "The server rejected the request. Check your training API token.";
+"ProfileError.parsing" = "The server returned an unexpected data format. Try again later.";
+"ProfileError.server" = "Could not get a response from the server. Try again.";
+"ProfileNFT.price.value" = "%@ ETH";
