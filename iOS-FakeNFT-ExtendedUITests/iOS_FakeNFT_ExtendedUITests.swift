@@ -111,6 +111,58 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 
     @MainActor
+    func testMyNFTLikeChangesUpdateFavoritesAndProfileCounter() throws {
+        let app = favoritesApp()
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.my-nfts"].waitForExistence(timeout: 10))
+        app.buttons["profile.my-nfts"].tap()
+        let add = app.buttons["profile.nfts.favorite.1"]
+        let remove = app.buttons["profile.nfts.favorite.2"]
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        XCTAssertEqual(add.value as? String, "Не в избранном")
+        add.tap()
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        XCTAssertTrue(NSPredicate(format: "value == %@", "В избранном").evaluate(with: add)
+                      || XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "В избранном"), object: add)], timeout: 5) == .completed)
+        remove.tap()
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "Не в избранном"), object: remove)], timeout: 5), .completed)
+        attachScreenshot("Мои NFT — изменение избранного")
+        app.buttons["profile.nfts.back"].tap()
+        let favorites = app.buttons["profile.favorites"]
+        XCTAssertTrue(favorites.waitForExistence(timeout: 5))
+        XCTAssertTrue(favorites.label.contains("(2)"))
+        favorites.tap()
+        XCTAssertTrue(app.buttons["profile.favorites.remove.1"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["profile.favorites.remove.2"].exists)
+        app.buttons["profile.favorites.back"].tap()
+        app.buttons["profile.my-nfts"].tap()
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        XCTAssertEqual(add.value as? String, "В избранном")
+        XCTAssertEqual(remove.value as? String, "Не в избранном")
+    }
+
+    @MainActor
+    func testMyNFTLikeFailureCanRetryWithoutLosingList() throws {
+        let app = favoritesApp(["--profile-favorites-fail-first-removal"])
+        app.launch()
+        XCTAssertTrue(app.buttons["profile.my-nfts"].waitForExistence(timeout: 10))
+        app.buttons["profile.my-nfts"].tap()
+        let heart = app.buttons["profile.nfts.favorite.1"]
+        XCTAssertTrue(heart.waitForExistence(timeout: 10))
+        heart.tap()
+        let alert = app.alerts["Не удалось обновить избранное"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        attachScreenshot("Ошибка изменения избранного в Моих NFT")
+        alert.buttons["Повторить"].tap()
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "В избранном"), object: heart)], timeout: 5), .completed)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "profile.nfts.name").count, 3)
+        app.buttons["profile.nfts.back"].tap()
+        XCTAssertTrue(app.buttons["profile.favorites"].label.contains("(3)"))
+    }
+
+    @MainActor
     func testMyNFTEmptyStateAndBackNavigation() throws {
         let app = XCUIApplication()
         app.launchArguments = ["--profile-ui-testing", "--profile-empty-nfts", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]

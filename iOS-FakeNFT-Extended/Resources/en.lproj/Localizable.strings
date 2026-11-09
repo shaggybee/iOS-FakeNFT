@@ -103,3 +103,5 @@
 "ProfileFavorites.empty" = "You have no favorite NFTs yet";
 "ProfileFavorites.error.title" = "Failed to update favorites";
 "ProfileFavorites.remove" = "Remove %@ from favorites";
+
+"ProfileFavorites.add" = "Add %@ to favorites";

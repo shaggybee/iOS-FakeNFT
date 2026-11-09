@@ -371,6 +371,11 @@ final class ProfileNFTsTests: XCTestCase {
             price: Double(price) ?? 0, author: "John Doe")
     }
 
+    private func favoritesService() -> any ProfileFavoritesService {
+        ProfileFavoritesServiceImpl(profileService: StubProfileService(profile: profile),
+                                   nftService: FavoriteNFTRecorder(items: items))
+    }
+
     func testNFTDecodesAuthorDisplayNameAndSharedPrice() throws {
         let json = Data(#"{"id":"1","name":"April","images":["https://example.com/1.png"],"rating":5,"price":8.81,"author":"Hardcore Archimedes","description":"Art"}"#.utf8)
         let nft = try JSONDecoder().decode(Nft.self, from: json)
@@ -482,7 +487,7 @@ final class ProfileNFTsTests: XCTestCase {
     func testViewModelLoadsProfileIDsOnceAndSortsWithoutNetwork() async {
         let service = StubProfileNFTsService(items: items)
         let store = StubProfileSortStore()
-        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: store)
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: store, favoritesService: favoritesService())
         await model.loadIfNeeded()
         await model.loadIfNeeded()
         XCTAssertEqual(model.items.map(\.id), ["2", "3", "1"])
@@ -496,7 +501,7 @@ final class ProfileNFTsTests: XCTestCase {
 
     func testViewModelFailureCanRetry() async {
         let service = StubProfileNFTsService(items: items, failures: 1)
-        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore(), favoritesService: favoritesService())
         await model.load()
         guard case .error = model.state else { return XCTFail("Expected error") }
         XCTAssertTrue(model.showsError)
@@ -507,7 +512,7 @@ final class ProfileNFTsTests: XCTestCase {
 
     func testCancelledNFTLoadRestoresStateWithoutAlert() async {
         let service = StubProfileNFTsService(items: items, delay: .seconds(60))
-        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore(), favoritesService: favoritesService())
         let task = Task { await model.load() }
         await service.waitForLoad(count: 1)
         XCTAssertTrue(model.isLoading)
@@ -521,7 +526,7 @@ final class ProfileNFTsTests: XCTestCase {
 
     func testCancelledRetryRestoresErrorWithoutShowingAnotherAlert() async {
         let service = StubProfileNFTsService(items: items, failures: 1, delayAfterFailure: .seconds(60))
-        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore(), favoritesService: favoritesService())
         await model.load()
         guard case .error = model.state else { return XCTFail("Expected first request to fail") }
         let retry = Task { await model.load() }
@@ -570,9 +575,69 @@ final class ProfileNFTsTests: XCTestCase {
         XCTAssertTrue(assembly.profileNFTsService is ProfileNFTsServiceImpl)
     }
 
+    func testOwnedNFTLikeUpdatesHeartProfileAndFavorites() async throws {
+        let profiles = StubProfileService(profile: profile)
+        let favorites = ProfileFavoritesServiceImpl(profileService: profiles, nftService: FavoriteNFTRecorder(items: items))
+        var published: UserProfile?
+        let model = ProfileNFTsViewModel(profile: profile, service: StubProfileNFTsService(items: items),
+                                        sortStore: StubProfileSortStore(), favoritesService: favorites) { published = $0 }
+        await model.load()
+        await model.setFavorite(id: "1", isLiked: true)
+        XCTAssertEqual(model.likedIDs, Set(["1", "2"]))
+        XCTAssertEqual(published?.likes, ["2", "1"])
+        XCTAssertEqual(published?.nfts, profile.nfts)
+        let added = try await favorites.loadFavorites()
+        XCTAssertEqual(added.items.map(\.id), ["2", "1"])
+        await model.setFavorite(id: "2", isLiked: false)
+        XCTAssertEqual(model.likedIDs, Set(["1"]))
+        XCTAssertEqual(published?.likes, ["1"])
+        let remaining = try await favorites.loadFavorites()
+        XCTAssertEqual(remaining.items.map(\.id), ["1"])
+        XCTAssertFalse(model.showsError)
+        XCTAssertNil(model.updatingFavoriteID)
+    }
+
+    func testLikeFailureKeepsCollectionAndHeartThenRetriesSameIntent() async {
+        let profiles = StubProfileService(profile: profile, failures: 1)
+        let favorites = ProfileFavoritesServiceImpl(profileService: profiles, nftService: FavoriteNFTRecorder(items: items))
+        var published: UserProfile?
+        let model = ProfileNFTsViewModel(profile: profile, service: StubProfileNFTsService(items: items),
+                                        sortStore: StubProfileSortStore(), favoritesService: favorites) { published = $0 }
+        await model.load()
+        await model.setFavorite(id: "1", isLiked: true)
+        XCTAssertTrue(model.showsError)
+        XCTAssertEqual(model.errorTitle, "ProfileFavorites.error.title")
+        XCTAssertEqual(model.likedIDs, Set(["2"]))
+        XCTAssertEqual(model.items.count, 3)
+        XCTAssertNil(published)
+        // Simulate a response lost after the server applied the requested addition.
+        await profiles.replaceProfile(UserProfile(id: profile.id, name: profile.name, avatar: profile.avatar,
+                                                 description: profile.description, website: profile.website,
+                                                 nfts: profile.nfts, likes: ["1", "2"]))
+        await model.retry()
+        XCTAssertEqual(model.likedIDs, Set(["1", "2"]))
+        XCTAssertFalse(model.showsError)
+        let updates = await profiles.likesUpdates
+        XCTAssertTrue(updates.isEmpty, "An already applied addition must not be inverted or sent again")
+    }
+
+    func testConcurrentLikeChangesDoNotDuplicateWrites() async {
+        let profiles = StubProfileService(profile: profile, delay: .milliseconds(20))
+        let favorites = ProfileFavoritesServiceImpl(profileService: profiles, nftService: FavoriteNFTRecorder(items: items))
+        let model = ProfileNFTsViewModel(profile: profile, service: StubProfileNFTsService(items: items),
+                                        sortStore: StubProfileSortStore(), favoritesService: favorites)
+        await model.load()
+        async let first: Void = model.setFavorite(id: "1", isLiked: true)
+        async let second: Void = model.setFavorite(id: "1", isLiked: true)
+        _ = await (first, second)
+        let updates = await profiles.likesUpdates
+        XCTAssertEqual(updates, [["2", "1"]])
+        XCTAssertEqual(model.likedIDs, Set(["1", "2"]))
+    }
+
     func testRepeatedNFTLoadDoesNotDuplicateRequest() async {
         let service = StubProfileNFTsService(items: items, delay: .milliseconds(20))
-        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore())
+        let model = ProfileNFTsViewModel(profile: profile, service: service, sortStore: StubProfileSortStore(), favoritesService: favoritesService())
         async let first: Void = model.load()
         async let second: Void = model.load()
         _ = await (first, second)
@@ -745,6 +810,30 @@ final class ProfileFavoritesTests: XCTestCase {
         XCTAssertEqual(updates, [["2", "3"]])
     }
 
+    func testAddingFavoritePreservesFreshLikesAndOtherProfileFields() async throws {
+        let profiles = StubProfileService(profile: profile(["2"]))
+        let service = ProfileFavoritesServiceImpl(profileService: profiles, nftService: FavoriteNFTRecorder(items: nfts))
+        _ = try await service.loadFavorites()
+        await profiles.replaceProfile(profile(["2", "3", "3"]))
+        let updated = try await service.setFavorite(id: "1", isLiked: true)
+        XCTAssertEqual(updated.likes, ["2", "3", "1"])
+        XCTAssertEqual(updated.nfts, ["owned"])
+        XCTAssertEqual(updated.name, "Антон")
+        XCTAssertEqual(updated.website, "https://example.com")
+        _ = try await service.setFavorite(id: "1", isLiked: true)
+        let updates = await profiles.likesUpdates
+        XCTAssertEqual(updates, [["2", "3", "1"]])
+    }
+
+    func testUnchangedServerResponseDoesNotReportSuccessfulAddition() async {
+        let service = ProfileFavoritesServiceImpl(
+            profileService: ProfileServiceImpl(networkClient: RecordingNetworkClient(profile: profile([]))),
+            nftService: FavoriteNFTRecorder(items: nfts))
+        do { _ = try await service.setFavorite(id: "1", isLiked: true); XCTFail("Expected rejected addition") }
+        catch ProfileFavoritesError.updateRejected { }
+        catch { XCTFail("Unexpected error: \(error)") }
+    }
+
     func testAlreadyRemovedFavoriteDoesNotWriteAgain() async throws {
         let profiles = StubProfileService(profile: profile(["2"]))
         let service = ProfileFavoritesServiceImpl(profileService: profiles, nftService: FavoriteNFTRecorder(items: nfts))
@@ -759,7 +848,7 @@ final class ProfileFavoritesTests: XCTestCase {
         let service = ProfileFavoritesServiceImpl(profileService: ProfileServiceImpl(networkClient: client),
                                                   nftService: FavoriteNFTRecorder(items: nfts))
         do { _ = try await service.removeFavorite(id: "1"); XCTFail("Expected rejected removal") }
-        catch ProfileFavoritesError.removalRejected { }
+        catch ProfileFavoritesError.updateRejected { }
         catch { XCTFail("Unexpected error: \(error)") }
         let requests = await client.requests
         XCTAssertEqual(requests.map(\.method), ["GET", "PUT"])
@@ -957,6 +1046,13 @@ private actor ControlledFavoritesService: ProfileFavoritesService {
         try await delay(delaysLoad)
         if failsLoad { failsLoad = false; throw URLError(.notConnectedToInternet) }
         return ProfileFavoritesSnapshot(profile: profile, items: items.filter { profile.likes.contains($0.id) })
+    }
+    func setFavorite(id: String, isLiked: Bool) async throws -> UserProfile {
+        guard isLiked else { return try await removeFavorite(id: id) }
+        profile = UserProfile(id: profile.id, name: profile.name, avatar: profile.avatar, description: profile.description,
+                              website: profile.website, nfts: profile.nfts,
+                              likes: profile.likes.filter { $0 != id } + [id])
+        return profile
     }
     func removeFavorite(id: String) async throws -> UserProfile {
         removalCalls.append(id)

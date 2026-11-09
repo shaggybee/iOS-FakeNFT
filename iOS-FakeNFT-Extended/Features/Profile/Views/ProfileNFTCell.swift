@@ -3,6 +3,9 @@ import SwiftUI
 struct ProfileNFTCell: View {
     let item: Nft
     let isLiked: Bool
+    let isUpdating: Bool
+    let isEnabled: Bool
+    let onToggleFavorite: () -> Void
 
     var body: some View {
         HStack(spacing: 20) {
@@ -11,11 +14,25 @@ struct ProfileNFTCell: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .accessibilityHidden(true)
             .overlay(alignment: .topTrailing) {
-                Image(systemName: AppSystemIcon.heartFilled)
+                Button(action: onToggleFavorite) {
+                    Group {
+                        if isUpdating { ProgressView().tint(.redUniversal) }
+                        else {
+                            Image(systemName: AppSystemIcon.heartFilled)
+                                .foregroundStyle(isLiked ? .redUniversal : .whiteUniversal)
+                        }
+                    }
                     .font(.system(size: 18))
-                    .foregroundStyle(isLiked ? .redUniversal : .whiteUniversal)
-                    .padding(8)
-                    .accessibilityLabel(Text(LocalizedStringKey(isLiked ? "ProfileNFT.liked" : "ProfileNFT.notLiked")))
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .disabled(!isEnabled)
+                .accessibilityLabel(String(format: NSLocalizedString(
+                    isLiked ? "ProfileFavorites.remove" : "ProfileFavorites.add", comment: "Toggle favorite NFT"
+                ), item.name))
+                .accessibilityValue(Text(LocalizedStringKey(isLiked ? "ProfileNFT.liked" : "ProfileNFT.notLiked")))
+                .accessibilityIdentifier("profile.nfts.favorite." + item.id)
             }
 
             HStack(spacing: 12) {

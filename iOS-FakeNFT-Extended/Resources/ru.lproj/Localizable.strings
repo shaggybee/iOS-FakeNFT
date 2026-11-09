@@ -70,3 +70,5 @@
 "ProfileFavorites.empty" = "У Вас ещё нет избранных NFT";
 "ProfileFavorites.error.title" = "Не удалось обновить избранное";
 "ProfileFavorites.remove" = "Удалить %@ из избранного";
+
+"ProfileFavorites.add" = "Добавить %@ в избранное";

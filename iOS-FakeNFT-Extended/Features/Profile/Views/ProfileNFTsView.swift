@@ -3,12 +3,15 @@ import SwiftUI
 struct ProfileNFTsRootView: View {
     @Environment(ServicesAssembly.self) private var services
     let profile: UserProfile
+    let onProfileChanged: (UserProfile) -> Void
 
     var body: some View {
         ProfileNFTsView(viewModel: ProfileNFTsViewModel(
             profile: profile,
             service: services.profileNFTsService,
-            sortStore: ProfileNFTSortStore()
+            sortStore: ProfileNFTSortStore(),
+            favoritesService: services.profileFavoritesService,
+            onProfileChanged: onProfileChanged
         ))
     }
 
@@ -18,7 +21,13 @@ struct ProfileNFTsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: ProfileNFTsViewModel
     @State private var showsSort = false
-    @State private var loadID = 0
+    @State private var request = Request.initial
+
+    private enum Request: Hashable {
+        case initial
+        case retry(UUID)
+        case setFavorite(String, Bool, UUID)
+    }
 
     init(viewModel: ProfileNFTsViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -54,15 +63,18 @@ struct ProfileNFTsView: View {
                 }
                 Button("ProfileNFT.close", role: .cancel) { }
             }
-            .alert("ProfileNFT.error.title", isPresented: $viewModel.showsError) {
-                Button("Error.repeat") { loadID += 1 }
+            .alert(LocalizedStringKey(viewModel.errorTitle), isPresented: $viewModel.showsError) {
+                Button("Error.repeat") { request = .retry(UUID()) }
                 Button("ProfileNFT.cancel", role: .cancel) { }
             } message: {
                 Text(viewModel.errorMessage)
             }
-            .task(id: loadID) {
-                if loadID == 0 { await viewModel.loadIfNeeded() }
-                else { await viewModel.load() }
+            .task(id: request) {
+                switch request {
+                case .initial: await viewModel.loadIfNeeded()
+                case .retry: await viewModel.retry()
+                case .setFavorite(let id, let isLiked, _): await viewModel.setFavorite(id: id, isLiked: isLiked)
+                }
             }
     }
 
@@ -83,7 +95,11 @@ struct ProfileNFTsView: View {
             EmptyStateView(message: NSLocalizedString("ProfileNFT.empty", comment: "No owned NFTs"))
         case .loaded:
             List(viewModel.items) { item in
-                ProfileNFTCell(item: item, isLiked: viewModel.likedIDs.contains(item.id))
+                ProfileNFTCell(item: item, isLiked: viewModel.likedIDs.contains(item.id),
+                               isUpdating: viewModel.updatingFavoriteID == item.id,
+                               isEnabled: !viewModel.isBusy) {
+                    request = .setFavorite(item.id, !viewModel.likedIDs.contains(item.id), UUID())
+                }
                     .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.whitePrimary)
@@ -94,7 +110,7 @@ struct ProfileNFTsView: View {
             .refreshable { await viewModel.load() }
         case .error:
             ErrorStateView(message: viewModel.errorMessage) {
-                loadID += 1
+                request = .retry(UUID())
             }
             .padding(16)
         }

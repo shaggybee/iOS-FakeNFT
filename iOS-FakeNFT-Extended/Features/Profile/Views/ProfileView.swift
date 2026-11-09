@@ -90,7 +90,7 @@ struct ProfileView: View {
 
                     VStack(spacing: 0) {
                         NavigationLink {
-                            ProfileNFTsRootView(profile: profile)
+                            ProfileNFTsRootView(profile: profile) { updated in viewModel.accept(updated) }
                         } label: {
                             menuRow("Мои NFT", count: profile.nfts.count)
                         }
