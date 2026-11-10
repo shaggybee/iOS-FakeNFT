@@ -57,7 +57,9 @@ final class CollectionViewModel {
         if case .idle = state {
             await load()
         } else {
-            await reloadCart()
+            async let cart: Void = reloadCart()
+            async let likes: Void = reloadLikes()
+            _ = await (cart, likes)
         }
     }
 
@@ -114,6 +116,19 @@ final class CollectionViewModel {
             updateLoadedState()
         } catch {
             isCartErrorPresented = true
+        }
+    }
+
+    func reloadLikes() async {
+        await likesSyncTask?.value
+
+        do {
+            let likes = try await likesService.loadLikes()
+            self.likes = likes
+            self.confirmedLikes = likes
+            updateLoadedState()
+        } catch {
+            isLikeErrorPresented = true
         }
     }
 }
