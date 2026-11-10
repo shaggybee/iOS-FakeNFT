@@ -21,9 +21,9 @@ struct UserNFTCollectionView: View {
     }
         
     let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(), alignment: .top),
+        GridItem(.flexible(), alignment: .top),
+        GridItem(.flexible(), alignment: .top)
     ]
     
     var body: some View {
