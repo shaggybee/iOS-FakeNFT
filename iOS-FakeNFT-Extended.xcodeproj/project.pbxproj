@@ -57,7 +57,6 @@
 		DB45CC6F308B930C0056B7C3 /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45CC6E308B930A0056B7C3 /* RatingViewModel.swift */; };
 		DB45CC71308BA2B10056B7C3 /* UsersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */; };
 		DB4942B8308CA1D700DE3C38 /* RatingUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */; };
-		DB4942BB308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md in Resources */ = {isa = PBXBuildFile; fileRef = DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */; };
 		DB5081A5309DE57E00FEEC8F /* MockNftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5081A4309DE57C00FEEC8F /* MockNftService.swift */; };
 		DB621BB4309A2DDD002BA5E8 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB621BB3309A2DDC002BA5E8 /* BackButton.swift */; };
 		DB621BB6309A49F9002BA5E8 /* UserNFTCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB621BB5309A49F8002BA5E8 /* UserNFTCollectionView.swift */; };
@@ -140,7 +139,6 @@
 		DB45CC6E308B930A0056B7C3 /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
 		DB45CC70308BA2A30056B7C3 /* UsersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersRequest.swift; sourceTree = "<group>"; };
 		DB4942B7308CA1CF00DE3C38 /* RatingUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingUser.swift; sourceTree = "<group>"; };
-		DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ElinaM_statistics-decomposition.md"; sourceTree = "<group>"; };
 		DB5081A4309DE57C00FEEC8F /* MockNftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNftService.swift; sourceTree = "<group>"; };
 		DB621BB3309A2DDC002BA5E8 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		DB621BB5309A49F8002BA5E8 /* UserNFTCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNFTCollectionView.swift; sourceTree = "<group>"; };
@@ -194,7 +192,6 @@
 		ABC5E15F2C31F5AF002B4068 = {
 			isa = PBXGroup;
 			children = (
-				DB4942B9308CA87B00DE3C38 /* docs */,
 				6306371E308641BB00E1F7C0 /* Docs */,
 				6320F14C3083F3F70095EB91 /* Configurations */,
 				ABC5E16A2C31F5AF002B4068 /* iOS-FakeNFT-Extended */,
@@ -411,14 +408,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		DB4942B9308CA87B00DE3C38 /* docs */ = {
-			isa = PBXGroup;
-			children = (
-				DB4942BA308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md */,
-			);
-			path = docs;
-			sourceTree = "<group>";
-		};
 		DBA8D1903095108300EE8AC7 /* Mock */ = {
 			isa = PBXGroup;
 			children = (
@@ -551,7 +540,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABC5E1732C31F5AF002B4068 /* Preview Assets.xcassets in Resources */,
-				DB4942BB308CA90C00DE3C38 /* ElinaM_statistics-decomposition.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

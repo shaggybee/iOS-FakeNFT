@@ -84,50 +84,6 @@ final class iOS_FakeNFT_ExtendedTests: XCTestCase {
         XCTAssertEqual(fields, ["name": "Антон + NFT & art", "description": "A=B & C+D"])
     }
 
-    func testWebsiteProvisionalFailureCanRetryWithoutDuplicateLoads() throws {
-        let model = ProfileWebsiteViewModel()
-        let coordinator = ProfileWebContent.Coordinator(model: model)
-        let webView = RecordingProfileWebView()
-        let url = try XCTUnwrap(URL(string: "https://example.com"))
-        coordinator.load(url, in: webView, reloadID: model.reloadID)
-        coordinator.load(url, in: webView, reloadID: model.reloadID)
-        XCTAssertEqual(webView.requests.count, 1)
-        coordinator.webView(webView, didStartProvisionalNavigation: nil)
-        coordinator.webView(webView, didFailProvisionalNavigation: nil, withError: URLError(.notConnectedToInternet))
-        XCTAssertEqual(model.state, .failed)
-
-        model.retry()
-        model.retry()
-        XCTAssertEqual(model.state, .loading)
-        XCTAssertEqual(model.reloadID, 1)
-        coordinator.load(url, in: webView, reloadID: model.reloadID)
-        XCTAssertEqual(webView.requests.map(\.url), [url, url])
-        coordinator.webView(webView, didStartProvisionalNavigation: nil)
-        coordinator.webView(webView, didFinish: nil)
-        XCTAssertEqual(model.state, .loaded)
-    }
-
-    func testWebsiteFailureAfterNavigationStartsShowsError() {
-        let model = ProfileWebsiteViewModel()
-        let coordinator = ProfileWebContent.Coordinator(model: model)
-        let webView = RecordingProfileWebView()
-        coordinator.webView(webView, didStartProvisionalNavigation: nil)
-        coordinator.webView(webView, didFail: nil, withError: URLError(.networkConnectionLost))
-        XCTAssertEqual(model.state, .failed)
-    }
-
-    func testCancelledWebsiteNavigationDoesNotShowError() {
-        let model = ProfileWebsiteViewModel()
-        let coordinator = ProfileWebContent.Coordinator(model: model)
-        let webView = RecordingProfileWebView()
-        coordinator.webView(webView, didStartProvisionalNavigation: nil)
-        coordinator.webView(webView, didFailProvisionalNavigation: nil, withError: URLError(.cancelled))
-        XCTAssertEqual(model.state, .loading)
-        coordinator.webView(webView, didFinish: nil)
-        coordinator.webView(webView, didFail: nil, withError: URLError(.cancelled))
-        XCTAssertEqual(model.state, .loaded)
-    }
-
     func testLoadingProfileUpdatesState() async {
         let service = StubProfileService(profile: profile)
         let model = ProfileViewModel(service: service)

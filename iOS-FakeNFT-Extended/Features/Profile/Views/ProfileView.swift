@@ -6,14 +6,13 @@ struct ProfileRootView: View {
     var body: some View {
         ProfileView(viewModel: ProfileViewModel(service: services.profileService))
     }
-
 }
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
     @State private var editingProfile: UserProfile?
-    @State private var website: ProfileWebsite?
     @State private var loadID = 0
+    @State private var navigationPath: NavigationPath = NavigationPath()
 
     init(viewModel: ProfileViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -21,7 +20,7 @@ struct ProfileView: View {
 
     var body: some View {
         @Bindable var viewModel = viewModel
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             content
                 .background(.whitePrimary)
                 .toolbar {
@@ -39,12 +38,12 @@ struct ProfileView: View {
                     }
                 }
                 .task(id: loadID) { await viewModel.load() }
-                .sheet(item: $website) { site in ProfileWebsiteView(url: site.url) }
                 .fullScreenCover(item: $editingProfile) { profile in
                     ProfileEditView(profile: profile, service: viewModel.service) { updated in
                         viewModel.accept(updated)
                     }
                 }
+                .navigationDestination(for: ProfileRoute.self, destination: destination)
                 .alert("Profile.error.title", isPresented: $viewModel.showsError) {
                     Button("Error.repeat") { loadID += 1 }
                     Button("Common.cancel", role: .cancel) { }
@@ -77,7 +76,7 @@ struct ProfileView: View {
 
                     if let url = profile.websiteURL {
                         Button {
-                            website = ProfileWebsite(url: url)
+                            navigationPath.append(ProfileRoute.webView(url))
                         } label: {
                             Text(profile.website)
                                 .font(AppFont.regular15)
@@ -117,6 +116,14 @@ struct ProfileView: View {
                 loadID += 1
             }
             .padding(16)
+        }
+    }
+    
+    @ViewBuilder
+    private func destination(_ route: ProfileRoute) -> some View {
+        switch route {
+        case .webView(let url):
+            WebView(url: url)
         }
     }
 

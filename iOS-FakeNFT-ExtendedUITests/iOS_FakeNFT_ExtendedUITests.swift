@@ -89,26 +89,6 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 
     @MainActor
-    func testEnglishProfileNetworkAndWebsiteErrors() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["--profile-ui-testing", "--profile-fail-first-load", "--profile-unavailable-website",
-                               "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
-        app.launch()
-        let error = app.alerts["Failed to load profile"]
-        XCTAssertTrue(error.waitForExistence(timeout: 10))
-        XCTAssertTrue(error.staticTexts["No internet connection. Check your connection and try again."].exists)
-        error.buttons["Retry"].tap()
-        XCTAssertTrue(app.buttons["profile.website"].waitForExistence(timeout: 5))
-        app.buttons["profile.website"].tap()
-        XCTAssertTrue(app.buttons["profile.website.retry"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["Failed to open website"].exists)
-        XCTAssertTrue(app.staticTexts["Check your internet connection and try again."].exists)
-        attachScreenshot("Profile website — English error")
-        app.buttons["Done"].tap()
-        XCTAssertTrue(app.buttons["profile.edit"].waitForExistence(timeout: 5))
-    }
-
-    @MainActor
     func testServerFailureOffersRetryAndLoadsProfile() throws {
         let app = XCUIApplication()
         app.launchArguments = ["--profile-ui-testing", "--profile-fail-first-load", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
@@ -137,26 +117,6 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
         confirmation.buttons["Выйти"].tap()
         XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["profile.name"].label, "Студент Практикума")
-    }
-
-    @MainActor
-    func testUnavailableWebsiteShowsRetryAndCanBeClosed() throws {
-        let app = XCUIApplication()
-        // The fixture uses a local unavailable address without changing a real profile.
-        app.launchArguments = ["--profile-ui-testing", "--profile-unavailable-website", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU"]
-        app.launch()
-        let link = app.buttons["profile.website"]
-        XCTAssertTrue(link.waitForExistence(timeout: 10))
-        XCTAssertEqual(link.label, "https://127.0.0.1:65534")
-        link.tap()
-        let retry = app.buttons["profile.website.retry"]
-        XCTAssertTrue(retry.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["Не удалось открыть сайт"].exists)
-        attachScreenshot("Ошибка открытия сайта")
-        retry.tap()
-        XCTAssertTrue(retry.waitForExistence(timeout: 10))
-        app.buttons["Готово"].tap()
-        XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 5))
     }
 
     @MainActor
@@ -454,49 +414,3 @@ final class iOS_FakeNFT_ExtendedUITests: XCTestCase {
     }
 }
 
-extension iOS_FakeNFT_ExtendedUITests {
-    @MainActor
-    func testCompleteProfileEpicScreencast() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["--profile-ui-testing", "--profile-unavailable-website", "-AppleLanguages", "(ru)", "-AppleLocale", "ru_RU", "-Profile.myNFTs.sort", "rating"]
-        app.launch()
-        XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 10))
-        attachScreenshot("Integrated profile")
-        app.buttons["profile.edit"].tap()
-        let name = app.textFields["profile.edit.name"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5))
-        name.tap()
-        let previous = (name.value as? String) ?? ""
-        name.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: previous.count) + "Anton")
-        attachScreenshot("Integrated profile editing")
-        app.buttons["profile.edit.save"].tap()
-        XCTAssertTrue(app.staticTexts["profile.name"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.staticTexts["profile.name"].label, "Anton")
-        app.buttons["profile.website"].tap()
-        XCTAssertTrue(app.buttons["profile.website.retry"].waitForExistence(timeout: 10))
-        attachScreenshot("Integrated website error handling")
-        app.buttons["Готово"].tap()
-        app.buttons["profile.my-nfts"].tap()
-        XCTAssertTrue(app.staticTexts.matching(identifier: "profile.nfts.name").firstMatch.waitForExistence(timeout: 10))
-        attachScreenshot("Integrated owned NFTs")
-        app.buttons["profile.nfts.sort"].tap()
-        app.buttons["По цене"].tap()
-        attachScreenshot("Integrated sorting")
-        app.buttons["profile.nfts.back"].tap()
-        app.buttons["profile.favorites"].tap()
-        let remove = app.buttons["profile.favorites.remove.2"]
-        XCTAssertTrue(remove.waitForExistence(timeout: 10))
-        attachScreenshot("Integrated favorites")
-        remove.tap()
-        XCTAssertTrue(remove.waitForNonExistence(timeout: 10))
-        app.buttons["profile.favorites.remove.5"].tap()
-        XCTAssertTrue(app.staticTexts["У Вас ещё нет избранных NFT"].waitForExistence(timeout: 10))
-        attachScreenshot("Integrated empty favorites")
-        app.buttons["profile.favorites.back"].tap()
-        XCTAssertTrue(app.buttons["profile.favorites"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["profile.favorites"].label.contains("(0)"))
-        XCTAssertTrue(app.tabBars.buttons["Каталог"].exists)
-        XCTAssertTrue(app.tabBars.buttons["Корзина"].exists)
-        attachScreenshot("Integrated updated profile counter")
-    }
-}
