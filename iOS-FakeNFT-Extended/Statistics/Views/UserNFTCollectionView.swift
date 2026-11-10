@@ -62,6 +62,7 @@ struct UserNFTCollectionView: View {
                         }
                     }
                 }
+                .scrollIndicators(.hidden)
                 .padding(.top,20)
             }
         }

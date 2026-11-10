@@ -13,6 +13,7 @@ private enum Constants {
 
 struct UserProfileView: View {
     
+    @Environment(\.dismiss) private var dismiss
     @State private var viewModel: UserProfileViewModel
     
     private let nftService: NftService
@@ -37,10 +38,6 @@ struct UserProfileView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
-            BackButton()
-                .padding(.bottom, 20)
-            
             if let user = viewModel.user {
                 HStack(spacing: Constants.avatarSpacing) {
                     AsyncImage(url: URL(string: user.avatar)) { image in image
@@ -67,7 +64,7 @@ struct UserProfileView: View {
                 
                 if let url = URL(string: user.website) {
                     NavigationLink {
-                        UserWebsiteView(url: url)
+                        WebView(url: url)
                     } label: {
                         Text("Перейти на сайт пользователя")
                             .font(AppFont.regular15)
@@ -99,8 +96,18 @@ struct UserProfileView: View {
             await viewModel.loadUser()
         }
         .padding(.horizontal, 16)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(.backward24)
+                        .tint(.blackPrimary)
+                }
+            }
+        }
     }
 }
 

@@ -63,7 +63,7 @@ struct NFTCollectionCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(nft.name)
                         .font(AppFont.bold17)
-                        .lineLimit(3)
+                        .lineLimit(1)
                     
                     Text(nft.price.formatted(.number.precision(.fractionLength(2))) + " ETH")
                         .font(AppFont.medium10)

@@ -41,9 +41,7 @@ private struct RatingScreen: View {
     var body: some View {
         VStack {
             if viewModel.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .tint(.blackPrimary)
+                LoadingView()
             } else if viewModel.errorMessage != nil {
                 Spacer()
             } else {
