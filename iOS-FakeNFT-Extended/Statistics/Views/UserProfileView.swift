@@ -66,7 +66,7 @@ struct UserProfileView: View {
                     NavigationLink {
                         WebView(url: url)
                     } label: {
-                        Text("Перейти на сайт пользователя")
+                        Text("Statistics.openWebsite")
                             .font(AppFont.regular15)
                             .foregroundStyle(.blackPrimary)
                             .frame(maxWidth: .infinity)
@@ -79,7 +79,8 @@ struct UserProfileView: View {
                 UserNFTCollectionView(userId: user.id, usersService: usersService , nftService: nftService, likesService: likesService, cartService: cartService)
                 } label: {
                     HStack {
-                        Text("Коллекция NFT (\(user.nfts.count))")
+                        Text(String(format: NSLocalizedString("Statistics.nftCollection.count", comment: "User NFT collection with count"),
+                                    user.nfts.count))
                         Spacer()
                         Image(systemName: "chevron.right")
                     }

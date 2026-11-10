@@ -29,7 +29,7 @@ struct UserNFTCollectionView: View {
     var body: some View {
         VStack(spacing: 0) {
                 ZStack {
-                    Text("Коллекция NFT")
+                    Text("Statistics.nftCollection")
                         .font(AppFont.bold17)
                     HStack {
                         BackButton()
@@ -73,10 +73,10 @@ struct UserNFTCollectionView: View {
         .onChange(of: viewModel.errorMessage) { _, newValue in
             isErrorPresented = newValue != nil
         }
-        .alert("Не удалось получить данные", isPresented: $isErrorPresented) {
-            Button("Отмена", role: .cancel) {}
+        .alert("Error.loadingData", isPresented: $isErrorPresented) {
+            Button("Common.cancel", role: .cancel) {}
             
-            Button("Повторить") {
+            Button("Error.retry") {
                 Task {
                     await viewModel.loadNFTs()
                 }

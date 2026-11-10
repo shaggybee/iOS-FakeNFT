@@ -112,6 +112,9 @@
 "Statistics.cartUpdateError" = "Failed to update cart";
 "Statistics.favoritesCartLoadError" = "Failed to load favorites or cart";
 "Statistics.nftLoadError" = "Failed to load NFT collection";
+"Statistics.nftCollection" = "NFT collection";
+"Statistics.nftCollection.count" = "NFT collection (%ld)";
+"Statistics.openWebsite" = "Go to user's website";
 
 "ProfileFavorites.add" = "Add %@ to favorites";
 

@@ -46,8 +46,6 @@
 		C011EC71000000000000000B /* ProfileLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000C /* ProfileLikesRequest.swift */; };
 		C011EC71000000000000000D /* UpdateLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000000E /* UpdateLikesRequest.swift */; };
 		C011EC71000000000000000F /* ProfileLikes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000010 /* ProfileLikes.swift */; };
-		C011EC710000000000000015 /* UpdateOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000016 /* UpdateOrderRequest.swift */; };
-		C011EC710000000000000017 /* OrderNfts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000018 /* OrderNfts.swift */; };
 		C011EC71000000000000001B /* View+LoadErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001C /* View+LoadErrorAlert.swift */; };
 		C011EC71000000000000001D /* NftCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC71000000000000001E /* NftCollection.swift */; };
 		C011EC71000000000000001F /* CatalogSortStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C011EC710000000000000020 /* CatalogSortStorage.swift */; };
@@ -128,8 +126,6 @@
 		C011EC71000000000000000C /* ProfileLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikesRequest.swift; sourceTree = "<group>"; };
 		C011EC71000000000000000E /* UpdateLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikesRequest.swift; sourceTree = "<group>"; };
 		C011EC710000000000000010 /* ProfileLikes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLikes.swift; sourceTree = "<group>"; };
-		C011EC710000000000000016 /* UpdateOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateOrderRequest.swift; sourceTree = "<group>"; };
-		C011EC710000000000000018 /* OrderNfts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderNfts.swift; sourceTree = "<group>"; };
 		C011EC71000000000000001C /* View+LoadErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LoadErrorAlert.swift"; sourceTree = "<group>"; };
 		C011EC71000000000000001E /* NftCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCollection.swift; sourceTree = "<group>"; };
 		C011EC710000000000000020 /* CatalogSortStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogSortStorage.swift; sourceTree = "<group>"; };
@@ -296,7 +292,6 @@
 				DBADCAF0308BF65B008A1EA6 /* UserModel.swift */,
 				ABC5E1A02C31F6D7002B4068 /* Nft.swift */,
 				C011EC71000000000000001E /* NftCollection.swift */,
-				C011EC710000000000000018 /* OrderNfts.swift */,
 				C011EC710000000000000010 /* ProfileLikes.swift */,
 				6373BD2B308A0DA200FC72B9 /* Order.swift */,
 				631AFD20309278A600A15FA3 /* Currency.swift */,
@@ -339,7 +334,6 @@
 				C011EC710000000000000008 /* CollectionRequest.swift */,
 				ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */,
 				ABC5E1AD2C31FB7F002B4068 /* NftByIdRequest.swift */,
-				C011EC710000000000000016 /* UpdateOrderRequest.swift */,
 				C011EC71000000000000000E /* UpdateLikesRequest.swift */,
 				C011EC71000000000000000C /* ProfileLikesRequest.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
@@ -604,10 +598,8 @@
 				DBADCAF3308BF747008A1EA6 /* UsersService.swift in Sources */,
 				63B85E8230867497003FDC64 /* LoadingView.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
-				C011EC710000000000000017 /* OrderNfts.swift in Sources */,
 				C011EC71000000000000001D /* NftCollection.swift in Sources */,
 				C011EC71000000000000001F /* CatalogSortStorage.swift in Sources */,
-				C011EC710000000000000015 /* UpdateOrderRequest.swift in Sources */,
 				C011EC71000000000000000F /* ProfileLikes.swift in Sources */,
 				C011EC71000000000000000D /* UpdateLikesRequest.swift in Sources */,
 				C011EC71000000000000000B /* ProfileLikesRequest.swift in Sources */,

@@ -83,23 +83,23 @@ private struct RatingScreen: View {
         .onChange(of: viewModel.errorMessage) { _, newValue in
             isErrorPresented = newValue != nil
         }
-        .alert("Не удалось получить данные", isPresented: $isErrorPresented) {
-            Button("Отмена", role: .cancel) {}
+        .alert("Error.loadingData", isPresented: $isErrorPresented) {
+            Button("Common.cancel", role: .cancel) {}
             
-            Button("Повторить") {
+            Button("Error.retry") {
                 Task {
                     await viewModel.loadUsers()
                 }
             }
         }
-        .confirmationDialog("Сортировка", isPresented: $isSortPresented, titleVisibility: .visible) {
-            Button("По имени") {
+        .confirmationDialog("Sort.title", isPresented: $isSortPresented, titleVisibility: .visible) {
+            Button("Sort.byName") {
                 viewModel.sortUsers(by: .name)
             }
-            Button("По рейтингу") {
+            Button("Sort.byRating") {
                 viewModel.sortUsers(by: .rating)
             }
-            Button("Закрыть", role: .cancel) {
+            Button("Common.close", role: .cancel) {
                 
             }
         }
