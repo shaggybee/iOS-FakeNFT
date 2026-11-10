@@ -1,0 +1,153 @@
+// MARK: - Catalog
+
+"Catalog.empty" = "No collections yet";
+"Catalog.loadingError" = "Failed to load collections";
+"Catalog.openNft" = "Open NFT";
+
+// MARK: - Collection
+
+"Collection.author" = "Collection author:";
+"Collection.cartError" = "Failed to update cart";
+"Collection.likeError" = "Failed to update favorites";
+"Collection.loadingError" = "Failed to load collection";
+"Collection.price" = "%@ ETH";
+
+// MARK: - Common
+
+"Common.cancel" = "Cancel";
+"Common.close" = "Close";
+
+// MARK: - Errors
+
+"Error.loadingData" = "Failed to get data";
+"Error.network" = "A network error occurred";
+"Error.retry" = "Retry";
+"Error.title" = "Error";
+"Error.unknown" = "An unknown error occurred";
+"Error.fetchData" = "Failed to fetch data";
+"Error.userNotFound" = "User not found";
+"Error.usersLoadFailed" = "Failed to load users";
+
+// MARK: - Sorting
+
+"Sort.byName" = "By name";
+"Sort.byNftCount" = "By NFT count";
+"Sort.title" = "Sort";
+"Sort.byPrice" = "By price";
+"Sort.byRating" = "By rating";
+
+// MARK: - Tab Bar
+
+"Tab.cart" = "Cart";
+"Tab.catalog" = "Catalog";
+"Tab.profile" = "Profile";
+"Tab.statistics" = "Statistics";
+
+// MARK: - WebView
+
+"WebView.loadingError" = "Failed to load page";
+
+// MARK: - Shopping Cart
+
+"ShoppingCart.price" = "Price";
+"ShoppingCart.pay" = "Pay";
+"ShoppingCart.empty" = "Cart is empty";
+"ShoppingCart.toPay" = "To pay";
+"ShoppingCart.loadError" = "Failed to load cart items";
+"ShoppingCart.deleteNftError" = "Failed to remove NFT";
+"ShoppingCart.deleteNftConfirmation" = "Are you sure you want to remove the item from the cart?";
+
+// MARK: - Button
+
+"Button.cancel" = "Cancel";
+"Button.close" = "Close";
+"Button.delete" = "Delete";
+"Button.comeback" = "Come back";
+"Button.retry" = "Retry";
+
+// MARK: - Payment
+
+"Payment.selection" = "Choose a payment method";
+"Payment.emptyCurrenciesList" = "No available currencies for payment";
+"Payment.loadCurrenciesError" = "Failed to load currency list";
+"Payment.pay" = "Pay";
+"Payment.agreement" = "By making a purchase, you agree to the terms";
+"Payment.agreementLink" = "User Agreement";
+"Payment.paymentFailed" = "Payment failed";
+"Payment.cartClearingFailed" = "Failed to clear cart";
+"Payment.successTitle" = "Success! Payment completed. Congratulations on your purchase!";
+"Payment.backToCart" = "Back to cart";
+
+// MARK: - Shopping Cart Agreement
+
+"ShoppingCartAgreement.loadError" = "Failed to load user agreement";
+
+
+// MARK: - Profile
+
+"Error.repeat" = "Retry";
+"ProfileNFT.sort.price" = "By price";
+"ProfileNFT.sort.rating" = "By rating";
+"ProfileNFT.sort.name" = "By name";
+"ProfileNFT.sort.title" = "Sort";
+"ProfileNFT.title" = "My NFTs";
+"ProfileNFT.empty" = "You have no NFTs yet";
+"ProfileNFT.error.title" = "Failed to load NFTs";
+"ProfileNFT.back" = "Back";
+"ProfileNFT.close" = "Close";
+"ProfileNFT.cancel" = "Cancel";
+"ProfileNFT.liked" = "In favorites";
+"ProfileNFT.notLiked" = "Not in favorites";
+"ProfileNFT.rating" = "Rating %d out of 5";
+"ProfileNFT.author" = "by %@";
+"ProfileNFT.price" = "Price";
+"ProfileFavorites.title" = "Favorite NFTs";
+"ProfileFavorites.empty" = "You have no favorite NFTs yet";
+"ProfileFavorites.error.title" = "Failed to update favorites";
+"ProfileFavorites.remove" = "Remove %@ from favorites";
+
+// MARK: - Statistics NFT Collection
+
+"Statistics.favoritesUpdateError" = "Failed to update favorites";
+"Statistics.cartUpdateError" = "Failed to update cart";
+"Statistics.favoritesCartLoadError" = "Failed to load favorites or cart";
+"Statistics.nftLoadError" = "Failed to load NFT collection";
+"Statistics.nftCollection" = "NFT collection";
+"Statistics.nftCollection.count" = "NFT collection (%ld)";
+"Statistics.openWebsite" = "Go to user's website";
+
+"ProfileFavorites.add" = "Add %@ to favorites";
+
+// Profile editing, validation and website
+"Common.save" = "Save";
+"Common.done" = "Done";
+"Profile.edit" = "Edit profile";
+"Profile.avatar" = "Profile photo";
+"Profile.error.title" = "Failed to load profile";
+"Profile.menuCount" = "%@ (%ld)";
+"ProfileEdit.name" = "Name";
+"ProfileEdit.description" = "Description";
+"ProfileEdit.website" = "Website";
+"ProfileEdit.website.placeholder" = "https://example.com";
+"ProfileEdit.photo.actions" = "Change profile photo";
+"ProfileEdit.photo.change" = "Change photo";
+"ProfileEdit.photo.delete" = "Remove photo";
+"ProfileEdit.photo.url" = "Photo URL";
+"ProfileEdit.photo.placeholder" = "https://example.com/photo.jpg";
+"ProfileEdit.discard.title" = "Leave without saving?";
+"ProfileEdit.discard.confirm" = "Leave";
+"ProfileEdit.discard.cancel" = "Stay";
+"ProfileEdit.discard.message" = "Your profile changes will be lost.";
+"ProfileEdit.error.title" = "Failed to save profile";
+"ProfileWebsite.loading" = "Loading website…";
+"ProfileWebsite.error.title" = "Failed to open website";
+"ProfileWebsite.error.message" = "Check your internet connection and try again.";
+"ProfileWebsite.title" = "User website";
+"ProfileValidation.name" = "Enter your name.";
+"ProfileValidation.website" = "Enter a website address starting with https:// or http://.";
+"ProfileValidation.avatar" = "Enter a photo URL starting with https:// or http://.";
+"ProfileError.offline" = "No internet connection. Check your connection and try again.";
+"ProfileError.token" = "The server rejected the request. Check your training API token.";
+"ProfileError.parsing" = "The server returned an unexpected data format. Try again later.";
+"ProfileError.server" = "Could not get a response from the server. Try again.";
+"ProfileNFT.price.value" = "%@ ETH";
