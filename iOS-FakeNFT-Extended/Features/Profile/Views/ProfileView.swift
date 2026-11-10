@@ -32,7 +32,7 @@ struct ProfileView: View {
                             } label: {
                                 Image(.edit40)
                             }
-                            .accessibilityLabel("Редактировать профиль")
+                            .accessibilityLabel(Text("Profile.edit"))
                             .accessibilityIdentifier("profile.edit")
                             .tint(.blackPrimary)
                         }
@@ -45,9 +45,9 @@ struct ProfileView: View {
                         viewModel.accept(updated)
                     }
                 }
-                .alert("Не удалось загрузить профиль", isPresented: $viewModel.showsError) {
-                    Button("Повторить") { loadID += 1 }
-                    Button("Отмена", role: .cancel) { }
+                .alert("Profile.error.title", isPresented: $viewModel.showsError) {
+                    Button("Error.repeat") { loadID += 1 }
+                    Button("Common.cancel", role: .cancel) { }
                 } message: {
                     Text(viewModel.errorMessage)
                 }
@@ -90,17 +90,17 @@ struct ProfileView: View {
 
                     VStack(spacing: 0) {
                         NavigationLink {
-                            ProfileNFTsRootView(profile: profile)
+                            ProfileNFTsRootView(profile: profile) { updated in viewModel.accept(updated) }
                         } label: {
-                            menuRow("Мои NFT", count: profile.nfts.count)
+                            menuRow("ProfileNFT.title", count: profile.nfts.count)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Мои NFT (\(profile.nfts.count))")
+                        .accessibilityLabel(menuTitle("ProfileNFT.title", count: profile.nfts.count))
                         .accessibilityIdentifier("profile.my-nfts")
                         NavigationLink {
                             ProfileFavoritesRootView { updated in viewModel.accept(updated) }
                         } label: {
-                            menuRow(NSLocalizedString("ProfileFavorites.title", comment: "Favorite NFTs"), count: profile.likes.count)
+                            menuRow("ProfileFavorites.title", count: profile.likes.count)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("profile.favorites")
@@ -120,9 +120,14 @@ struct ProfileView: View {
         }
     }
 
+    private func menuTitle(_ title: String, count: Int) -> String {
+        String(format: NSLocalizedString("Profile.menuCount", comment: "Profile menu with NFT count"),
+               NSLocalizedString(title, comment: "Profile menu title"), count)
+    }
+
     private func menuRow(_ title: String, count: Int) -> some View {
         HStack {
-            Text("\(title) (\(count))")
+            Text(menuTitle(title, count: count))
                 .font(AppFont.bold17)
             Spacer()
             Image(systemName: "chevron.right")

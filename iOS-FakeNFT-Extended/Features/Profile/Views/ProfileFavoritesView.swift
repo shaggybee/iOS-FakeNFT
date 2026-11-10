@@ -130,7 +130,8 @@ private struct ProfileFavoriteCell: View {
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(String(format: NSLocalizedString("ProfileNFT.rating", comment: "Rating"),
                                                max(0, min(5, item.rating))))
-                Text(item.price.formatted(.number.locale(locale).precision(.fractionLength(2))) + " ETH")
+                Text(String(format: NSLocalizedString("ProfileNFT.price.value", comment: "NFT price in ETH"),
+                            item.price.formatted(.number.locale(locale).precision(.fractionLength(2)))))
                     .font(AppFont.regular13)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)

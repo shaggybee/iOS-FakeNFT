@@ -77,3 +77,39 @@
 "Statistics.cartUpdateError" = "Не удалось обновить корзину";
 "Statistics.favoritesCartLoadError" = "Не удалось загрузить избранное или корзину";
 "Statistics.nftLoadError" = "Не удалось загрузить коллекцию NFT";
+
+"ProfileFavorites.add" = "Добавить %@ в избранное";
+
+// Profile editing, validation and website
+"Common.save" = "Сохранить";
+"Common.done" = "Готово";
+"Profile.edit" = "Редактировать профиль";
+"Profile.avatar" = "Фото профиля";
+"Profile.error.title" = "Не удалось загрузить профиль";
+"Profile.menuCount" = "%@ (%ld)";
+"ProfileEdit.name" = "Имя";
+"ProfileEdit.description" = "Описание";
+"ProfileEdit.website" = "Сайт";
+"ProfileEdit.website.placeholder" = "https://example.com";
+"ProfileEdit.photo.actions" = "Изменить фото профиля";
+"ProfileEdit.photo.change" = "Изменить фото";
+"ProfileEdit.photo.delete" = "Удалить фото";
+"ProfileEdit.photo.url" = "Ссылка на фото";
+"ProfileEdit.photo.placeholder" = "https://example.com/photo.jpg";
+"ProfileEdit.discard.title" = "Выйти без сохранения?";
+"ProfileEdit.discard.confirm" = "Выйти";
+"ProfileEdit.discard.cancel" = "Остаться";
+"ProfileEdit.discard.message" = "Изменения профиля будут потеряны.";
+"ProfileEdit.error.title" = "Не удалось сохранить профиль";
+"ProfileWebsite.loading" = "Загрузка сайта…";
+"ProfileWebsite.error.title" = "Не удалось открыть сайт";
+"ProfileWebsite.error.message" = "Проверьте подключение к интернету и попробуйте ещё раз.";
+"ProfileWebsite.title" = "Сайт пользователя";
+"ProfileValidation.name" = "Введите имя.";
+"ProfileValidation.website" = "Укажите адрес сайта, начинающийся с https:// или http://.";
+"ProfileValidation.avatar" = "Укажите ссылку на фото, начинающуюся с https:// или http://.";
+"ProfileError.offline" = "Нет подключения к интернету. Проверьте соединение и попробуйте ещё раз.";
+"ProfileError.token" = "Сервер отклонил запрос. Проверьте учебный API-токен.";
+"ProfileError.parsing" = "Сервер вернул данные в неожиданном формате. Попробуйте ещё раз позже.";
+"ProfileError.server" = "Не удалось получить ответ сервера. Попробуйте ещё раз.";
+"ProfileNFT.price.value" = "%@ ETH";

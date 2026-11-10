@@ -7,6 +7,14 @@ struct ProfileEditView: View {
     @State private var showsPhotoURL = false
     @State private var photoURL = ""
     @State private var showsDiscardConfirmation = false
+    @FocusState private var focusedField: Field?
+
+    private enum Field: Hashable {
+        case name
+        case description
+        case website
+    }
+
     let onSaved: (UserProfile) -> Void
 
     init(profile: UserProfile, service: any ProfileService, onSaved: @escaping (UserProfile) -> Void) {
@@ -22,22 +30,27 @@ struct ProfileEditView: View {
                     photoButton
                         .frame(maxWidth: .infinity)
 
-                    field("Имя") {
-                        TextField("Имя", text: $viewModel.draft.name)
+                    field("ProfileEdit.name", identifier: "name") {
+                        TextField("ProfileEdit.name", text: $viewModel.draft.name)
                             .textContentType(.name)
+                            .focused($focusedField, equals: .name)
+                            .submitLabel(.done)
                             .accessibilityIdentifier("profile.edit.name")
                     }
 
-                    field("Описание") {
-                        TextField("Описание", text: $viewModel.draft.description, axis: .vertical)
+                    field("ProfileEdit.description", identifier: "description") {
+                        TextField("ProfileEdit.description", text: $viewModel.draft.description, axis: .vertical)
                             .lineLimit(5...8)
+                            .focused($focusedField, equals: .description)
                             .accessibilityIdentifier("profile.edit.description")
                     }
 
-                    field("Сайт") {
-                        TextField("https://example.com", text: $viewModel.draft.website)
+                    field("ProfileEdit.website", identifier: "website") {
+                        TextField("ProfileEdit.website.placeholder", text: $viewModel.draft.website)
                             .keyboardType(.URL)
                             .textContentType(.URL)
+                            .focused($focusedField, equals: .website)
+                            .submitLabel(.done)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                             .accessibilityIdentifier("profile.edit.website")
@@ -52,23 +65,40 @@ struct ProfileEditView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
+                .background {
+                    Color.whitePrimary
+                        .contentShape(Rectangle())
+                        .onTapGesture { focusedField = nil }
+                }
             }
             .scrollDismissesKeyboard(.interactively)
-            .background(.whitePrimary)
+            .background {
+                Color.whitePrimary
+                    .contentShape(Rectangle())
+                    .onTapGesture { focusedField = nil }
+            }
+            .onSubmit { focusedField = nil }
+            .onDisappear { focusedField = nil }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        focusedField = nil
                         if viewModel.hasChanges { showsDiscardConfirmation = true }
                         else { dismiss() }
                     } label: {
                         Image(systemName: "chevron.left")
                     }
-                    .accessibilityLabel("Назад")
+                    .accessibilityLabel(Text("ProfileNFT.back"))
                     .accessibilityIdentifier("profile.edit.back")
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Common.done") { focusedField = nil }
+                        .accessibilityIdentifier("profile.edit.keyboard.done")
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                BaseButton(title: "Сохранить") { save() }
+                BaseButton(title: NSLocalizedString("Common.save", comment: "Save profile")) { save() }
                     .disabled(!viewModel.canSave)
                     .opacity(viewModel.canSave ? 1 : 0.5)
                     .padding(.horizontal, 16)
@@ -81,31 +111,31 @@ struct ProfileEditView: View {
                 if viewModel.isSaving { BlockingProgressView() }
             }
             .interactiveDismissDisabled(viewModel.hasChanges || viewModel.isSaving)
-            .confirmationDialog("Изменить фото профиля", isPresented: $showsPhotoActions, titleVisibility: .visible) {
-                Button("Изменить фото") {
+            .confirmationDialog("ProfileEdit.photo.actions", isPresented: $showsPhotoActions, titleVisibility: .visible) {
+                Button("ProfileEdit.photo.change") {
                     photoURL = viewModel.draft.avatar
                     showsPhotoURL = true
                 }
-                Button("Удалить фото", role: .destructive) { viewModel.draft.avatar = "" }
-                Button("Отмена", role: .cancel) { }
+                Button("ProfileEdit.photo.delete", role: .destructive) { viewModel.draft.avatar = "" }
+                Button("Common.cancel", role: .cancel) { }
             }
-            .alert("Ссылка на фото", isPresented: $showsPhotoURL) {
-                TextField("https://example.com/photo.jpg", text: $photoURL)
+            .alert("ProfileEdit.photo.url", isPresented: $showsPhotoURL) {
+                TextField("ProfileEdit.photo.placeholder", text: $photoURL)
                     .keyboardType(.URL)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
-                Button("Сохранить") { viewModel.draft.avatar = photoURL }
-                Button("Отмена", role: .cancel) { }
+                Button("Common.save") { viewModel.draft.avatar = photoURL }
+                Button("Common.cancel", role: .cancel) { }
             }
-            .alert("Выйти без сохранения?", isPresented: $showsDiscardConfirmation) {
-                Button("Выйти", role: .destructive) { dismiss() }
-                Button("Остаться", role: .cancel) { }
+            .alert("ProfileEdit.discard.title", isPresented: $showsDiscardConfirmation) {
+                Button("ProfileEdit.discard.confirm", role: .destructive) { dismiss() }
+                Button("ProfileEdit.discard.cancel", role: .cancel) { }
             } message: {
-                Text("Изменения профиля будут потеряны.")
+                Text("ProfileEdit.discard.message")
             }
-            .alert("Не удалось сохранить профиль", isPresented: $viewModel.showsError) {
-                Button("Повторить") { save() }
-                Button("Отмена", role: .cancel) { }
+            .alert("ProfileEdit.error.title", isPresented: $viewModel.showsError) {
+                Button("Error.repeat") { save() }
+                Button("Common.cancel", role: .cancel) { }
             } message: {
                 Text(viewModel.errorMessage)
             }
@@ -114,7 +144,10 @@ struct ProfileEditView: View {
     }
 
     private var photoButton: some View {
-        Button { showsPhotoActions = true } label: {
+        Button {
+            focusedField = nil
+            showsPhotoActions = true
+        } label: {
             ProfileAvatarView(url: ProfileURL.webURL(from: viewModel.draft.avatar), size: 70)
                 .overlay(alignment: .bottomTrailing) {
                     Image(systemName: "camera.circle.fill")
@@ -123,12 +156,16 @@ struct ProfileEditView: View {
                         .foregroundStyle(.whitePrimary, .blackPrimary)
                 }
         }
-        .accessibilityLabel("Изменить фото профиля")
+        .accessibilityLabel(Text("ProfileEdit.photo.actions"))
+        .accessibilityIdentifier("profile.edit.photo")
     }
 
-    private func field<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func field<Content: View>(_ title: LocalizedStringKey, identifier: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(AppFont.bold22)
+            Text(title)
+                .font(AppFont.bold22)
+                .accessibilityIdentifier("profile.edit.label." + identifier)
+                .onTapGesture { focusedField = nil }
             content()
                 .font(AppFont.regular17)
                 .padding(12)
@@ -139,6 +176,7 @@ struct ProfileEditView: View {
     }
 
     private func save() {
+        focusedField = nil
         Task {
             if let profile = await viewModel.save() {
                 onSaved(profile)

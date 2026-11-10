@@ -8,12 +8,13 @@ struct ProfileFavoritesSnapshot: Sendable {
 protocol ProfileFavoritesService: Sendable {
     func loadFavorites() async throws -> ProfileFavoritesSnapshot
     func removeFavorite(id: String) async throws -> UserProfile
+    func setFavorite(id: String, isLiked: Bool) async throws -> UserProfile
 }
 
 actor ProfileFavoritesServiceImpl: ProfileFavoritesService {
     private let profileService: any ProfileService
     private let nftService: any NftService
-    private var isRemoving = false
+    private var isUpdating = false
 
     init(profileService: any ProfileService, nftService: any NftService) {
         self.profileService = profileService
@@ -36,22 +37,27 @@ actor ProfileFavoritesServiceImpl: ProfileFavoritesService {
     }
 
     func removeFavorite(id: String) async throws -> UserProfile {
+        try await setFavorite(id: id, isLiked: false)
+    }
+
+    func setFavorite(id: String, isLiked: Bool) async throws -> UserProfile {
         // Actor methods can reenter across awaits: reject overlapping mutations.
-        guard !isRemoving else { throw ProfileFavoritesError.busy }
-        isRemoving = true
-        defer { isRemoving = false }
+        guard !isUpdating else { throw ProfileFavoritesError.busy }
+        isUpdating = true
+        defer { isUpdating = false }
         let current = try await profileService.loadProfile()
         try Task.checkCancellation()
-        guard current.likes.contains(id) else { return current }
+        guard current.likes.contains(id) != isLiked else { return current }
         var seen = Set<String>()
-        let remaining = current.likes.filter { $0 != id && seen.insert($0).inserted }
-        let updated = try await profileService.updateLikes(remaining)
-        guard !updated.likes.contains(id) else { throw ProfileFavoritesError.removalRejected }
+        var likes = current.likes.filter { $0 != id && seen.insert($0).inserted }
+        if isLiked { likes.append(id) }
+        let updated = try await profileService.updateLikes(likes)
+        guard updated.likes.contains(id) == isLiked else { throw ProfileFavoritesError.updateRejected }
         return updated
     }
 }
 
 enum ProfileFavoritesError: Error {
     case busy
-    case removalRejected
+    case updateRejected
 }
