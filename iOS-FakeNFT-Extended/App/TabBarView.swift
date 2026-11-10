@@ -54,7 +54,10 @@ struct TabBarView: View {
                 }
                 .tag(Tab.cart)
             
-            Text("Tab.statistics")
+            NavigationStack {
+                StatisticsRatingView()
+            }
+            
                 .tabItem {
                     Label {
                         Text("Tab.statistics")

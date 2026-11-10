@@ -71,6 +71,13 @@
 "ProfileFavorites.error.title" = "Не удалось обновить избранное";
 "ProfileFavorites.remove" = "Удалить %@ из избранного";
 
+// MARK: - Statistics NFT Collection
+
+"Statistics.favoritesUpdateError" = "Не удалось обновить избранное";
+"Statistics.cartUpdateError" = "Не удалось обновить корзину";
+"Statistics.favoritesCartLoadError" = "Не удалось загрузить избранное или корзину";
+"Statistics.nftLoadError" = "Не удалось загрузить коллекцию NFT";
+
 "ProfileFavorites.add" = "Добавить %@ в избранное";
 
 // Profile editing, validation and website

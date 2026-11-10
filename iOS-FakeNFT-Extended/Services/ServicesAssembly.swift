@@ -59,6 +59,10 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
         profileFavoritesService = ProfileFavoritesServiceImpl(profileService: profileService, nftService: nftService)
         usesDemoProfileData = false
     }
-
+    
+    var usersService: UsersService {
+        UsersServiceImpl(networkClient: networkClient)
+    }
     var currenciesService: CurrenciesServiceProtocol { CurrenciesService(networkClient: networkClient) }
+
 }
