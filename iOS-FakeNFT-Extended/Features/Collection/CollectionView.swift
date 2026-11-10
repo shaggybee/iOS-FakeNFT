@@ -47,6 +47,7 @@ struct CollectionView: View {
 
     var body: some View {
         content
+            .background(.whitePrimary)
             .navigationBarBackButtonHidden()
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {

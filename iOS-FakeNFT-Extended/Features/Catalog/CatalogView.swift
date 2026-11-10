@@ -35,6 +35,7 @@ struct CatalogView: View {
         NavigationStack(path: $router.path) {
             content
                 .navigationBarTitleDisplayMode(.inline)
+                .background(.whitePrimary)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         sortButton

@@ -97,6 +97,7 @@ struct UserProfileView: View {
             await viewModel.loadUser()
         }
         .padding(.horizontal, 16)
+        .background(.whitePrimary)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {

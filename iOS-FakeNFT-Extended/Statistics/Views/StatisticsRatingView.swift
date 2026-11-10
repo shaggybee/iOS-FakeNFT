@@ -74,6 +74,7 @@ private struct RatingScreen: View {
                 .scrollContentBackground(.hidden)
             }
         }
+        .background(.whitePrimary)
         .navigationDestination(item: $selectedUserId) { userId in
             UserProfileView(userId: userId, usersService: usersService, nftService: nftService, likesService: likesService, cartService: cartService)
         }
